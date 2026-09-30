@@ -53,10 +53,14 @@ computer player, its tables on several devices and its cards.
 
 ## Install
 
+Each version is a GitHub release with the built package attached. Install it
+by that file's address, pinned to the version:
+
 ```sh
-pnpm add @johnmorrisdotca/hitotsu
-# or: npm install @johnmorrisdotca/hitotsu
+pnpm add https://github.com/johnmorrisdotca/hitotsu/releases/download/v1.0.0/johnmorrisdotca-hitotsu-1.0.0.tgz
 ```
+
+It is not on npm yet.
 
 ES modules with TypeScript types. The core and the table have no
 dependencies; the React components need React 18 or later.

@@ -6,6 +6,19 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-09-30
+
+### Added
+
+- Each version tag builds the package and attaches its tarball to a GitHub
+  release, which is how projects install it until it is on npm.
+
+### Changed
+
+- The first stable version: the rules, the table, the card drawing and the
+  mounted UI are the public API, and a change that breaks one of them is a new
+  major version.
+
 ## [0.1.0] - 2026-09-30
 
 ### Added
@@ -29,5 +42,6 @@ All notable changes to this project are written here. The format follows
   `@johnmorrisdotca/hitotsu/react`.
 - A static demo, published to GitHub Pages.
 
-[Unreleased]: https://github.com/johnmorrisdotca/hitotsu/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/johnmorrisdotca/hitotsu/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/johnmorrisdotca/hitotsu/compare/v0.1.0...v1.0.0
 [0.1.0]: https://github.com/johnmorrisdotca/hitotsu/releases/tag/v0.1.0
