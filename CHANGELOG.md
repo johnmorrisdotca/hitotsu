@@ -6,6 +6,14 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-09-30
+
+### Fixed
+
+- The package loads through `require()` as well as `import` (Node 22 and
+  later load the ES module either way), so a tool that compiles to CommonJS,
+  such as Playwright's test runner, can use it.
+
 ## [1.0.0] - 2026-09-30
 
 ### Added
@@ -42,6 +50,7 @@ All notable changes to this project are written here. The format follows
   `@johnmorrisdotca/hitotsu/react`.
 - A static demo, published to GitHub Pages.
 
-[Unreleased]: https://github.com/johnmorrisdotca/hitotsu/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/johnmorrisdotca/hitotsu/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/johnmorrisdotca/hitotsu/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/johnmorrisdotca/hitotsu/compare/v0.1.0...v1.0.0
 [0.1.0]: https://github.com/johnmorrisdotca/hitotsu/releases/tag/v0.1.0
