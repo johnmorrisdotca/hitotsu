@@ -3,6 +3,13 @@
 Thank you for wanting to help. Bug reports, rule questions and pull requests
 are all welcome.
 
+## Before you start
+
+Open an issue first for anything bigger than a typo, so we can agree on the
+shape before you spend time on it. This file says what is particular to
+Hitotsu; the family's shared guidance is at
+[github.com/johnmorrisdotca/.github](https://github.com/johnmorrisdotca/.github/blob/main/CONTRIBUTING.md).
+
 ## Reporting a bug
 
 Open an issue with the house rules the table played, what happened, and what
@@ -64,6 +71,12 @@ pnpm test:package     # packed, installed from the tarball, and used as publishe
 - A rule change comes with a test in `src/rules.test.ts` that plays the
   position it is about.
 - Keep the core free of dependencies and of the DOM.
+- Words a player reads come in English and Japanese. If you cannot write the
+  Japanese, say so in the pull request.
+- Option values and names are kebab case, as `<hitotsu-table>`'s attributes are.
+- Art and sound are CC0 or public domain only, checked at the source, and
+  credited in `docs/credits.md`. No GPL or LGPL code.
+- Node 22 or later.
 - A README table or example is held to the code by `src/docs.test.js`: change
   both together.
 - Add a line under **Unreleased** in `CHANGELOG.md`.
