@@ -22,6 +22,8 @@ export type HitotsuStrings = {
   won: (who: string) => string;
   again: string;
   stock: (count: number) => string;
+  /** The label under the card in play, matching the one under the draw pile so the two sit level. "In play" when left out. */
+  inPlay?: string;
   colour: Record<"R" | "Y" | "G" | "B", string>;
   news: {
     caught: (who: string) => string;
@@ -37,7 +39,7 @@ export type HitotsuStrings = {
   };
 };
 
-export const HITOTSU_STRINGS: HitotsuStrings = {
+export const HITOTSU_STRINGS: Required<HitotsuStrings> = {
   you: "You",
   computer: (n) => `Computer ${n}`,
   yourTurn: "Your turn",
@@ -60,6 +62,7 @@ export const HITOTSU_STRINGS: HitotsuStrings = {
   won: (who) => `${who} won.`,
   again: "Play again",
   stock: (count) => `${count} left to draw`,
+  inPlay: "In play",
   colour: { R: "red", Y: "yellow", G: "green", B: "blue" },
   news: {
     caught: (who) => `${who} forgot to call Hitotsu!: two cards.`,

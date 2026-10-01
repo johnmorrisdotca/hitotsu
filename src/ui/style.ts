@@ -29,13 +29,16 @@ export const CSS = `
 .ht-seat b { font-size: .95rem; }
 .ht-seat span { font-size: .8rem; color: var(--ht-muted); }
 .ht-felt { position: relative; border-radius: var(--ht-radius); background: radial-gradient(circle at 50% 40%, var(--ht-felt), var(--ht-felt-deep)); color: var(--ht-felt-ink); padding: 18px 16px; display: grid; justify-items: center; gap: 10px; }
-.ht-piles { display: flex; align-items: center; gap: 22px; }
+.ht-piles { display: flex; align-items: flex-start; justify-content: center; gap: 22px; }
 .ht-card { display: block; width: var(--ht-card); aspect-ratio: 5 / 7; border-radius: 9% / 6.5%; box-shadow: 0 1px 3px rgba(0,0,0,.4); }
 .ht-card svg { display: block; width: 100%; height: 100%; }
 .ht-piles .ht-card { width: calc(var(--ht-card) * 1.25); }
-.ht-stock { display: grid; justify-items: center; gap: 4px; font-size: .75rem; opacity: .85; background: none; border: 0; padding: 0; }
+/* The draw pile and the card in play are the same box, a card over a one-line caption, so the two cards sit level. */
+.ht-stock, .ht-pile { display: grid; justify-items: center; gap: 4px; background: none; border: 0; padding: 0; color: inherit; }
+.ht-stock > span:last-child, .ht-pile > span:last-child { font-size: .75rem; line-height: 1.2; opacity: .85; white-space: nowrap; }
 .ht-stock:disabled { cursor: default; }
-.ht-dir { font-size: 1.6rem; opacity: .8; }
+/* The turn's direction sits level with the middle of the cards, not of the cards and their captions. */
+.ht-dir { font-size: 1.6rem; line-height: 1; opacity: .8; align-self: flex-start; margin-top: calc(var(--ht-card) * 1.25 * 0.7 - .8rem); }
 .ht-status { margin: 0; font-weight: 600; text-align: center; }
 .ht-news { margin: 0; min-height: 1.3em; font-size: .85rem; opacity: .85; text-align: center; }
 .ht-hand { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; padding-top: 6px; }
@@ -44,8 +47,8 @@ export const CSS = `
 .ht-hand button[data-playable] .ht-card { box-shadow: 0 0 0 3px var(--ht-playable), 0 3px 6px rgba(0,0,0,.4); }
 .ht-hand button:disabled { cursor: default; }
 .ht-hand button:disabled .ht-card { filter: saturate(.55) brightness(.92); }
-.ht-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; min-height: 42px; }
-.ht-actions button { border: 1px solid var(--ht-rule); background: var(--ht-surface); border-radius: 999px; padding: 8px 16px; }
+.ht-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; min-height: 44px; }
+.ht-actions button { border: 1px solid var(--ht-rule); background: var(--ht-surface); border-radius: 999px; padding: 8px 16px; min-height: 44px; }
 .ht-actions button[data-strong] { background: var(--ht-accent); color: var(--ht-accent-ink); border-color: var(--ht-accent); }
 .ht-actions button[data-on] { background: var(--ht-ink); color: var(--ht-surface); }
 .ht-actions button[data-colour] { color: #fff; border-color: transparent; }

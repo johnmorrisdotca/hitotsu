@@ -57,7 +57,7 @@ Each version is a GitHub release with the built package attached. Install it
 by that file's address, pinned to the version:
 
 ```sh
-pnpm add https://github.com/johnmorrisdotca/hitotsu/releases/download/v1.0.1/johnmorrisdotca-hitotsu-1.0.1.tgz
+pnpm add https://github.com/johnmorrisdotca/hitotsu/releases/download/v1.1.0/johnmorrisdotca-hitotsu-1.1.0.tgz
 ```
 
 It is not on npm yet.
@@ -273,6 +273,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md). In short:
 pnpm install
 pnpm check   # lint, types and tests: the same as CI
 pnpm site    # build the demo into ./site, then serve it
+pnpm test:demo   # build the demo and tap through it in a real browser
 ```
 
 Please follow the [code of conduct](./CODE_OF_CONDUCT.md).

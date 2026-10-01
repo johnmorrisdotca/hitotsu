@@ -6,6 +6,26 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-10-01
+
+### Changed
+
+- **The draw pile and the card in play sit level.** They are now the same box,
+  a card over a one-line caption (the new optional `inPlay` string, "In play"
+  unless said), so the two cards share a top and a bottom and the direction
+  mark sits level with the middle of them. The draw pile's caption used to be
+  taller than the card in play's and pushed its card up.
+- The table's buttons (Keep it, Take, Challenge, a colour) are at least 44
+  pixels tall.
+
+### Added
+
+- The demo is on the family's standard: the shared header and footer, English
+  and Japanese (the Japanese not yet read by a native reader), the family's
+  cloth patches (the table wears the cloth chosen), rules and number of
+  computers chosen with a press, and an API reference page in the same frame.
+  It is tested in a real browser on a phone and a desk (`pnpm test:demo`).
+
 ## [1.0.1] - 2026-09-30
 
 ### Fixed

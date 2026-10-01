@@ -97,7 +97,7 @@ function newsLine(news: readonly HitotsuNews[], t: HitotsuStrings, name: (seat: 
 export function mountHitotsu(target: HTMLElement, options: HitotsuTableOptions = {}): HitotsuHandle {
   const doc = target.ownerDocument;
   injectStyle(doc);
-  const t: HitotsuStrings = { ...HITOTSU_STRINGS, ...options.strings };
+  const t: Required<HitotsuStrings> = { ...HITOTSU_STRINGS, ...options.strings };
   const root = h("div", { class: "ht-root" });
   for (const [name, value] of Object.entries(options.theme ?? {})) root.style.setProperty(name, value);
   target.append(root);
@@ -195,9 +195,10 @@ export function mountHitotsu(target: HTMLElement, options: HitotsuTableOptions =
                 ? `${t.yourTurn}. ${t.follow(t.colour[game.colour])}`
                 : t.toPlay(name(game.toPlay));
 
-    const stock = h("button", { type: "button", class: "ht-stock", disabled: drawMove === null, "aria-label": t.draw, onclick: () => drawMove !== null && play(drawMove) }, cardElement(null), t.stock(game.stock.length));
-    const pile = top === null ? h("span") : cardElement(top, top[0] === "W" ? game.colour : undefined);
-    pile.setAttribute("aria-label", top === null ? "" : hitotsuWords(top));
+    const stock = h("button", { type: "button", class: "ht-stock", "data-testid": "ht-stock", disabled: drawMove === null, "aria-label": t.draw, onclick: () => drawMove !== null && play(drawMove) }, cardElement(null), h("span", {}, t.stock(game.stock.length)));
+    const inPlay = top === null ? h("span", { class: "ht-card", "aria-hidden": "true", style: "visibility:hidden" }) : cardElement(top, top[0] === "W" ? game.colour : undefined);
+    if (top !== null) inPlay.setAttribute("aria-label", hitotsuWords(top));
+    const pile = h("span", { class: "ht-pile", "data-testid": "ht-pile" }, inPlay, h("span", {}, t.inPlay));
     refill(
       root,
       h(

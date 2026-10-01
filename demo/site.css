@@ -1,0 +1,31 @@
+/* Hitotsu's own: the table's setup, the deck, and the API reference. Everything shared is in family.css, loaded before this. */
+:root { --intro-room: 9.5rem; --intro-room-wide: 5.5rem; }
+
+.setup { display: grid; gap: 8px; margin-bottom: 14px; }
+.setup .fam-row { gap: 8px 14px; }
+/* Two lines kept for the rules' note in either language, so choosing a rule never moves the table. */
+.rules-note { min-height: 2.7em; font-size: .85rem; }
+.fam-seg button { min-width: 44px; }
+
+/* The table is the package's own; this keeps one steady box round it. */
+#table { min-width: 0; margin-bottom: 8px; }
+#table .ht-felt { min-height: 270px; align-content: start; }
+
+.deck { display: grid; grid-template-columns: repeat(auto-fill, minmax(54px, 1fr)); gap: 6px; }
+.deck svg { width: 100%; height: auto; filter: drop-shadow(0 1px 1px rgba(0,0,0,.3)); user-select: none; -webkit-user-select: none; }
+
+/* The API reference: one page, a section for each entry point. */
+.api-contents ul { list-style: none; margin: 8px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr)); gap: 0 12px; font-size: .9rem; }
+.api-contents li a { display: inline-flex; align-items: center; min-height: 44px; overflow-wrap: anywhere; }
+.api-contents p { margin: 0 0 4px; }
+.api-entry { margin-top: 28px; min-width: 0; }
+.api-entry h2 { font-size: 1.15rem; margin: 0 0 6px; overflow-wrap: anywhere; }
+.api-names { display: flex; flex-wrap: wrap; gap: 2px 12px; margin: 0 0 12px; font-size: .85rem; }
+.api-names a { font-family: var(--mono); display: inline-flex; align-items: center; min-height: 32px; }
+.api-entry article { border-top: 1px solid var(--rule); padding: 12px 0; display: grid; gap: 8px; min-width: 0; }
+.api-entry article > * { min-width: 0; max-width: 100%; }
+.api-entry h3 { margin: 0; font-size: 1rem; font-family: var(--mono); overflow-wrap: anywhere; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.api-entry h3 .fam-badge { font-family: var(--font); font-weight: 600; }
+.api-entry p { margin: 0; line-height: 1.5; max-width: 72ch; }
+.api-entry p.api-names { max-width: none; }
+.api-entry pre { white-space: pre-wrap; overflow-wrap: anywhere; }
