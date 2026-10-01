@@ -14,8 +14,8 @@ Match the colour or the number, and call Hitotsu! with one card left. Two to eig
 <p align="center"><a href="https://johnmorrisdotca.github.io/hitotsu/"><strong>Play a hand →</strong></a> · <a href="https://johnmorrisdotca.github.io/hitotsu/api.html">API reference</a></p>
 
 <p align="center">
-  <img src="docs/desktop.jpg" alt="A table of four: you and three computers along the top, the stock and a blue nine on the felt, and your hand of three with the blue draw two glowing as playable" width="600">
-  <img src="docs/phone.jpg" alt="Party mode on a phone in dark mode: a red skip on the pile and a hand of three, one of them a wild draw four" width="220">
+  <img src="docs/desktop.jpg" alt="A table of four under the demo's header, with its language chooser and five cloth patches: you and three computers along the top, the stock and a blue draw two on the felt, and your hand of nine with the blue reverse glowing as playable and a Keep it button" width="600">
+  <img src="docs/phone.jpg" alt="Party mode on a phone in dark mode, in Japanese: the four seats, a red draw two on the pile, and a hand of eight with the red skip glowing as playable" width="220">
 </p>
 
 *Hitotsu* means "one" in Japanese: the call a player makes with one card
@@ -254,6 +254,13 @@ src/
 
 Tests sit beside the code they test (`*.test.ts`). `scripts/` builds the demo
 and its API reference page, and `demo/` is the page published on GitHub Pages.
+
+## The name
+
+*Hitotsu* (一つ) is Japanese for "one", the word for a single thing when you
+count: "one card" is *hitotsu*. It is said in three beats, *hi-to-tsu*. It is
+also the call at this table, made with one card left in your hand, which is
+why the game and the package carry it.
 
 ## Roadmap
 
