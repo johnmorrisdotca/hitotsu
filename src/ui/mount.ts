@@ -6,9 +6,10 @@ import { hitotsuComputer, hitotsuComputerJump } from "../computer.ts";
 import { hitotsuWinners, playHitotsu, startHitotsu } from "../rules.ts";
 import { callMatters, movesFor, playableFor, waysFor } from "../seat.ts";
 import type { HitotsuCard, HitotsuColour, HitotsuGame, HitotsuMove, HitotsuNews, HitotsuOptions } from "../types.ts";
+import { createCardSounds, type CardSounds } from "./cardSounds.ts";
 import { h, refill } from "./dom.ts";
 import { injectStyle } from "./style.ts";
-import { HITOTSU_STRINGS, type HitotsuStrings } from "./strings.ts";
+import { hitotsuLanguageOf, hitotsuStrings, type HitotsuLanguage, type HitotsuStrings } from "./strings.ts";
 
 export type HitotsuTableOptions = {
   /** Everybody at the table, seat 0 first: seat 0 is the person at this screen, the rest computers. Two to eight; four by default. */
@@ -19,12 +20,16 @@ export type HitotsuTableOptions = {
   size?: number;
   /** The seed the deals are shuffled from; a fresh one if not given. */
   seed?: number;
-  /** Words to use instead of the built-in ones. */
+  /** The language of the table's words, `"en"` or `"ja"`. The page's own (`lang` on the element or an ancestor, or on the document) unless said. */
+  language?: HitotsuLanguage;
+  /** Words to use instead of the built-in ones, over whichever language is in use. */
   strings?: Partial<HitotsuStrings>;
   /** How long a computer thinks before it plays, in milliseconds. Long enough to jump in, where the table plays jump-in. */
   computerMs?: number;
   /** CSS variables for the table, such as `{ "--ht-felt": "#234" }`. */
   theme?: Record<`--ht-${string}`, string>;
+  /** Card sounds: `true` for the package's own (cards dealt, played, shuffled; Kenney's Casino Audio, CC0), or a `createCardSounds()` of your own. Off unless asked; nothing is fetched until the first sound. */
+  sound?: boolean | CardSounds;
   /** Called after every move, with the game it made. */
   onMove?: (game: HitotsuGame) => void;
 };
@@ -33,7 +38,7 @@ export type HitotsuHandle = {
   /** The game as it stands. */
   game(): HitotsuGame;
   /** Deal again, with any options changed. */
-  restart(options?: Omit<HitotsuTableOptions, "strings" | "theme" | "onMove">): void;
+  restart(options?: Omit<HitotsuTableOptions, "language" | "strings" | "theme" | "sound" | "onMove">): void;
   destroy(): void;
 };
 
@@ -97,11 +102,14 @@ function newsLine(news: readonly HitotsuNews[], t: HitotsuStrings, name: (seat: 
 export function mountHitotsu(target: HTMLElement, options: HitotsuTableOptions = {}): HitotsuHandle {
   const doc = target.ownerDocument;
   injectStyle(doc);
-  const t: Required<HitotsuStrings> = { ...HITOTSU_STRINGS, ...options.strings };
+  const language = options.language ?? hitotsuLanguageOf(target.closest("[lang]")?.getAttribute("lang") ?? doc.documentElement.lang);
+  const t: Required<HitotsuStrings> = { ...hitotsuStrings(language), ...options.strings };
   const root = h("div", { class: "ht-root" });
   for (const [name, value] of Object.entries(options.theme ?? {})) root.style.setProperty(name, value);
   target.append(root);
 
+  const ownSounds = options.sound === true ? createCardSounds() : null;
+  const sounds: CardSounds | null = ownSounds ?? (typeof options.sound === "object" ? options.sound : null);
   let settings = { players: options.players, rules: options.rules, size: options.size, seed: options.seed, computerMs: options.computerMs };
   let game: HitotsuGame;
   let chosen: HitotsuCard | null = null;
@@ -118,9 +126,17 @@ export function mountHitotsu(target: HTMLElement, options: HitotsuTableOptions =
   };
   const name = (seat: number) => game.players[seat] ?? `${seat + 1}`;
 
+  /** The sound a move makes: a card laid down, or cards drawn. */
+  const sayMove = (move: HitotsuMove, before: HitotsuGame) => {
+    if ("play" in move || "jump" in move) sounds?.play("play");
+    else if ("draw" in move) sounds?.play("deal");
+    else if ("take" in move) sounds?.play("deal", { count: before.pending });
+  };
+
   const play = (move: HitotsuMove) => {
     const next = playHitotsu(game, move);
     if (next === null) return;
+    sayMove(move, game);
     game = next;
     chosen = null;
     calling = false;
@@ -146,7 +162,7 @@ export function mountHitotsu(target: HTMLElement, options: HitotsuTableOptions =
   function actions(): HTMLElement {
     const bar = h("div", { class: "ht-actions" });
     if (game.phase === "over") {
-      bar.append(h("button", { type: "button", "data-strong": true, onclick: () => (deal(), render()) }, t.again));
+      bar.append(h("button", { type: "button", "data-strong": true, onclick: () => (deal(), sounds?.play("shuffle"), sounds?.play("deal", { count: game.hands[0]?.length ?? 1, delay: 700 }), render()) }, t.again));
       return bar;
     }
     const mine = movesFor(game, 0);
@@ -192,12 +208,12 @@ export function mountHitotsu(target: HTMLElement, options: HitotsuTableOptions =
             : game.drawn !== null
               ? t.drew(name(game.toPlay))
               : game.toPlay === 0
-                ? `${t.yourTurn}. ${t.follow(t.colour[game.colour])}`
+                ? `${t.yourTurn}${language === "ja" ? "。" : ". "}${t.follow(t.colour[game.colour])}`
                 : t.toPlay(name(game.toPlay));
 
     const stock = h("button", { type: "button", class: "ht-stock", "data-testid": "ht-stock", disabled: drawMove === null, "aria-label": t.draw, onclick: () => drawMove !== null && play(drawMove) }, cardElement(null), h("span", {}, t.stock(game.stock.length)));
     const inPlay = top === null ? h("span", { class: "ht-card", "aria-hidden": "true", style: "visibility:hidden" }) : cardElement(top, top[0] === "W" ? game.colour : undefined);
-    if (top !== null) inPlay.setAttribute("aria-label", hitotsuWords(top));
+    if (top !== null) inPlay.setAttribute("aria-label", hitotsuWords(top, language));
     const pile = h("span", { class: "ht-pile", "data-testid": "ht-pile" }, inPlay, h("span", {}, t.inPlay));
     refill(
       root,
@@ -219,7 +235,7 @@ export function mountHitotsu(target: HTMLElement, options: HitotsuTableOptions =
         "div",
         { class: "ht-hand" },
         ...(game.hands[0] ?? []).map((card) => {
-          const button = h("button", { type: "button", "aria-label": hitotsuWords(card), disabled: !playable.includes(card), "data-playable": playable.includes(card), title: game.toPlay !== 0 && playable.includes(card) ? t.jumpIn : undefined, onclick: () => tapCard(card) });
+          const button = h("button", { type: "button", "aria-label": hitotsuWords(card, language), disabled: !playable.includes(card), "data-playable": playable.includes(card), title: game.toPlay !== 0 && playable.includes(card) ? t.jumpIn : undefined, onclick: () => tapCard(card) });
           button.append(cardElement(card));
           return button;
         }),
@@ -238,10 +254,13 @@ export function mountHitotsu(target: HTMLElement, options: HitotsuTableOptions =
       settings = { ...settings, ...next };
       if (next.seed === undefined) settings.seed = undefined;
       deal();
+      sounds?.play("shuffle");
+      sounds?.play("deal", { count: game.hands[0]?.length ?? 1, delay: 700 });
       render();
     },
     destroy() {
       if (timer !== undefined) clearTimeout(timer);
+      ownSounds?.close();
       root.remove();
     },
   };

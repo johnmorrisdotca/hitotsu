@@ -49,5 +49,7 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
+      - name: The command line, as a child process
+        run: node scripts/check-cli.mjs
       - name: The package as npm packs it installs, imports and runs
         run: node scripts/check-package.mjs

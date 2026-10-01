@@ -6,6 +6,9 @@ import { fileURLToPath } from "node:url";
 
 import { expect, test } from "@playwright/test";
 
+import { runCli } from "../dist/cli.js";
+import { hitotsuWords } from "../dist/index.js";
+
 const site = join(dirname(fileURLToPath(import.meta.url)), "..", "site");
 const TYPES = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css", ".json": "application/json", ".svg": "image/svg+xml" };
 
@@ -201,5 +204,77 @@ test("Help is off at first, and on it shows a line under each option row, in eit
   await expect(page.locator("[data-help-switch]")).toHaveAttribute("aria-pressed", "true");
   await page.locator("[data-help-switch]").click();
   await expect(lines.first()).toBeHidden();
+  expect(errors).toEqual([]);
+});
+
+test("an address opens the deal it names, and the command line shows the same cards", async ({ page }) => {
+  const errors = await open(page, "?lang=en&rules=party&computers=5&seed=42");
+  await expect(seats(page)).toHaveCount(6);
+  await expect(page.locator('[data-testid="rules"] [data-mode="party"]')).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator('[data-testid="counts"] [data-count="5"]')).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator(".ht-hand button")).toHaveCount(5);
+  // The page's own account of how to get this table in a page of your own names this deal.
+  await expect(page.locator('[data-testid="using-tag"]')).toContainText('<hitotsu-table rules="party" computers="5" seed="42"></hitotsu-table>');
+  await expect(page.locator('[data-testid="using-script"]')).toContainText("seed: 42");
+  const command = await page.locator('[data-testid="using-cli"]').textContent();
+  expect(command).toContain("deal --seed 42 --players 6 --rules party");
+  const dealt = runCli(["deal", "--seed", "42", "--players", "6", "--rules", "party"]).out.split("\n")[0].replace("Seat 1: ", "").split(" ");
+  const shown = await page.locator(".ht-hand button").evaluateAll((buttons) => buttons.map((button) => button.getAttribute("aria-label")));
+  expect([...shown].sort()).toEqual(dealt.map((card) => hitotsuWords(`${card}0`)).sort());
+  await sound(page, errors);
+});
+
+test("the Sound switch is off at first, and on it is written into the tag", async ({ page }) => {
+  const errors = await open(page, "?lang=en&seed=42");
+  await expect(page.locator('[data-testid="sound"] [data-sound="off"]')).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator('[data-testid="using-tag"]')).not.toContainText(" sound");
+  await tap(page, '[data-testid="sound"] [data-sound="on"]');
+  await expect(page.locator('[data-testid="sound"] [data-sound="on"]')).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator('[data-testid="using-tag"]')).toContainText(' sound></hitotsu-table>');
+  await tap(page, '[data-testid="sound"] [data-sound="off"]');
+  await expect(page.locator('[data-testid="using-tag"]')).not.toContainText(" sound");
+  await sound(page, errors);
+});
+
+test("in Japanese the tag says so, and the same deal stays on the table", async ({ page }) => {
+  await open(page, "?lang=en&seed=42");
+  const before = await page.locator(".ht-hand button").count();
+  const cards = () => page.locator(".ht-hand button").evaluateAll((buttons) => buttons.length);
+  await tap(page, 'button[data-lang="ja"]');
+  await expect(page.locator('[data-testid="using-tag"]')).toContainText('lang="ja"');
+  await expect(page.locator('[data-testid="using-tag"]')).toContainText('seed="42"');
+  expect(await cards()).toBe(before);
+  const label = await page.locator(".ht-hand button").first().getAttribute("aria-label");
+  expect(label).toMatch(/[赤黄緑青ワ]/);
+});
+
+test("the tag works on a page of its own: <hitotsu-table>, its attributes and its event", async ({ page }) => {
+  const errors = await open(page, "?lang=en");
+  await page.route("http://hitotsu.test/tag.html", (route) =>
+    route.fulfill({
+      contentType: "text/html",
+      body: `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"></head><body>
+        <hitotsu-table id="t" rules="party" computers="2" seed="42"></hitotsu-table>
+        <script type="module">
+          window.moves = 0;
+          document.getElementById("t").addEventListener("hitotsu-move", () => (window.moves += 1));
+          import("./dist/element-define.js").then(() => (document.documentElement.dataset.ready = "true"));
+        </script></body></html>`,
+    }),
+  );
+  await page.goto("http://hitotsu.test/tag.html");
+  await expect(page.locator("html")).toHaveAttribute("data-ready", "true");
+  await expect(seats(page)).toHaveCount(3);
+  await expect(page.locator(".ht-hand button")).toHaveCount(5);
+  await page.locator("#t").evaluate((el) => el.setAttribute("rules", "classic"));
+  await expect(page.locator(".ht-hand button")).toHaveCount(7);
+  await page.locator("#t").evaluate((el) => el.setAttribute("lang", "ja"));
+  await page.locator("#t").evaluate((el) => el.setAttribute("rules", "party"));
+  await page.locator("#t").evaluate((el) => el.setAttribute("rules", "classic"));
+  const playable = page.locator(".ht-hand button[data-playable='true']");
+  if ((await playable.count()) === 0) await tap(page, '[data-testid="ht-stock"]');
+  else await tap(page, playable.first());
+  await expect.poll(() => page.evaluate(() => window.moves)).toBeGreaterThan(0);
+  expect(await page.locator("#t").evaluate((el) => el.game.seed)).toBeGreaterThan(0);
   expect(errors).toEqual([]);
 });

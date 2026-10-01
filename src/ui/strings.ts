@@ -76,3 +76,58 @@ export const HITOTSU_STRINGS: Required<HitotsuStrings> = {
     drew: (who, count) => `${who} drew ${count === 1 ? "a card" : `${count} cards`}.`,
   },
 };
+
+/**
+ * The table's words in Japanese. Not yet reviewed by a native reader: a
+ * "Fix a translation" issue, naming the string, is welcome.
+ */
+export const HITOTSU_STRINGS_JA: Required<HitotsuStrings> = {
+  you: "あなた",
+  computer: (n) => `コンピューター${n}`,
+  yourTurn: "あなたの番",
+  toPlay: (who) => `${who}の番`,
+  follow: (colour) => `${colour}、同じ数字か記号、またはワイルドを出します。`,
+  facing: (who, count) => `${who}は${count}枚引くか、ドローカードを重ねます。`,
+  drew: (who) => `${who}が引きました。そのカードを出すか、持っておきます。`,
+  challengeOpen: (who, by) => `${who}は${by}のワイルドドローフォーに挑戦するか、引きます。`,
+  cards: (count) => `${count}枚`,
+  points: (count) => `${count}点`,
+  draw: "引く",
+  keep: "持っておく",
+  take: (count) => `${count}枚引く`,
+  challenge: "挑戦",
+  call: "ヒトツ！と言う",
+  called: "ヒトツ！と言いました",
+  pickColour: "色を選ぶ",
+  swapWith: (who) => `${who}と手札を交換`,
+  jumpIn: "割り込み！",
+  won: (who) => `${who}の勝ち。`,
+  again: "もう一度",
+  stock: (count) => `山札あと${count}枚`,
+  inPlay: "場のカード",
+  colour: { R: "赤", Y: "黄", G: "緑", B: "青" },
+  news: {
+    caught: (who) => `${who}は「ヒトツ！」と言い忘れました。2枚引きます。`,
+    took: (who, count) => `${who}は${count}枚引きました。`,
+    challenge: (who, by, guilty) => (guilty ? `${who}が${by}に挑戦しました。${by}はその色を持っていました。` : `${who}が${by}に挑戦しました。${by}はその色を持っていませんでした。`),
+    swap: (who, other) => `${who}は${other}と手札を交換しました。`,
+    rotate: "全員の手札が回りました。",
+    jump: (who) => `${who}が割り込みました！`,
+    skipped: (who) => `${who}は飛ばされます。`,
+    reversed: "順番が逆になります。",
+    drew: (who, count) => `${who}が${count}枚引きました。`,
+  },
+};
+
+/** The languages the table speaks: English, and Japanese (`"ja"`). */
+export type HitotsuLanguage = "en" | "ja";
+
+/** The table's words in a language: `HITOTSU_STRINGS` for `"en"`, `HITOTSU_STRINGS_JA` for `"ja"`. */
+export function hitotsuStrings(language: HitotsuLanguage): Required<HitotsuStrings> {
+  return language === "ja" ? HITOTSU_STRINGS_JA : HITOTSU_STRINGS;
+}
+
+/** The language a language tag such as `"ja"`, `"ja-JP"` or `"en-GB"` asks for: Japanese for any `ja`, English for everything else, and for nothing. */
+export function hitotsuLanguageOf(tag: string | null | undefined): HitotsuLanguage {
+  return /^ja(?:[-_]|$)/i.test(tag ?? "") ? "ja" : "en";
+}

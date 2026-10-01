@@ -9,6 +9,7 @@
  * table for several devices `./table.ts`, and a table to play in any page is
  * `mountHitotsu` in `./ui/mount.ts`, exported here too.
  */
+export * from "./version.ts";
 export * from "./types.ts";
 export * from "./constants.ts";
 export * from "./random.ts";
@@ -20,4 +21,4 @@ export * from "./codec.ts";
 export * from "./table.ts";
 export * from "./card.ts";
 export { mountHitotsu, type HitotsuHandle, type HitotsuTableOptions } from "./ui/mount.ts";
-export { HITOTSU_STRINGS, type HitotsuStrings } from "./ui/strings.ts";
+export { HITOTSU_STRINGS, HITOTSU_STRINGS_JA, hitotsuLanguageOf, hitotsuStrings, type HitotsuLanguage, type HitotsuStrings } from "./ui/strings.ts";

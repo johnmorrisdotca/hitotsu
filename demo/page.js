@@ -1,7 +1,8 @@
 // The Hitotsu demo: a table against the computers, set up with a few presses. The table is the package's own
 // (`mountHitotsu`); this page chooses the rules and how many computers, gives it the family's cloth, and says
 // everything in English or Japanese.
-import { HITOTSU_CLASSIC, HITOTSU_DECK, HITOTSU_PARTY, hitotsuCardSvg, mountHitotsu } from "./dist/index.js";
+import { HITOTSU_CLASSIC, HITOTSU_DECK, HITOTSU_PARTY, hitotsuCardSvg, hitotsuStrings, mountHitotsu } from "./dist/index.js";
+import { createCardSounds } from "./dist/card-sounds.js";
 
 const $ = (id) => document.getElementById(id);
 
@@ -25,6 +26,18 @@ const WORDS = {
     pageDeck: "The deck",
     pageDeckNote: "108 cards in four colours. Each colour also has an element in its corners (火 土 木 水), so no card is told by colour alone.",
     foot: "Open source under the MIT licence. Nothing here is stored or sent anywhere.",
+    pageSound: "Sound",
+    pageSoundOn: "On",
+    pageSoundOff: "Off",
+    pageCopyLink: "Copy link to this deal",
+    pageCopied: "Copied",
+    pageCopyFailed: "Copy the address bar",
+    pageUsing: "Using it",
+    pageUsingNote: "The table above, as you would put it in your own page, or deal it on the command line. The seed is this deal's, so the command line shows the same cards.",
+    pageUsingTag: "As a tag",
+    pageUsingScript: "With a script",
+    pageUsingCli: "On the command line",
+    pageCopy: "Copy",
   },
   ja: {
     pitch: "色か数字をそろえて出し、手札が1枚になったら「ヒトツ！」と言います。コンピューター1〜7人と、クラシックかパーティーのルールで遊べます。",
@@ -44,64 +57,44 @@ const WORDS = {
     pageDeck: "カード",
     pageDeckNote: "4色108枚。色ごとに四隅の元素（火 土 木 水）もあるので、色だけで見分ける必要はありません。",
     foot: "MITライセンスのオープンソースです。ここでは何も保存せず、どこにも送りません。",
+    pageSound: "音",
+    pageSoundOn: "あり",
+    pageSoundOff: "なし",
+    pageCopyLink: "この配りのリンクをコピー",
+    pageCopied: "コピーしました",
+    pageCopyFailed: "アドレスバーからコピーしてください",
+    pageUsing: "使い方",
+    pageUsingNote: "上のテーブルを、自分のページに置くときの書き方と、コマンドラインで配る方法です。シードはこの配りのものなので、コマンドラインでも同じカードが出ます。",
+    pageUsingTag: "タグで",
+    pageUsingScript: "スクリプトで",
+    pageUsingCli: "コマンドラインで",
+    pageCopy: "コピー",
   },
 };
 
-// The table's own words in Japanese. Not yet reviewed by a native reader.
-const TABLE_JA = {
-  you: "あなた",
-  computer: (n) => `コンピューター${n}`,
-  yourTurn: "あなたの番",
-  toPlay: (who) => `${who}の番`,
-  follow: (colour) => `${colour}、同じ数字か記号、またはワイルドを出します。`,
-  facing: (who, count) => `${who}は${count}枚引くか、ドローカードを重ねます。`,
-  drew: (who) => `${who}が引きました。そのカードを出すか、持っておきます。`,
-  challengeOpen: (who, by) => `${who}は${by}のワイルドドローフォーに挑戦するか、引きます。`,
-  cards: (count) => `${count}枚`,
-  points: (count) => `${count}点`,
-  draw: "引く",
-  keep: "持っておく",
-  take: (count) => `${count}枚引く`,
-  challenge: "挑戦",
-  call: "ヒトツ！と言う",
-  called: "ヒトツ！と言いました",
-  pickColour: "色を選ぶ",
-  swapWith: (who) => `${who}と手札を交換`,
-  jumpIn: "割り込み！",
-  won: (who) => `${who}の勝ち。`,
-  again: "もう一度",
-  stock: (count) => `山札あと${count}枚`,
-  inPlay: "場のカード",
-  colour: { R: "赤", Y: "黄", G: "緑", B: "青" },
-  news: {
-    caught: (who) => `${who}は「ヒトツ！」と言い忘れました。2枚引きます。`,
-    took: (who, count) => `${who}は${count}枚引きました。`,
-    challenge: (who, by, guilty) => (guilty ? `${who}が${by}に挑戦しました。${by}はその色を持っていました。` : `${who}が${by}に挑戦しました。${by}はその色を持っていませんでした。`),
-    swap: (who, other) => `${who}は${other}と手札を交換しました。`,
-    rotate: "全員の手札が回りました。",
-    jump: (who) => `${who}が割り込みました！`,
-    skipped: (who) => `${who}は飛ばされます。`,
-    reversed: "順番が逆になります。",
-    drew: (who, count) => `${who}が${count}枚引きました。`,
-  },
-};
-
-let mode = "classic";
-let computers = 3;
+const asked = new URLSearchParams(location.search);
+const seatCounts = [1, 3, 5, 7];
+let mode = asked.get("rules") === "party" ? "party" : "classic";
+let computers = seatCounts.includes(Number(asked.get("computers"))) ? Number(asked.get("computers")) : 3;
+let seed = /^\d{1,10}$/.test(asked.get("seed") ?? "") && Number(asked.get("seed")) >= 1 && Number(asked.get("seed")) <= 2147483647 ? Number(asked.get("seed")) : undefined;
 let table = null;
+// The sounds are the package's own, off until the Sound switch says On.
+const sounds = createCardSounds({ muted: true });
 
 const language = familyLanguage({
   id: "hitotsu",
   words: WORDS,
   onChange: () => {
+    // The same deal, in the other language.
+    seed = table.game().seed;
     mount();
     note();
+    using();
   },
 });
 
-const tableWords = () => (language.lang === "ja" ? TABLE_JA : {});
 const chosen = () => {
-  const words = language.lang === "ja" ? TABLE_JA : { you: "You", computer: (n) => `Computer ${n}` };
+  const words = hitotsuStrings(language.lang === "ja" ? "ja" : "en");
   return {
     rules: mode === "party" ? HITOTSU_PARTY : HITOTSU_CLASSIC,
     players: [words.you, ...Array.from({ length: computers }, (_, at) => words.computer(at + 1))],
@@ -123,7 +116,9 @@ const THEME = {
 
 function mount() {
   table?.destroy();
-  table = mountHitotsu($("table"), { ...chosen(), strings: tableWords(), theme: THEME, computerMs: window.hitotsuDelay ?? undefined });
+  table = mountHitotsu($("table"), { ...chosen(), seed, language: language.lang === "ja" ? "ja" : "en", sound: sounds, theme: THEME, computerMs: window.hitotsuDelay ?? undefined, onMove: using });
+  seed = undefined;
+  using();
 }
 
 function note() {
@@ -140,6 +135,7 @@ for (const button of $("rules").children) {
     press("rules", "mode", mode);
     note();
     table.restart(chosen());
+    using();
   });
 }
 for (const button of $("counts").children) {
@@ -147,13 +143,68 @@ for (const button of $("counts").children) {
     computers = Number(button.dataset.count);
     press("counts", "count", computers);
     table.restart(chosen());
+    using();
   });
 }
-$("deal").addEventListener("click", () => table.restart(chosen()));
+$("deal").addEventListener("click", () => {
+  table.restart(chosen());
+  using();
+});
+
+for (const button of $("sound").children) {
+  button.addEventListener("click", () => {
+    const on = button.dataset.sound === "on";
+    sounds.setMuted(!on);
+    press("sound", "sound", on ? "on" : "off");
+    if (on) sounds.play("deal");
+    using();
+  });
+}
+
+/** Put text on the clipboard and say so on the button for a moment. */
+async function copy(button, text, label) {
+  let said = language.word("pageCopied");
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch {
+    said = language.word("pageCopyFailed");
+  }
+  button.textContent = said;
+  button.dataset.said = "true";
+  setTimeout(() => {
+    button.textContent = language.word(label);
+    delete button.dataset.said;
+  }, 1500);
+}
+
+/** The address of this deal: the rules, the computers and the seed, and the language if it was asked for. */
+function dealLink() {
+  const link = new URL(location.href);
+  link.search = "";
+  link.searchParams.set("rules", mode);
+  link.searchParams.set("computers", String(computers));
+  link.searchParams.set("seed", String(table.game().seed));
+  if (language.asked !== null) link.searchParams.set("lang", language.asked);
+  return link.href;
+}
+$("share").addEventListener("click", () => copy($("share"), dealLink(), "pageCopyLink"));
+
+/** The three ways to put this table in a page of your own, written out for what is on the screen. */
+function using() {
+  const lang = language.lang === "ja" ? "ja" : "en";
+  const seedNow = table.game().seed;
+  const sound = sounds.muted ? "" : " sound";
+  $("using-tag").textContent = `<script type="module" src="https://cdn.jsdelivr.net/npm/@johnmorrisdotca/hitotsu@1/dist/element-define.js"></script>\n<hitotsu-table rules="${mode}" computers="${computers}" seed="${seedNow}"${lang === "ja" ? ' lang="ja"' : ""}${sound}></hitotsu-table>`;
+  $("using-script").textContent = `import { ${mode === "party" ? "HITOTSU_PARTY" : "HITOTSU_CLASSIC"}, mountHitotsu } from "@johnmorrisdotca/hitotsu";\n\nmountHitotsu(document.getElementById("table"), {\n  rules: ${mode === "party" ? "HITOTSU_PARTY" : "HITOTSU_CLASSIC"},\n  players: [${chosen().players.map((name) => JSON.stringify(name)).join(", ")}],\n  seed: ${seedNow},\n  language: "${lang}",${sound === "" ? "" : "\n  sound: true,"}\n});`;
+  $("using-cli").textContent = `npx @johnmorrisdotca/hitotsu deal --seed ${seedNow} --players ${computers + 1} --rules ${mode}\nnpx @johnmorrisdotca/hitotsu play --seed ${seedNow} --players ${computers + 1} --rules ${mode}`;
+}
+for (const id of ["tag", "script", "cli"]) $(`copy-${id}`).addEventListener("click", () => copy($(`copy-${id}`), $(`using-${id}`).textContent, "pageCopy"));
 
 const shown = HITOTSU_DECK.filter((card) => card.endsWith("0"));
 $("deck").innerHTML = [...shown, null].map((card) => hitotsuCardSvg(card, { width: 100 })).join("");
 
+press("rules", "mode", mode);
+press("counts", "count", computers);
 mount();
 note();
 document.documentElement.dataset.ready = "true";

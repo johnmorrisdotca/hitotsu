@@ -17,12 +17,35 @@
               <button type="button" data-count="7" aria-pressed="false">7</button>
             </div>
           </div>
+          <div class="fam-row" data-help-en="Card sounds: a card dealt, played and the deck shuffled. Off until you turn them on." data-help-ja="カードの音（配る・出す・切る）です。オンにするまでは鳴りません。">
+            <span class="fam-label" id="sound-label" data-say="pageSound"></span>
+            <div class="fam-seg" id="sound" role="group" aria-labelledby="sound-label" data-testid="sound">
+              <button type="button" data-sound="off" aria-pressed="true" data-say="pageSoundOff"></button>
+              <button type="button" data-sound="on" aria-pressed="false" data-say="pageSoundOn"></button>
+            </div>
+          </div>
           <button type="button" class="fam-button" data-primary="true" id="deal" data-testid="deal" data-say="pageDeal" data-tip-en="Shuffle and deal a new game with the same rules and players" data-tip-ja="同じルールと人数で、新しく配り直します"></button>
         </div>
         <p class="fam-fine rules-note" id="rules-note" data-testid="rules-note"></p>
       </section>
       <div id="table" data-testid="table"></div>
+      <div class="fam-actions">
+        <button type="button" class="fam-button" id="share" data-testid="share" data-say="pageCopyLink" data-tip-en="Copy an address that opens this deal again: the same rules, computers and shuffle" data-tip-ja="同じルール・人数・配りをもう一度開くアドレスをコピーします"></button>
+      </div>
       __UNREVIEWED__
+      <section aria-labelledby="using-title">
+        <h2 id="using-title" data-say="pageUsing"></h2>
+        <p class="fam-muted" data-say="pageUsingNote"></p>
+        <h3 class="fam-label" data-say="pageUsingTag"></h3>
+        <pre id="using-tag" data-testid="using-tag" tabindex="0"></pre>
+        <div class="fam-actions"><button type="button" class="fam-button" id="copy-tag" data-say="pageCopy"></button></div>
+        <h3 class="fam-label" data-say="pageUsingScript"></h3>
+        <pre id="using-script" data-testid="using-script" tabindex="0"></pre>
+        <div class="fam-actions"><button type="button" class="fam-button" id="copy-script" data-say="pageCopy"></button></div>
+        <h3 class="fam-label" data-say="pageUsingCli"></h3>
+        <pre id="using-cli" data-testid="using-cli" tabindex="0"></pre>
+        <div class="fam-actions"><button type="button" class="fam-button" id="copy-cli" data-say="pageCopy"></button></div>
+      </section>
       <section aria-labelledby="deck-title">
         <h2 id="deck-title" data-say="pageDeck"></h2>
         <p class="fam-muted" data-say="pageDeckNote"></p>

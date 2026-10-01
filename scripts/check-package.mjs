@@ -99,12 +99,12 @@ for (const name of Object.keys(pkg.bin ?? {})) {
     console.error(`FAIL ${name} --version said ${version}`);
     process.exit(1);
   }
-  const dealt = JSON.parse(run(command, ["deal", "--hands", "2", "--each", "2", "--seed", "42", "--json"], project, true));
-  if (JSON.stringify(dealt.hands) !== '[["3C","2H"],["9C","KH"]]' || dealt.rest.length !== 48) {
-    console.error(`FAIL ${name} dealt ${JSON.stringify(dealt.hands)}`);
+  const played = JSON.parse(run(command, ["play", "--seed", "42", "--players", "3", "--rules", "party", "--json"], project, true));
+  if (played.moves !== 28 || played.winners.join() !== "1") {
+    console.error(`FAIL ${name} played ${JSON.stringify(played)}`);
     process.exit(1);
   }
-  console.log(`ok   ${name} --version and a seeded deal, as installed`);
+  console.log(`ok   ${name} --version and a seeded game, as installed`);
 }
 
 rmSync(scratch, { recursive: true, force: true });

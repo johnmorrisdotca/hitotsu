@@ -51,7 +51,7 @@ export function HitotsuCardImage({ card, called, ...svg }: { card: HitotsuCard |
 
 export type HitotsuTableProps = HitotsuTableOptions & { onReady?: (table: HitotsuHandle) => void } & Omit<HTMLAttributes<HTMLDivElement>, keyof HitotsuTableOptions>;
 
-const OPTION_NAMES = ["players", "rules", "size", "seed", "strings", "computerMs", "theme", "onMove", "onReady"] as const;
+const OPTION_NAMES = ["players", "rules", "size", "seed", "language", "strings", "sound", "computerMs", "theme", "onMove", "onReady"] as const;
 
 /**
  * A whole table, you against computers, as a React component:

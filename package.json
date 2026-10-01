@@ -1,6 +1,6 @@
 {
   "name": "@johnmorrisdotca/hitotsu",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Hitotsu, a colour-card shedding game for two to eight: the familiar play, the popular house rules as options (stacking, jump-in, sevens and zeros, draw to match, no bluffing), a computer player, a table for several devices, and its own deck. No dependencies.",
   "license": "MIT",
   "author": "John Morris <john@johnmorris.ca>",
@@ -13,17 +13,71 @@
     "url": "https://github.com/johnmorrisdotca/hitotsu/issues"
   },
   "type": "module",
-  "sideEffects": false,
+  "sideEffects": [
+    "./dist/element-define.js"
+  ],
   "keywords": [
+    "accessible-cards",
+    "bot-player",
+    "browser",
+    "bun",
+    "call-last-card",
+    "card-deck",
     "card-game",
-    "shedding-game",
-    "crazy-eights",
-    "party-game",
-    "game-engine",
-    "multiplayer",
+    "card-game-ai",
+    "card-game-engine",
+    "card-game-rules",
+    "card-sounds",
+    "cli",
+    "color-card-game",
+    "colour-card-game",
+    "command-line",
+    "computer-opponent",
     "computer-player",
+    "crazy-eights",
+    "custom-element",
+    "deck-design",
+    "deno",
+    "draw-two",
+    "english",
+    "esm",
+    "family-game",
+    "game-bot",
+    "game-engine",
+    "game-notation",
+    "game-rules",
+    "hitotsu-table",
+    "house-rules",
+    "i18n",
+    "japanese",
+    "jump-in",
+    "multiplayer",
+    "multiplayer-card-game",
+    "no-dependencies",
+    "node",
+    "one-card-left",
+    "party-game",
+    "react",
+    "replayable",
+    "reverse",
+    "rules-engine",
+    "saved-game",
+    "seeded-random",
+    "seeded-shuffle",
+    "seven-zero",
+    "sevens-and-zeros",
+    "shedding-game",
+    "skip",
+    "sound-effects",
+    "stacking-draw-cards",
     "svg",
-    "react"
+    "svg-cards",
+    "tabletop",
+    "turn-based-game",
+    "typescript",
+    "web-component",
+    "wild-draw-four",
+    "zero-dependencies"
   ],
   "exports": {
     ".": {
@@ -33,13 +87,28 @@
     "./react": {
       "types": "./dist/react.d.ts",
       "default": "./dist/react.js"
+    },
+    "./element": {
+      "types": "./dist/element.d.ts",
+      "default": "./dist/element.js"
+    },
+    "./element-define": {
+      "types": "./dist/element-define.d.ts",
+      "default": "./dist/element-define.js"
+    },
+    "./card-sounds": {
+      "types": "./dist/card-sounds.d.ts",
+      "default": "./dist/card-sounds.js"
     }
   },
   "files": [
     "dist",
+    "bin",
     "README.md",
     "LICENSE",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "docs/strings-ja.md",
+    "docs/credits.md"
   ],
   "engines": {
     "node": ">=20"
@@ -51,8 +120,11 @@
     "test": "vitest run",
     "check": "pnpm lint && pnpm typecheck && pnpm test",
     "site": "pnpm build && node scripts/site.mjs",
+    "sounds": "node scripts/sounds.mjs",
+    "docs:make": "node scripts/docs.mjs",
     "pictures": "pnpm site && node scripts/readme-pictures.mjs",
     "prepublishOnly": "pnpm check && pnpm build",
+    "test:cli": "pnpm build && node scripts/check-cli.mjs",
     "test:package": "pnpm build && node scripts/check-package.mjs",
     "test:demo": "pnpm site && playwright test"
   },
@@ -73,6 +145,9 @@
     "react": {
       "optional": true
     }
+  },
+  "bin": {
+    "hitotsu": "bin/hitotsu.mjs"
   },
   "publishConfig": {
     "access": "public"

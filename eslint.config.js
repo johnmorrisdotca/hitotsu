@@ -1,7 +1,7 @@
 import js from "@eslint/js";
 import tseslint from "typescript-eslint";
 
-const browser = Object.fromEntries(["document", "window", "location", "history", "navigator", "console", "URLSearchParams", "familyLanguage", "localStorage"].map((name) => [name, "readonly"]));
+const browser = Object.fromEntries(["document", "window", "location", "history", "navigator", "console", "URL", "URLSearchParams", "setTimeout", "familyLanguage", "localStorage"].map((name) => [name, "readonly"]));
 
 export default tseslint.config(
   { ignores: ["dist/", "site/", "node_modules/", "test-results/", "playwright-report/"] },

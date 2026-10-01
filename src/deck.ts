@@ -77,13 +77,21 @@ export function sortHitotsu(hand: readonly HitotsuCard[]): HitotsuCard[] {
 const COLOUR_WORDS: Record<HitotsuColour, string> = { R: "red", Y: "yellow", G: "green", B: "blue" };
 const FACE_WORDS: Record<string, string> = { S: "skip", R: "reverse", D: "draw two", W: "wild", F: "wild draw four" };
 
-export function colourWords(colour: HitotsuColour): string {
-  return COLOUR_WORDS[colour];
+const COLOUR_WORDS_JA: Record<HitotsuColour, string> = { R: "赤", Y: "黄", G: "緑", B: "青" };
+const FACE_WORDS_JA: Record<string, string> = { S: "スキップ", R: "リバース", D: "ドロー2", W: "ワイルド", F: "ワイルドドローフォー" };
+
+export function colourWords(colour: HitotsuColour, language: "en" | "ja" = "en"): string {
+  return (language === "ja" ? COLOUR_WORDS_JA : COLOUR_WORDS)[colour];
 }
 
-/** "red five", "blue draw two", "wild draw four", as a sentence and a screen reader say it. */
-export function hitotsuWords(card: HitotsuCard): string {
+/** "red five", "blue draw two", "wild draw four", as a sentence and a screen reader say it; in Japanese, "赤の5", "青のドロー2", "ワイルドドローフォー". */
+export function hitotsuWords(card: HitotsuCard, language: "en" | "ja" = "en"): string {
   const face = faceOf(card);
+  if (language === "ja") {
+    const named = FACE_WORDS_JA[face] ?? face;
+    const colour = colourOf(card);
+    return colour === null ? named : `${COLOUR_WORDS_JA[colour]}の${named}`;
+  }
   const named = FACE_WORDS[face] ?? ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"][Number(face)] ?? face;
   const colour = colourOf(card);
   return colour === null ? named : `${COLOUR_WORDS[colour]} ${named}`;

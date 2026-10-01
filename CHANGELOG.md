@@ -6,8 +6,37 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-10-01
+
+### Added
+
+- **The table in Japanese.** `language: "ja"` (or the page's `lang`, which it
+  follows unless told) says every word at the table in Japanese, card names
+  for a screen reader included: 赤の5. `HITOTSU_STRINGS_JA`, `hitotsuStrings`
+  and `hitotsuLanguageOf` are exported, and `docs/strings-ja.md` lists every
+  string beside its English. The Japanese has not yet been read by a native
+  reader.
+- **`<hitotsu-table>`**, a tag for a table with no script of your own
+  (`@johnmorrisdotca/hitotsu/element` and `/element-define`).
+- **Card sounds**, off unless asked: `sound: true`, or the tag's `sound`
+  attribute. A card dealt, played and the deck shuffled, from Kenney's Casino
+  Audio (CC0; `docs/credits.md`). `createCardSounds` is
+  `@johnmorrisdotca/hitotsu/card-sounds`.
+- **A command line**, `hitotsu`: `deal`, `play` and `check`, in English and
+  Japanese, the same cards for the same seed on every machine.
+- `VERSION`, `test:package` and a three-system package check in CI and in the
+  release, issue templates, and a `docs.test.js` that holds the README's
+  tables and examples to the code.
+
+### Fixed
+
+- The README said the package was not on npm. It is.
+- The README said the colours could be set on any ancestor. They are set in a
+  rule on `.ht-root`, or as `theme`.
+
 ### Changed
 
+- The demo has a Sound switch, a link to the deal on the table (`?rules=`, `?computers=` and `?seed=`), and a "Using it" panel that writes the table out as a tag, a script and a command line.
 - **A Help switch in the demo.** Beside the language chooser in the family header, shared by every demo. Off (the default) the page is as it was; on, each option row (the rules, the number of computers) says in one plain line what it does, in English or Japanese, and every button in it has the same words as its hover text. Kept on the device.
 
 
@@ -75,7 +104,9 @@ All notable changes to this project are written here. The format follows
   `@johnmorrisdotca/hitotsu/react`.
 - A static demo, published to GitHub Pages.
 
-[Unreleased]: https://github.com/johnmorrisdotca/hitotsu/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/johnmorrisdotca/hitotsu/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/johnmorrisdotca/hitotsu/compare/v1.1.0...v1.2.0
+[1.1.0]: https://github.com/johnmorrisdotca/hitotsu/compare/v1.0.1...v1.1.0
 [1.0.1]: https://github.com/johnmorrisdotca/hitotsu/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/johnmorrisdotca/hitotsu/compare/v0.1.0...v1.0.0
 [0.1.0]: https://github.com/johnmorrisdotca/hitotsu/releases/tag/v0.1.0
