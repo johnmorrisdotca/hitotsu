@@ -11,7 +11,7 @@ Match the colour or the number, and call Hitotsu! with one card left. Two to eig
   <img alt="TypeScript" src="https://img.shields.io/badge/types-TypeScript-3178c6">
 </p>
 
-<p align="center"><a href="https://johnmorrisdotca.github.io/hitotsu/"><strong>Play a hand →</strong></a></p>
+<p align="center"><a href="https://johnmorrisdotca.github.io/hitotsu/"><strong>Play a hand →</strong></a> · <a href="https://johnmorrisdotca.github.io/hitotsu/api.html">API reference</a></p>
 
 <p align="center">
   <img src="docs/desktop.jpg" alt="A table of four: you and three computers along the top, the stock and a blue nine on the felt, and your hand of three with the blue draw two glowing as playable" width="600">
@@ -132,6 +132,8 @@ four) and which copy it is. The two red fives are `R50` and `R51`.
 
 ## API
 
+The [API reference](https://johnmorrisdotca.github.io/hitotsu/api.html) lists every export of every entry point with its signature and its doc comment. It is made from the source by `pnpm site`, so it cannot fall behind the code.
+
 Every function is pure, and every type is exported.
 
 ### Playing
@@ -219,6 +221,39 @@ Any browser from the last few years: the core and the table need ES2020, and
 the table CSS custom properties and `aspect-ratio` (Chrome and Edge 88,
 Firefox 89, Safari 15). The core has no DOM and no platform needs at all, so it
 runs the same in Node 20 and later, Deno, Bun, a worker or a server function.
+
+## Architecture
+
+The rules, the computer player and the saved-game format are plain functions
+over plain data with no DOM and no dependency: a game is a value, and every
+move returns the next one. The table is drawn by a small DOM layer under
+`ui/`, kept apart so a server or a test can use the rules alone, and the card's
+look is decided in one place (`card.ts`) that plain DOM and React both draw
+from.
+
+```text
+src/
+├── card.ts       the deck's own design as shapes: one place decides how a card looks
+├── codec.ts      a game as text and back: its table, its seed and every move, played again through the rules
+├── computer.ts   the computer player, which sees only what a person at the table sees
+├── constants.ts  how long a game lasts, its "size": 200 or 500 points, or a single hand
+├── deck.ts       the 108-card deck as short names, and how a card is read
+├── index.ts      the main entry: the rules, the deck, the computer player, the codec, and the table to mount
+├── random.ts     a seeded source of numbers in [0, 1)
+├── react.tsx     the "/react" entry: the card's drawing as React elements
+├── rules.ts      the rules and nothing else: deal, list the legal moves, play one, score a hand
+├── seat.ts       one seat's view of what it may do, for a table on one device or on several
+├── table.ts      what a server needs to run a game whose players each hold their own phone
+├── types.ts      the vocabulary of the game: cards, moves, options and a game
+└── ui/  the table that draws and plays a game in plain DOM
+    ├── dom.ts      a few lines of DOM building, so the table needs no framework
+    ├── mount.ts    the table itself: mounting it on a page, and the options it takes
+    ├── strings.ts  every word the table says, which a host page can replace
+    └── style.ts    the table's look, injected once per document
+```
+
+Tests sit beside the code they test (`*.test.ts`). `scripts/` builds the demo
+and its API reference page, and `demo/` is the page published on GitHub Pages.
 
 ## Roadmap
 
