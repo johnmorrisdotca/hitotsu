@@ -77,6 +77,10 @@ pnpm test:package     # packed, installed from the tarball, and used as publishe
 - Art and sound are CC0 or public domain only, checked at the source, and
   credited in `docs/credits.md`. No GPL or LGPL code.
 - Node 22 or later.
+- **The list of the family in the README is made, not written.** `pnpm family:readme` writes it between its
+  markers from `scripts/family-template.mjs` (the names, the Japanese names and a line on each), and
+  `scripts/family-readme.mjs` is the same file in every package. To add a package or change a line, change the
+  template in every repository, bump `FAMILY_TEMPLATE_VERSION` and record the new hash in `src/family.test.js`.
 - A README table or example is held to the code by `src/docs.test.js`: change
   both together.
 - Add a line under **Unreleased** in `CHANGELOG.md`.

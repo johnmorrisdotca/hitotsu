@@ -1,6 +1,6 @@
 {
   "name": "@johnmorrisdotca/hitotsu",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Hitotsu, a colour-card shedding game for two to eight: the familiar play, the popular house rules as options (stacking, jump-in, sevens and zeros, draw to match, no bluffing), a computer player, a table for several devices, and its own deck. No dependencies.",
   "license": "MIT",
   "author": "John Morris <john@johnmorris.ca>",
@@ -111,7 +111,7 @@
     "docs/credits.md"
   ],
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
@@ -126,6 +126,7 @@
     "prepublishOnly": "pnpm check && pnpm build",
     "test:cli": "pnpm build && node scripts/check-cli.mjs",
     "test:package": "pnpm build && node scripts/check-package.mjs",
+    "family:readme": "node scripts/family-readme.mjs",
     "test:demo": "pnpm site && playwright test"
   },
   "devDependencies": {

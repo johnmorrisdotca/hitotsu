@@ -6,6 +6,12 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-10-01
+
+### Changed
+
+- **Needs Node 22 or later; Node 20 is no longer supported.** Nothing else changed.
+
 ## [1.2.0] - 2026-10-01
 
 ### Added
@@ -104,7 +110,8 @@ All notable changes to this project are written here. The format follows
   `@johnmorrisdotca/hitotsu/react`.
 - A static demo, published to GitHub Pages.
 
-[Unreleased]: https://github.com/johnmorrisdotca/hitotsu/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/johnmorrisdotca/hitotsu/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/johnmorrisdotca/hitotsu/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/johnmorrisdotca/hitotsu/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/johnmorrisdotca/hitotsu/compare/v1.0.1...v1.1.0
 [1.0.1]: https://github.com/johnmorrisdotca/hitotsu/compare/v1.0.0...v1.0.1
