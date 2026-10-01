@@ -1,19 +1,23 @@
       <section class="setup" aria-labelledby="setup-title">
         <h2 id="setup-title" class="fam-sr" data-say="pageSetup"></h2>
         <div class="fam-row">
-          <span class="fam-label" id="rules-label" data-say="pageRules"></span>
-          <div class="fam-seg" id="rules" role="group" aria-labelledby="rules-label" data-testid="rules">
-            <button type="button" data-mode="classic" aria-pressed="true" data-say="pageClassic"></button>
-            <button type="button" data-mode="party" aria-pressed="false" data-say="pageParty"></button>
+          <div class="fam-row" data-help-en="Classic is the standard game. Party adds stacking draw cards, jumping in, and special sevens and zeros." data-help-ja="クラシックは標準のルールです。パーティーは、ドローカードの重ね出し、割り込み、7と0の特別ルールが加わります。">
+            <span class="fam-label" id="rules-label" data-say="pageRules"></span>
+            <div class="fam-seg" id="rules" role="group" aria-labelledby="rules-label" data-testid="rules">
+              <button type="button" data-mode="classic" aria-pressed="true" data-say="pageClassic"></button>
+              <button type="button" data-mode="party" aria-pressed="false" data-say="pageParty"></button>
+            </div>
           </div>
-          <span class="fam-label" id="count-label" data-say="pageComputers"></span>
-          <div class="fam-seg" id="counts" role="group" aria-labelledby="count-label" data-testid="counts">
-            <button type="button" data-count="1" aria-pressed="false">1</button>
-            <button type="button" data-count="3" aria-pressed="true">3</button>
-            <button type="button" data-count="5" aria-pressed="false">5</button>
-            <button type="button" data-count="7" aria-pressed="false">7</button>
+          <div class="fam-row" data-help-en="How many computer players sit at the table with you: one, three, five or seven. The table is dealt again." data-help-ja="いっしょに遊ぶコンピューターの人数です（1・3・5・7人）。選ぶと配り直します。">
+            <span class="fam-label" id="count-label" data-say="pageComputers"></span>
+            <div class="fam-seg" id="counts" role="group" aria-labelledby="count-label" data-testid="counts">
+              <button type="button" data-count="1" aria-pressed="false">1</button>
+              <button type="button" data-count="3" aria-pressed="true">3</button>
+              <button type="button" data-count="5" aria-pressed="false">5</button>
+              <button type="button" data-count="7" aria-pressed="false">7</button>
+            </div>
           </div>
-          <button type="button" class="fam-button" data-primary="true" id="deal" data-testid="deal" data-say="pageDeal"></button>
+          <button type="button" class="fam-button" data-primary="true" id="deal" data-testid="deal" data-say="pageDeal" data-tip-en="Shuffle and deal a new game with the same rules and players" data-tip-ja="同じルールと人数で、新しく配り直します"></button>
         </div>
         <p class="fam-fine rules-note" id="rules-note" data-testid="rules-note"></p>
       </section>
