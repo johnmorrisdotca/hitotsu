@@ -284,7 +284,7 @@ describe("package.json", () => {
     const pointed = [...Object.values(pkg.bin), ...Object.values(pkg.exports).flatMap((entry) => Object.values(entry))];
     for (const file of pointed) expect(/^\.?\/?(dist|bin)\//.test(file), file).toBe(true);
     expect(pkg.dependencies).toBeUndefined();
-    for (const file of ["docs/strings-ja.md", "docs/credits.md", "bin"]) expect(pkg.files).toContain(file);
+    for (const file of ["CREDITS.md", "bin"]) expect(pkg.files).toContain(file);
   });
 
   it("has keywords that are many, lower case and not repeated, and a description that fits", () => {

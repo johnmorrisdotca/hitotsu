@@ -9,7 +9,7 @@ const lines = [
   "/**",
   " * The card sounds, recorded: cards dealt, turned over, played and shuffled,",
   " * as base64 AAC (.m4a). From Kenney's Casino Audio",
-  " * pack, CC0; see docs/credits.md. Written by scripts/sounds.mjs from the files",
+  " * pack, CC0; see CREDITS.md. Written by scripts/sounds.mjs from the files",
   " * in ./sounds, never by hand. `createCardSounds` loads this module only when",
   " * a sound is first played, so a page that stays silent never downloads it.",
   " */",

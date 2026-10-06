@@ -1,7 +1,7 @@
 /**
  * THE SOUNDS OF A CARD TABLE: a card dealt, turned over, played, the deck
  * shuffled. The recordings are real cards
- * (Kenney's Casino Audio, CC0; see docs/credits.md), loaded the first time a
+ * (Kenney's Casino Audio, CC0; see CREDITS.md), loaded the first time a
  * sound is played and never before, so a page that stays silent never fetches
  * them. Where they cannot be loaded or decoded, a short sound made in the
  * browser stands in. Nothing here throws: a platform with no audio, a context

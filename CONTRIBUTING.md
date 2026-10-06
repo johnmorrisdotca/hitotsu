@@ -128,7 +128,7 @@ pnpm test:package     # packed, installed from the tarball, and used as publishe
 - `src/cli.ts`, `bin/hitotsu.mjs`: the command line, a pure function and the few
   lines that hand it the process.
 - `sounds/`, `src/sounds.ts`: the recordings, and the module `pnpm sounds` makes
-  from them. A new recording needs a row in `docs/credits.md` with its source
+  from them. A new recording needs a row in `CREDITS.md` with its source
   and licence checked there: CC0 or public domain only.
 
 ### Rule changes
