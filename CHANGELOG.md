@@ -6,6 +6,22 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [1.3.1] - 2026-10-05
+
+Nothing that was exported has been changed or removed.
+
+### Added
+
+- A test holds every `@johnmorrisdotca/hitotsu@N` version pin in the README to this package's major version.
+- The entry point `@johnmorrisdotca/hitotsu/element/define`, the name every other package of the family gives its tag-registering entry. `@johnmorrisdotca/hitotsu/element-define` stays as an alias of it.
+
+### Changed
+
+- The family's list, in the README and in the demo's footer, names all twenty-four packages, Karakuri and Houseki included.
+- The npm description is one sentence of 250 characters or fewer, so npm and its search show it whole; it is also the repository's About text. `homepage` is the demo site and `author` is `"John Morris"`, the same in every package.
+- The GitHub Actions workflows use the current versions of the actions (checkout 7, setup-node 7, pnpm/action-setup 6; configure-pages 6, upload-pages-artifact 5 and deploy-pages 5 for Pages), which clears GitHub's Node 20 deprecation warning.
+- `package.json` gains `main`, `module` and `types` for older tools, and an `import` condition on every entry.
+
 ## [1.3.0] - 2026-10-01
 
 ### Changed
@@ -110,7 +126,8 @@ All notable changes to this project are written here. The format follows
   `@johnmorrisdotca/hitotsu/react`.
 - A static demo, published to GitHub Pages.
 
-[Unreleased]: https://github.com/johnmorrisdotca/hitotsu/compare/v1.3.0...HEAD
+[Unreleased]: https://github.com/johnmorrisdotca/hitotsu/compare/v1.3.1...HEAD
+[1.3.1]: https://github.com/johnmorrisdotca/hitotsu/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/johnmorrisdotca/hitotsu/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/johnmorrisdotca/hitotsu/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/johnmorrisdotca/hitotsu/compare/v1.0.1...v1.1.0

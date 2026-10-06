@@ -126,7 +126,8 @@ dependencies; the React components need React 18 or later.
 
 Changing an attribute deals again. Every move is announced as a `hitotsu-move`
 event carrying the game in `detail`, and the element has a `game` property and
-a `deal()` method. The script above is `@johnmorrisdotca/hitotsu/element-define`,
+a `deal()` method. The script above is `@johnmorrisdotca/hitotsu/element/define`
+(`@johnmorrisdotca/hitotsu/element-define` is the same file under its first name),
 which registers the tag by being imported; `@johnmorrisdotca/hitotsu/element`
 exports the same class and registers nothing until you call `defineHitotsuTable()`. Any framework that
 passes unknown tags through will carry it; Vue needs to be told that tags
@@ -416,7 +417,7 @@ src/
 ├── computer.ts   the computer player, which sees only what a person at the table sees
 ├── constants.ts  how long a game lasts, its "size": 200 or 500 points, or a single hand
 ├── deck.ts       the 108-card deck as short names, and how a card is read
-├── element-define.ts  the "/element-define" entry: registers <hitotsu-table> by being imported
+├── element-define.ts  the "/element/define" entry (also "/element-define"): registers <hitotsu-table> by being imported
 ├── element.ts    the "/element" entry: the <hitotsu-table> class, and defineHitotsuTable()
 ├── index.ts      the main entry: the rules, the deck, the computer player, the codec, and the table to mount
 ├── random.ts     a seeded source of numbers in [0, 1)
@@ -448,7 +449,7 @@ why the game and the package carry it.
 ## The family
 
 <!-- family:start (made by scripts/family-readme.mjs from scripts/family-template.mjs; change those, not this) -->
-Hitotsu is one of twenty-two packages, each made for the same site, each at
+Hitotsu is one of twenty-four packages, each made for the same site, each at
 [github.com/johnmorrisdotca](https://github.com/johnmorrisdotca). The code of every one is MIT.
 
 - [Korokoro](https://github.com/johnmorrisdotca/korokoro) (コロコロ): dice, with notation, exact odds, real sounds and the dice of many games. [Demo](https://johnmorrisdotca.github.io/korokoro/).
@@ -473,8 +474,10 @@ Hitotsu is one of twenty-two packages, each made for the same site, each at
 - [Tobiishi](https://github.com/johnmorrisdotca/tobiishi) (飛び石): peg solitaire with nine boards and seeded solvable challenges. [Demo](https://johnmorrisdotca.github.io/tobiishi/).
 - [Jirai](https://github.com/johnmorrisdotca/jirai) (地雷): minesweeper on shaped grids with verified no-guess boards. [Demo](https://johnmorrisdotca.github.io/jirai/).
 - [Gunjin](https://github.com/johnmorrisdotca/gunjin) (軍人): five hidden-rank strategy games with pass-the-device play. [Demo](https://johnmorrisdotca.github.io/gunjin/).
+- [Karakuri](https://github.com/johnmorrisdotca/karakuri) (からくり): eight hyper-casual puzzle games, some of them physics: draw a shield, pull pins, cut ropes, slide blocks, pour tubes. [Demo](https://johnmorrisdotca.github.io/karakuri/).
+- [Houseki](https://github.com/johnmorrisdotca/houseki) (宝石): gem and stone matching puzzles: falling triplets, stone collapse, colour chains and gem swap. [Demo](https://johnmorrisdotca.github.io/houseki/).
 
-**This package is Hitotsu.** The demos of all twenty-two share one header and footer, so each links the rest.
+**This package is Hitotsu.** The demos of all twenty-four share one header and footer, so each links the rest.
 <!-- family:end -->
 
 ## Roadmap

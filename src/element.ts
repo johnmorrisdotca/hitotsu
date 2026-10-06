@@ -23,7 +23,7 @@
  * on `.ht-root`, as `README.md` lists.
  *
  * `./element` exports the class and `defineHitotsuTable()` with no effect of
- * its own; `./element-define` registers it by being imported.
+ * its own; `./element/define` (once `./element-define`, which still works) registers it by being imported.
  */
 import { HITOTSU_CLASSIC, HITOTSU_PARTY } from "./constants.ts";
 import { mountHitotsu, type HitotsuHandle } from "./ui/mount.ts";

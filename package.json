@@ -1,9 +1,9 @@
 {
   "name": "@johnmorrisdotca/hitotsu",
-  "version": "1.3.0",
-  "description": "Hitotsu, a colour-card shedding game for two to eight: the familiar play, the popular house rules as options (stacking, jump-in, sevens and zeros, draw to match, no bluffing), a computer player, a table for several devices, and its own deck. No dependencies.",
+  "version": "1.3.1",
+  "description": "Hitotsu, a colour-card shedding game for two to eight: the familiar play, the popular house rules as options, a computer player, a table for several devices, and its own deck. Zero dependencies.",
   "license": "MIT",
-  "author": "John Morris <john@johnmorris.ca>",
+  "author": "John Morris",
   "homepage": "https://johnmorrisdotca.github.io/hitotsu/",
   "repository": {
     "type": "git",
@@ -79,25 +79,38 @@
     "wild-draw-four",
     "zero-dependencies"
   ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
       "default": "./dist/index.js"
     },
     "./react": {
       "types": "./dist/react.d.ts",
+      "import": "./dist/react.js",
       "default": "./dist/react.js"
     },
     "./element": {
       "types": "./dist/element.d.ts",
+      "import": "./dist/element.js",
       "default": "./dist/element.js"
+    },
+    "./element/define": {
+      "types": "./dist/element-define.d.ts",
+      "import": "./dist/element-define.js",
+      "default": "./dist/element-define.js"
     },
     "./element-define": {
       "types": "./dist/element-define.d.ts",
+      "import": "./dist/element-define.js",
       "default": "./dist/element-define.js"
     },
     "./card-sounds": {
       "types": "./dist/card-sounds.d.ts",
+      "import": "./dist/card-sounds.js",
       "default": "./dist/card-sounds.js"
     }
   },
