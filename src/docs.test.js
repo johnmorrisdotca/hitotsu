@@ -312,7 +312,7 @@ describe("the family's look", () => {
 
   it("the site script uses the family's header and footer", () => {
     const site = readFileSync("scripts/site.mjs", "utf8");
-    for (const part of ["familyHead(", "familyHeader(", "familyUnreviewed(", "familyFooter(", "FAMILY_SCRIPT", 'href="family.css"', 'href="site.css"']) expect(site).toContain(part);
-    expect(site.indexOf('href="family.css"')).toBeLessThan(site.indexOf('href="site.css"'));
+    for (const part of ["familyHead(", "familyHeader(", "familyUnreviewed(", "familyFooter(", "FAMILY_SCRIPT", 'href="family.css"', 'href="hitotsu.css"']) expect(site).toContain(part);
+    expect(site.indexOf('href="family.css"')).toBeLessThan(site.indexOf('href="hitotsu.css"'));
   });
 });

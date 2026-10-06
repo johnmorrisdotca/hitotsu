@@ -14,7 +14,7 @@ const frame = ({ title, description, links, body, scripts }) => `<!doctype html>
     ${familyHead({ id, title, description, ogTitle: "Hitotsu 一つ: the colour-card game", ogDescription: "Match the colour or the number, and call Hitotsu! with one card left. Play against computers." })}
     <link rel="icon" href="${icon}" />
     <link rel="stylesheet" href="family.css" />
-    <link rel="stylesheet" href="site.css" />
+    <link rel="stylesheet" href="hitotsu.css" />
   </head>
   <body>
     <main>
@@ -30,13 +30,13 @@ ${body}
 
 rmSync("site", { recursive: true, force: true });
 mkdirSync("site", { recursive: true });
-for (const file of ["family.css", "site.css", "page.js"]) cpSync(`demo/${file}`, `site/${file}`);
+for (const file of ["family.css", "hitotsu.css", "page.js"]) cpSync(`demo/${file}`, `site/${file}`);
 cpSync("dist", "site/dist", { recursive: true });
 
 writeFileSync(
   "site/index.html",
   frame({
-    title: "Hitotsu 一つ: the colour-card game, against computers",
+    title: "Hitotsu · the colour-card game, against computers",
     description: "Play Hitotsu against one to seven computers: match the colour or the number, and call Hitotsu! with one card left. Classic rules or party mode, in English and Japanese. Free and open source.",
     links: [{ href: "api.html", say: "pageApi" }],
     body: readFileSync("demo/body.html", "utf8").replace("__UNREVIEWED__", familyUnreviewed({ id })).trimEnd(),
