@@ -6,6 +6,11 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+- Add shared table builder and validated no-storage iframe, reflected presentation settings, `points` and host `options`; keep numeric `size` match aliases and existing game/deal access.
+- Preserve play while changing words, colours and sound; support custom tags and shadow-root styles.
+- Compose move/load/finish/error events with JSON-safe data; event games use seat labels while local getters and callbacks keep private names.
+
+
 
 
 ### Added

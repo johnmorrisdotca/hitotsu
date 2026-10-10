@@ -1,5 +1,14 @@
-/** Every word the table says, so a host page can put its own in (`strings` when it mounts). */
+/** Every table word, including embed errors; hosts may override them with strings.
+ * @example
+ * ```ts
+ * import type { HitotsuStrings } from "@johnmorrisdotca/hitotsu";
+ * const words: Partial<HitotsuStrings> = { embedError: "Check the table settings." };
+ * console.log(words.embedError);
+ * ```
+ */
 export type HitotsuStrings = {
+  /** Shown when a local embed cannot mount with its settings. */
+  embedError?: string;
   you: string;
   computer: (n: number) => string;
   yourTurn: string;
@@ -40,6 +49,7 @@ export type HitotsuStrings = {
 };
 
 export const HITOTSU_STRINGS: Required<HitotsuStrings> = {
+  embedError: "The table could not be shown. Check its settings.",
   you: "You",
   computer: (n) => `Computer ${n}`,
   yourTurn: "Your turn",
@@ -82,6 +92,7 @@ export const HITOTSU_STRINGS: Required<HitotsuStrings> = {
  * "Fix a translation" issue, naming the string, is welcome.
  */
 export const HITOTSU_STRINGS_JA: Required<HitotsuStrings> = {
+  embedError: "テーブルを表示できません。設定を確認してください。",
   you: "あなた",
   computer: (n) => `コンピューター${n}`,
   yourTurn: "あなたの番",

@@ -11,9 +11,19 @@ import { h, refill } from "./dom.ts";
 import { injectStyle } from "./style.ts";
 import { hitotsuLanguageOf, hitotsuStrings, type HitotsuLanguage, type HitotsuStrings } from "./strings.ts";
 
+/** Native table settings, including private player names and callbacks.
+ * @example
+ * ```ts
+ * import type { HitotsuTableOptions } from "@johnmorrisdotca/hitotsu";
+ * const options: HitotsuTableOptions = { seed: 42, size: 200 };
+ * console.log(options.size);
+ * ```
+ */
 export type HitotsuTableOptions = {
   /** Everybody at the table, seat 0 first: seat 0 is the person at this screen, the rest computers. Two to eight; four by default. */
   players?: readonly string[];
+  /** Number of computer seats when names are omitted, 1–7; three by default. */
+  computers?: number;
   /** The house rules: `HITOTSU_CLASSIC` (the default), `HITOTSU_PARTY`, or any mix. */
   rules?: HitotsuOptions;
   /** What wins: 200 or 500 points, or 1 for a single hand (the default). */
@@ -34,11 +44,21 @@ export type HitotsuTableOptions = {
   onMove?: (game: HitotsuGame) => void;
 };
 
+/** Native game access, redealing and presentation updates.
+ * @example
+ * ```ts
+ * import type { HitotsuHandle } from "@johnmorrisdotca/hitotsu";
+ * const update = (table: HitotsuHandle) => table.set({ language: "ja" });
+ * console.log(typeof update);
+ * ```
+ */
 export type HitotsuHandle = {
   /** The game as it stands. */
   game(): HitotsuGame;
   /** Deal again, with any options changed. */
   restart(options?: Omit<HitotsuTableOptions, "language" | "strings" | "theme" | "sound" | "onMove">): void;
+  /** Update words, palette, sound and callback while preserving the current game. */
+  set(options: Pick<HitotsuTableOptions, "language" | "strings" | "theme" | "sound" | "onMove">): void;
   destroy(): void;
 };
 
@@ -98,26 +118,36 @@ function newsLine(news: readonly HitotsuNews[], t: HitotsuStrings, name: (seat: 
  * 0, computers in the rest. Tap a card that glows to play it (a wild asks for
  * a colour, a seven under sevens-and-zeros for a hand to swap with), tap the
  * stock to draw, and call Hitotsu! before the second-last card goes down.
+ * @param target - The host element, including a host in a shadow root.
+ * @param options - Game settings, private names and presentation choices.
+ * @returns The live table; destroy it when the host is removed.
+ * @example
+ * ```ts
+ * import { mountHitotsu } from "@johnmorrisdotca/hitotsu";
+ * const show = (host: HTMLElement) => mountHitotsu(host, { seed: 42 });
+ * console.log(typeof show);
+ * ```
  */
 export function mountHitotsu(target: HTMLElement, options: HitotsuTableOptions = {}): HitotsuHandle {
   const doc = target.ownerDocument;
-  injectStyle(doc);
-  const language = options.language ?? hitotsuLanguageOf(target.closest("[lang]")?.getAttribute("lang") ?? doc.documentElement.lang);
-  const t: Required<HitotsuStrings> = { ...hitotsuStrings(language), ...options.strings };
+  injectStyle(doc, target.getRootNode());
+  let language = options.language ?? hitotsuLanguageOf(target.closest("[lang]")?.getAttribute("lang") ?? doc.documentElement.lang);
+  let t: Required<HitotsuStrings> = { ...hitotsuStrings(language), ...options.strings };
   const root = h("div", { class: "ht-root" });
   for (const [name, value] of Object.entries(options.theme ?? {})) root.style.setProperty(name, value);
   target.append(root);
 
-  const ownSounds = options.sound === true ? createCardSounds() : null;
-  const sounds: CardSounds | null = ownSounds ?? (typeof options.sound === "object" ? options.sound : null);
-  let settings = { players: options.players, rules: options.rules, size: options.size, seed: options.seed, computerMs: options.computerMs };
+  let ownSounds = options.sound === true ? createCardSounds() : null;
+  let sounds: CardSounds | null = ownSounds ?? (typeof options.sound === "object" ? options.sound : null);
+  let settings = { players: options.players, computers: options.computers, rules: options.rules, size: options.size, seed: options.seed, computerMs: options.computerMs };
   let game: HitotsuGame;
   let chosen: HitotsuCard | null = null;
   let calling = false;
   let timer: ReturnType<typeof setTimeout> | undefined;
 
   const deal = () => {
-    const players = settings.players ?? [t.you, t.computer(1), t.computer(2), t.computer(3)];
+    if (settings.players === undefined && (!Number.isInteger(settings.computers ?? 3) || (settings.computers ?? 3) < 1 || (settings.computers ?? 3) > 7)) throw new RangeError("Choose one to seven computers.");
+    const players = settings.players ?? [t.you, ...Array.from({ length: settings.computers ?? 3 }, (_, at) => t.computer(at + 1))];
     const started = startHitotsu(settings.size ?? HITOTSU_ONE_HAND, players, settings.seed ?? freshSeed(), settings.rules ?? HITOTSU_CLASSIC, players.map((_, seat) => seat !== 0));
     if (started === null) throw new Error("Hitotsu is played by two to eight, to 1, 200 or 500.");
     game = started;
@@ -256,6 +286,25 @@ export function mountHitotsu(target: HTMLElement, options: HitotsuTableOptions =
       deal();
       sounds?.play("shuffle");
       sounds?.play("deal", { count: game.hands[0]?.length ?? 1, delay: 700 });
+      render();
+    },
+    set(next) {
+      if (next.sound !== undefined && next.sound !== options.sound) {
+        ownSounds?.close();
+        ownSounds = next.sound === true ? createCardSounds() : null;
+        sounds = ownSounds ?? (typeof next.sound === "object" ? next.sound : null);
+      }
+      if (next.theme !== undefined) {
+        for (const name of Object.keys(options.theme ?? {})) if (!(name in next.theme)) root.style.removeProperty(name);
+        for (const [name, value] of Object.entries(next.theme)) root.style.setProperty(name, value);
+      }
+      options = { ...options, ...next };
+      language = options.language ?? language;
+      t = { ...hitotsuStrings(language), ...options.strings };
+      if (settings.players === undefined) {
+        const names = [t.you, ...game.players.slice(1).map((_, at) => t.computer(at + 1))];
+        if (names.some((name, at) => game.players[at] !== name)) game = { ...game, players: names };
+      }
       render();
     },
     destroy() {

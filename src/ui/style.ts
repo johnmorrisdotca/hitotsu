@@ -55,10 +55,22 @@ export const CSS = `
 @media (prefers-reduced-motion: reduce) { .ht-hand button { transition: none; } }
 `;
 
-export function injectStyle(doc: Document): void {
-  if (doc.getElementById(STYLE_ID) !== null) return;
+/** Install the native table stylesheet once per document or shadow root.
+ * @param doc - The owner document.
+ * @param root - The host root, defaulting to the document.
+ * @returns Nothing; an existing stylesheet is preserved.
+ * @example
+ * ```ts
+ * import { injectStyle } from "./style.ts";
+ * const install = (doc: Document) => injectStyle(doc);
+ * console.log(typeof install);
+ * ```
+ */
+export function injectStyle(doc: Document, root: Node = doc): void {
+  const target = typeof ShadowRoot !== "undefined" && root instanceof ShadowRoot ? root : doc.head;
+  if (target.querySelector(`#${STYLE_ID}`) !== null) return;
   const style = doc.createElement("style");
   style.id = STYLE_ID;
   style.textContent = CSS;
-  doc.head.append(style);
+  target.append(style);
 }

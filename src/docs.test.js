@@ -71,7 +71,7 @@ describe("the README's examples", () => {
     const real = new Set([...Object.keys(hitotsu), ...Object.keys(sounds), ...Object.keys(element), "HitotsuTable", "HitotsuCardImage", "HitotsuCardDrawing"]);
     const api = section("## API").replace(/\/\/.*$/gm, "");
     const calls = new Set([...api.matchAll(/(?<![\w.])([a-z][A-Za-z]+)(?=\()/g)].map((match) => match[1]));
-    const known = new Set(["mountHitotsu", "game", "restart", "destroy"]);
+    const known = new Set(["mountHitotsu", "game", "restart", "set", "destroy"]);
     for (const name of calls) if (!known.has(name)) expect(real.has(name), `${name} is in the API section and not exported`).toBe(true);
     expect(calls.size).toBeGreaterThan(30);
   });
@@ -307,7 +307,7 @@ describe("the family's look", () => {
   });
 
   it("scripts/family-template.mjs is the family's file too", () => {
-    expect(createHash("sha256").update(readFileSync("scripts/family-template.mjs")).digest("hex")).toBe("d7cd8c1cf8c1e4a919b074fdc43574fc8e9f1f39c285d10a11d7d75a98852f67");
+    expect(createHash("sha256").update(readFileSync("scripts/family-template.mjs")).digest("hex")).toBe("3d90724c7ed364c994d03549b7562dd98b7841d7827b492dc7ddcdc4604192ff");
   });
 
   it("the site script uses the family's header and footer", () => {

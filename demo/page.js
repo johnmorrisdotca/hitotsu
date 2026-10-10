@@ -8,7 +8,7 @@ const $ = (id) => document.getElementById(id);
 
 // The page's own words. The Japanese has not yet been read by a native reader: the page says so in Japanese only.
 const WORDS = {
-  en: {
+  en: { pageBuilder: "Build an embed",
     pitch: "Match the colour or the number, and call Hitotsu! with one card left. Play against one to seven computers, by the classic rules or the party ones.",
     name: "Hitotsu is Japanese for “one”: the call you make with one card left.",
     nameLink: "About the name",
@@ -39,7 +39,7 @@ const WORDS = {
     pageUsingCli: "On the command line",
     pageCopy: "Copy",
   },
-  ja: {
+  ja: { pageBuilder: "埋め込みを作る",
     pitch: "色か数字をそろえて出し、手札が1枚になったら「ヒトツ！」と言います。コンピューター1〜7人と、クラシックかパーティーのルールで遊べます。",
     name: "「ヒトツ」は「一つ」。手札が1枚になったときに言う言葉です。",
     nameLink: "名前について（英語）",

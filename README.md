@@ -175,6 +175,11 @@ ES modules with TypeScript types. The core and the table have no
 dependencies; the React components need React 18 or later. A page with no
 bundler loads the tag from a CDN (`@1` is the major version).
 
+[Build an embed](https://johnmorrisdotca.github.io/hitotsu/builder.html) with a live
+preview and code for a custom element, iframe, module, React, Vue, Svelte, Angular
+or a plain HTML block. [The embed guide](docs/embeds.md) covers host options,
+compatible match sizes and frame messages.
+
 ### As a tag
 
 ```html
@@ -189,13 +194,19 @@ bundler loads the tag from a CDN (`@1` is the major version).
 | `rules` | `classic` (the default) or `party` |
 | `computers` | how many computers sit with you, 1 to 7 |
 | `players` | the names at the table, comma-separated, seat 0 first (yours); two to eight of them |
-| `size` | `1` for a single hand (the default), `200` or `500` points |
+| `size` | display `small`, `medium` or `large`; numeric `1`, `200`, `500` remain match-point aliases |
+| `points` | `1` for a single hand (default), or `200` / `500`; overrides numeric `size` |
+| `theme` | `auto` (default), `light` or `dark` |
+| `width` | display width in pixels, fitting a narrower host |
+| `label` | an optional spoken label for the table |
 | `seed` | the number the deals are shuffled from; a fresh one if not given |
 | `lang` | `ja` for Japanese; the page's language unless said |
 | `sound` | card sounds, when present (`sound="off"` turns them off again) |
 
-Changing an attribute deals again. Every move is announced as a `hitotsu-move`
-event carrying the game in `detail`, and the element has a `game` property and
+Game-setting changes deal again; language, sound and appearance changes preserve play.
+Attributes reflect as properties, and `options` accepts all native settings. Every
+move is announced as a bubbling, composed `hitotsu-move` event carrying a JSON-safe
+copy of the game with generic seat labels instead of player names in `detail`, and the element has a `game` property and
 a `deal()` method. The script above is `@johnmorrisdotca/hitotsu/element/define`
 (`@johnmorrisdotca/hitotsu/element-define` is the same file under its first name),
 which registers the tag by being imported; `@johnmorrisdotca/hitotsu/element`
@@ -326,7 +337,7 @@ Save this as a file and open it. The tag registers itself when its module is imp
 
 ### Listening to every move
 
-Every move is announced as a `hitotsu-move` event carrying the game in `detail`, so a page can keep a log, show a score of its own or send the game to a server.
+Every move is announced as a `hitotsu-move` event carrying a copy of the game with generic seat labels in `detail`, so a page can keep a log, show a score of its own or send the game to a server.
 
 ```html
 <hitotsu-table id="table" rules="classic" computers="2"></hitotsu-table>
@@ -658,17 +669,17 @@ React `HitotsuCardDrawing` all draw it.
 
 ```ts no-check
 mountHitotsu(element, {
-  players?, rules?, size?, seed?,
+  players?, computers?, rules?, size?, seed?,
   language?,         // "en" or "ja"; the page's language if not given
   computerMs?,       // how long a computer thinks: your window to jump in
   strings?,          // your own words, over the language's
   sound?,            // true, or a createCardSounds() of your own
   theme?,            // CSS variables, such as { "--ht-felt": "#234" }
   onMove?,
-}): { game(), restart(options?), destroy() }
+}): { game(), restart(options?), set(presentation), destroy() }
 
 hitotsuStrings(language), hitotsuLanguageOf(tag), HITOTSU_STRINGS, HITOTSU_STRINGS_JA
-defineHitotsuTable()                           // registers <hitotsu-table>, from "/element"
+defineHitotsuTable(tag?), defineTable(tag?)   // registers the default or a custom tag, from "/element"
 createCardSounds({ muted?, volume? })           // from "/card-sounds"
 ```
 
@@ -881,14 +892,14 @@ Hitotsu is one of twenty-eight packages, each made for the same site, each at
 
 **Geography & data**
 
-- [address-plus](https://github.com/johnmorrisdotca/address-plus) (アドレスプラス): parse and format addresses in the United States, Canada and Japan. [Demo](https://johnmorrisdotca.github.io/address-plus/).
+- [address-plus](https://github.com/johnmorrisdotca/address-plus) (アドレスプラス): parse and format addresses in the United States, Canada, Japan, Australia and the United Kingdom. [Demo](https://johnmorrisdotca.github.io/address-plus/).
 - [Chizu](https://github.com/johnmorrisdotca/chizu) (地図): maps of the world and of countries' regions, in English and Japanese, with a quiz and callouts. [Demo](https://johnmorrisdotca.github.io/chizu/).
 - [Hata](https://github.com/johnmorrisdotca/hata) (旗): country and regional flags as SVG, at their true proportions and keyed by ISO code. [Demo](https://johnmorrisdotca.github.io/hata/).
 - [Kuni](https://github.com/johnmorrisdotca/kuni) (国): countries and their regions, with ISO codes and names in English and Japanese. [Demo](https://johnmorrisdotca.github.io/kuni/).
 
 **Developer tools**
 
-- [REST in Pieces](https://github.com/spxis/rest-in-pieces) (レスト・イン・ピーシズ): seeded test data and REST APIs for frontend development, with latency and error drills. [Demo](https://spxis.github.io/rest-in-pieces/).
+- [REST in Pieces](https://github.com/spxis/rest-in-pieces) (レスト・イン・ピーシーズ): seeded test data and REST APIs for frontend development, with latency and error drills. [Demo](https://spxis.github.io/rest-in-pieces/).
 
 
 **This package is Hitotsu.** The demos of all twenty-eight share one header and footer, so each links the rest.

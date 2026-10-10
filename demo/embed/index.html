@@ -1,0 +1,8 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><meta name="color-scheme" content="light dark"><title>Hitotsu · colour-card table</title><style>html,body{margin:0;width:100%;height:100%;background:transparent;overflow:hidden}body{display:flex;align-items:center;justify-content:center;padding:8px;box-sizing:border-box}</style></head><body><script type="module">
+import "../dist/element-define.js";
+const query=new URLSearchParams(location.search),table=document.createElement("hitotsu-table");table.setAttribute("size","medium");
+for(const[name,choices]of[["rules",["classic","party"]],["points",["1","200","500"]],["lang",["en","ja"]],["theme",["auto","light","dark"]],["size",["small","medium","large","1","200","500"]]])if(choices.includes(query.get(name)))table.setAttribute(name,query.get(name));
+for(const[name,min,max]of[["width",100,2000],["seed",1,2147483647],["computers",1,7]]){const value=query.get(name);if(value!==null&&/^\d+$/.test(value)&&Number(value)>=min&&Number(value)<=max)table.setAttribute(name,value);}
+if(query.has("sound")&&["","true","on","1","false","off","no","0"].includes(query.get("sound").trim().toLowerCase()))table.setAttribute("sound",query.get("sound"));const label=query.get("label");if(label!==null&&label.length<=200)table.setAttribute("label",label);if(query.get("lang")==="ja")document.documentElement.lang="ja";
+for(const type of["hitotsu-load","hitotsu-move","hitotsu-finish","hitotsu-error"])table.addEventListener(type,event=>{if(parent!==window)parent.postMessage({type:event.type,detail:JSON.parse(JSON.stringify(event.detail))},"*");});document.body.append(table);
+</script></body></html>

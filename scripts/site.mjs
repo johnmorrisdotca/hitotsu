@@ -4,7 +4,7 @@
 import { cpSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 
 import { apiBody } from "./api.mjs";
-import { FAMILY_SCRIPT, familyFooter, familyHead, familyHeader, familyUnreviewed } from "./family-template.mjs";
+import { FAMILY_SCRIPT, FAMILY_EMBED_BUILDER_WORDS, familyEmbedBuilder, familyFooter, familyHead, familyHeader, familyUnreviewed } from "./family-template.mjs";
 
 const id = "hitotsu";
 const icon = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect x='14' y='6' width='72' height='88' rx='12' fill='%23b5452c' stroke='%23fffdf8' stroke-width='6'/%3E%3Cpath d='M36 54 H64' stroke='%23fffdf8' stroke-width='9' stroke-linecap='round'/%3E%3C/svg%3E`;
@@ -38,7 +38,7 @@ writeFileSync(
   frame({
     title: "Hitotsu · the colour-card game, against computers",
     description: "Play Hitotsu against one to seven computers: match the colour or the number, and call Hitotsu! with one card left. Classic rules or party mode, in English and Japanese. Free and open source.",
-    links: [{ href: "api.html", say: "pageApi" }],
+    links: [{ href: "api.html", say: "pageApi" }, { href: "builder.html", say: "pageBuilder" }],
     body: readFileSync("demo/body.html", "utf8").replace("__UNREVIEWED__", familyUnreviewed({ id })).trimEnd(),
     scripts: `<script type="module" src="page.js"></script>`,
   }),
@@ -65,3 +65,9 @@ writeFileSync(
   }),
 );
 console.log(`site/ is ready (${api.total} exports in api.html): serve it, or let the Pages workflow publish it.`);
+
+writeFileSync("site/family-embed-builder.js", `export const FAMILY_EMBED_BUILDER_WORDS = ${JSON.stringify(FAMILY_EMBED_BUILDER_WORDS)};\nexport ${familyEmbedBuilder.toString()};\n`);
+const builderParts = { builderHead: familyHead({ id, title: "Hitotsu · build a table embed", description: "Choose rules and a seed, preview a colour-card table and copy the embed code." }), builderHeader: familyHeader({ id, links: [{ href: "./", say: "toGallery" }] }), unreviewed: familyUnreviewed({ id }), footer: familyFooter({ id }), script: `<script>${FAMILY_SCRIPT}</script>` };
+writeFileSync("site/builder.html", readFileSync("demo/builder.html", "utf8").replace(/<!-- family:([A-Za-z]+) -->/g, (_match, key) => builderParts[key]));
+cpSync("demo/embed", "site/embed", { recursive: true });
+for (const file of ["builder.js", "builder.css"]) cpSync(`demo/${file}`, `site/${file}`);

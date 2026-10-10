@@ -9,6 +9,7 @@ open a *Fix a translation* issue with the string's name. `{who}`, `{count}` and 
 
 | Name | English | Japanese |
 | --- | --- | --- |
+| `embedError` | The table could not be shown. Check its settings. | テーブルを表示できません。設定を確認してください。 |
 | `you` | You | あなた |
 | `computer` | Computer {n} | コンピューター{n} |
 | `yourTurn` | Your turn | あなたの番 |
