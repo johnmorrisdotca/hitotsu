@@ -10,9 +10,6 @@ All notable changes to this project are written here. The format follows
 - Preserve play while changing words, colours and sound; support custom tags and shadow-root styles.
 - Compose move/load/finish/error events with JSON-safe data; event games use seat labels while local getters and callbacks keep private names.
 
-
-
-
 ### Added
 
 - Share a package-independent embed builder for option controls, preview adapters, code tabs and shareable links.
@@ -20,6 +17,8 @@ All notable changes to this project are written here. The format follows
 ### Changed
 
 - Group the package family by kind, alphabetize each group, and include the geography packages and REST in Pieces in the shared footer and README.
+
+- Update the shared family description for addresses in all seven supported countries, including France and Germany.
 
 ## [1.3.2] - 2026-10-06
 

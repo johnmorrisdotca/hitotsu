@@ -48,6 +48,13 @@ export type HitotsuStrings = {
   };
 };
 
+/** Native interface, settings and words for host code.
+ * @example
+ * ```ts
+ * import { HITOTSU_STRINGS } from "@johnmorrisdotca/hitotsu";
+ * console.log(HITOTSU_STRINGS.you);
+ * ```
+ */
 export const HITOTSU_STRINGS: Required<HitotsuStrings> = {
   embedError: "The table could not be shown. Check its settings.",
   you: "You",
@@ -90,6 +97,11 @@ export const HITOTSU_STRINGS: Required<HitotsuStrings> = {
 /**
  * The table's words in Japanese. Not yet reviewed by a native reader: a
  * "Fix a translation" issue, naming the string, is welcome.
+ * @example
+ * ```ts
+ * import { HITOTSU_STRINGS_JA } from "@johnmorrisdotca/hitotsu";
+ * console.log(HITOTSU_STRINGS_JA.you);
+ * ```
  */
 export const HITOTSU_STRINGS_JA: Required<HitotsuStrings> = {
   embedError: "テーブルを表示できません。設定を確認してください。",

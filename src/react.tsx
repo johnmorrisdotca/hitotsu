@@ -61,6 +61,13 @@ const OPTION_NAMES = ["players", "computers", "rules", "size", "seed", "language
  * component's own element once the browser has it and taken back on unmount,
  * so it renders nothing on the server and needs no provider. Options are read
  * when it mounts; give it a new `key` to deal again with different ones.
+ * @param props - Native table options and host-div attributes.
+ * @returns A host div whose effect mounts and cleans up the native table.
+ * @example
+ * ```ts
+ * import { HitotsuTable } from "@johnmorrisdotca/hitotsu/react";
+ * console.log(typeof HitotsuTable); // function
+ * ```
  */
 export function HitotsuTable(props: HitotsuTableProps) {
   const host = useRef<HTMLDivElement>(null);
