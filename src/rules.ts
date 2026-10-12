@@ -40,14 +40,45 @@ import {
  * alone.
  */
 
-/** The most at a table: eight, which one deck of 108 deals seven each and leaves a stock to draw from. */
+/** The most at a table: eight, which one deck of 108 deals seven each and leaves a stock to draw from.
+ *
+ * @example
+ * ```ts
+ * import { HITOTSU_MOST_PLAYERS } from "@johnmorrisdotca/hitotsu";
+ * console.log(HITOTSU_MOST_PLAYERS);
+ * ```
+ */
 export const HITOTSU_MOST_PLAYERS = 8;
 
+/** The top card of the discard pile.
+ *
+ * @param game - The current native game; it is left unchanged.
+ * @returns The top card of the discard pile.
+ * @example
+ * ```ts
+ * import { HITOTSU_CLASSIC, hitotsuTop, startHitotsu } from "@johnmorrisdotca/hitotsu";
+ *
+ * const game = startHitotsu(1, ["Aki", "Ben"], 42, HITOTSU_CLASSIC, [true, true])!;
+ * console.log(hitotsuTop(game));
+ * ```
+ */
 export function hitotsuTop(game: HitotsuGame): HitotsuCard {
   return game.discard[game.discard.length - 1] ?? "";
 }
 
-/** A seat's hand; an empty one for a seat the table does not have. */
+/** A seat's hand; an empty one for a seat the table does not have.
+ *
+ * @param game - The current native game; it is left unchanged.
+ * @param seat - The zero-based seat whose choices are requested.
+ * @returns A seat's hand; an empty one for a seat the table does not have.
+ * @example
+ * ```ts
+ * import { HITOTSU_CLASSIC, handOf, startHitotsu } from "@johnmorrisdotca/hitotsu";
+ *
+ * const game = startHitotsu(1, ["Aki", "Ben"], 42, HITOTSU_CLASSIC, [true, true])!;
+ * console.log(handOf(game, 0));
+ * ```
+ */
 export function handOf(game: HitotsuGame, seat: number): HitotsuCard[] {
   return game.hands[seat] ?? [];
 }
@@ -58,7 +89,19 @@ function along(game: HitotsuGame, seat: number, steps: number): number {
   return (((seat + game.direction * steps) % count) + count) % count;
 }
 
-/** Whether a card may go on the pile on an ordinary turn: a wild always; otherwise the colour to follow, or the top card's face. */
+/** Whether a card may go on the pile on an ordinary turn: a wild always; otherwise the colour to follow, or the top card's face.
+ *
+ * @param game - The current native game; it is left unchanged.
+ * @param card - The physical card id; null draws the back where supported.
+ * @returns Whether a card may go on the pile on an ordinary turn: a wild always; otherwise the colour to follow, or the top card's face.
+ * @example
+ * ```ts
+ * import { HITOTSU_CLASSIC, hitotsuMatches, startHitotsu } from "@johnmorrisdotca/hitotsu";
+ *
+ * const game = startHitotsu(1, ["Aki", "Ben"], 42, HITOTSU_CLASSIC, [true, true])!;
+ * console.log(hitotsuMatches(game, game.hands[0]![0]!));
+ * ```
+ */
 export function hitotsuMatches(game: HitotsuGame, card: HitotsuCard): boolean {
   if (isWild(card)) return true;
   const top = hitotsuTop(game);
@@ -79,7 +122,18 @@ function stacks(game: HitotsuGame, card: HitotsuCard): boolean {
   return face === WILD_FOUR || (stacking === "any" && face === DRAW_TWO && colourOf(card) === game.colour);
 }
 
-/** The cards the player to move may play now: on a draw, what stacks; after drawing, the card drawn if it goes. */
+/** The cards the player to move may play now: on a draw, what stacks; after drawing, the card drawn if it goes.
+ *
+ * @param game - The current native game; it is left unchanged.
+ * @returns The cards the player to move may play now: on a draw, what stacks; after drawing, the card drawn if it goes.
+ * @example
+ * ```ts
+ * import { HITOTSU_CLASSIC, hitotsuPlayable, startHitotsu } from "@johnmorrisdotca/hitotsu";
+ *
+ * const game = startHitotsu(1, ["Aki", "Ben"], 42, HITOTSU_CLASSIC, [true, true])!;
+ * console.log(hitotsuPlayable(game));
+ * ```
+ */
 export function hitotsuPlayable(game: HitotsuGame): HitotsuCard[] {
   if (game.phase === "over" || game.toPlay === null) return [];
   const hand = handOf(game, game.toPlay);
@@ -112,7 +166,18 @@ function canDraw(game: HitotsuGame): boolean {
   return game.stock.length > 0 || game.discard.length > 1;
 }
 
-/** Every move the player to move may make now; none once the game is over. Cards played out of turn are `hitotsuJumpIns`. */
+/** Every move the player to move may make now; none once the game is over. Cards played out of turn are `hitotsuJumpIns`.
+ *
+ * @param game - The current native game; it is left unchanged.
+ * @returns Every move the player to move may make now; none once the game is over. Cards played out of turn are `hitotsuJumpIns`.
+ * @example
+ * ```ts
+ * import { HITOTSU_CLASSIC, hitotsuMoves, startHitotsu } from "@johnmorrisdotca/hitotsu";
+ *
+ * const game = startHitotsu(1, ["Aki", "Ben"], 42, HITOTSU_CLASSIC, [true, true])!;
+ * console.log(hitotsuMoves(game));
+ * ```
+ */
 export function hitotsuMoves(game: HitotsuGame): HitotsuMove[] {
   if (game.phase === "over" || game.toPlay === null) return [];
   const seat = game.toPlay;
@@ -130,6 +195,16 @@ export function hitotsuMoves(game: HitotsuGame): HitotsuMove[] {
  * of turn, and play goes on from them. Not on a draw waiting to be taken, a
  * challenge waiting to be made, or while the player to move decides about a
  * card they drew.
+ *
+ * @param game - The current native game; it is left unchanged.
+ * @returns JUMPING IN: with the option on, any other player holding a card identical to the one on top — same colour, same face, never a wild — may play it out of turn, and play goes on from them. Not on a draw waiting to be taken, a challenge waiting to be made, or while the player to move decides about a card they drew.
+ * @example
+ * ```ts
+ * import { HITOTSU_CLASSIC, hitotsuJumpIns, startHitotsu } from "@johnmorrisdotca/hitotsu";
+ *
+ * const game = startHitotsu(1, ["Aki", "Ben"], 42, HITOTSU_CLASSIC, [true, true])!;
+ * console.log(hitotsuJumpIns(game));
+ * ```
  */
 export function hitotsuJumpIns(game: HitotsuGame): HitotsuMove[] {
   if (!game.options.jumpIn || game.phase === "over" || game.toPlay === null) return [];
@@ -201,6 +276,21 @@ function dealHand(base: Omit<HitotsuGame, "hands" | "stock" | "discard" | "colou
   };
 }
 
+/** Deal a new seeded game for two to eight players at a supported match length; null for an unsupported length or player count.
+ *
+ * @param size - The match length: 1 for one hand, or 200 or 500 points.
+ * @param players - The two to eight player names in seat order.
+ * @param seed - The numeric seed that reproduces the same random sequence or deal.
+ * @param options - Native table, rules, sound or drawing settings; omitted fields retain their defaults.
+ * @param computers - Computer-controlled seats: flags for a game, seat indices for a shared table.
+ * @returns Deal a new seeded game for two to eight players at a supported match length; null for an unsupported length or player count.
+ * @example
+ * ```ts
+ * import { HITOTSU_CLASSIC, startHitotsu } from "@johnmorrisdotca/hitotsu";
+ *
+ * console.log(startHitotsu(1, ["Aki", "Ben"], 42, HITOTSU_CLASSIC)?.hands.map((hand) => hand.length));
+ * ```
+ */
 export function startHitotsu(size: number, players: readonly string[], seed = 1, options: HitotsuOptions = HITOTSU_CLASSIC, computers?: readonly boolean[]): HitotsuGame | null {
   if (!(HITOTSU_SIZES as readonly number[]).includes(size)) return null;
   if (players.length < 2 || players.length > HITOTSU_MOST_PLAYERS) return null;
@@ -334,6 +424,19 @@ function challengeFour(game: HitotsuGame, seat: number): HitotsuGame {
   return { ...drew, toPlay: along(drew, seat, 1), news: [{ kind: "challenge", seat, by, guilty: false }, { kind: "took", seat, count }] };
 }
 
+/** Apply a legal move and return a new game with that move recorded; null for an illegal move or a finished game. The input game is unchanged.
+ *
+ * @param game - The current native game; it is left unchanged.
+ * @param move - The native move to apply, validate or inspect.
+ * @returns Apply a legal move and return a new game with that move recorded; null for an illegal move or a finished game. The input game is unchanged.
+ * @example
+ * ```ts
+ * import { HITOTSU_CLASSIC, hitotsuMoves, playHitotsu, startHitotsu } from "@johnmorrisdotca/hitotsu";
+ *
+ * const game = startHitotsu(1, ["Aki", "Ben"], 42, HITOTSU_CLASSIC, [true, true])!;
+ * console.log(playHitotsu(game, hitotsuMoves(game)[0]!)?.moves.length);
+ * ```
+ */
 export function playHitotsu(game: HitotsuGame, move: HitotsuMove): HitotsuGame | null {
   const seat = game.toPlay;
   if (game.phase === "over" || seat === null) return null;
@@ -350,7 +453,18 @@ export function playHitotsu(game: HitotsuGame, move: HitotsuMove): HitotsuGame |
   return next === null ? null : { ...next, moves: [...game.moves, move] };
 }
 
-/** Once the game is over: whoever went out in a game of one hand; otherwise the highest score, level on it sharing the win. */
+/** Once the game is over: whoever went out in a game of one hand; otherwise the highest score, level on it sharing the win.
+ *
+ * @param game - The current native game; it is left unchanged.
+ * @returns Once the game is over: whoever went out in a game of one hand; otherwise the highest score, level on it sharing the win.
+ * @example
+ * ```ts
+ * import { HITOTSU_CLASSIC, hitotsuWinners, startHitotsu } from "@johnmorrisdotca/hitotsu";
+ *
+ * const game = startHitotsu(1, ["Aki", "Ben"], 42, HITOTSU_CLASSIC, [true, true])!;
+ * console.log(hitotsuWinners(game));
+ * ```
+ */
 export function hitotsuWinners(game: HitotsuGame): number[] {
   if (game.phase !== "over") return [];
   if (game.size === HITOTSU_ONE_HAND) return game.results[game.results.length - 1]?.winners ?? [];

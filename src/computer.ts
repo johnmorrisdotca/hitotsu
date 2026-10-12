@@ -19,6 +19,15 @@ import { DRAW_TWO, REVERSE, SKIP, WILD, WILD_FOUR, colourOf, faceOf, hitotsuPoin
  *   most of. It always calls "Hitotsu!", and jumps in whenever it can.
  * - With nothing to play it draws, and plays the card drawn if it goes and is
  *   not a wild (which it keeps).
+ *
+ * @example
+ * ```ts
+ * import type { HitotsuView } from "@johnmorrisdotca/hitotsu";
+ * import { hitotsuView, startHitotsu } from "@johnmorrisdotca/hitotsu";
+ *
+ * const value: HitotsuView = hitotsuView(startHitotsu(1, ["Aki", "Ben"], 42)!, 0);
+ * console.log(value.counts);
+ * ```
  */
 
 export type HitotsuView = {
@@ -34,6 +43,19 @@ export type HitotsuView = {
   legal: readonly HitotsuMove[];
 };
 
+/** One seat’s hand and legal choices, with public counts and the current colour, for a computer player.
+ *
+ * @param game - The current native game; it is left unchanged.
+ * @param seat - The zero-based seat whose choices are requested.
+ * @returns One seat’s hand and legal choices, with public counts and the current colour, for a computer player.
+ * @example
+ * ```ts
+ * import { HITOTSU_CLASSIC, hitotsuView, startHitotsu } from "@johnmorrisdotca/hitotsu";
+ *
+ * const game = startHitotsu(1, ["Aki", "Ben"], 42, HITOTSU_CLASSIC, [true, true])!;
+ * console.log(hitotsuView(game, 0));
+ * ```
+ */
 export function hitotsuView(game: HitotsuGame, seat: number = game.toPlay ?? 0): HitotsuView {
   const count = game.players.length;
   return {
@@ -48,7 +70,17 @@ export function hitotsuView(game: HitotsuGame, seat: number = game.toPlay ?? 0):
   };
 }
 
-/** The colour this hand holds most of, red first among equals so the choice is always the same. */
+/** The colour this hand holds most of, red first among equals so the choice is always the same.
+ *
+ * @param hand - The hand number for deterministic shuffling, or the held cards where an array is accepted.
+ * @returns The colour this hand holds most of, red first among equals so the choice is always the same.
+ * @example
+ * ```ts
+ * import { longestColour } from "@johnmorrisdotca/hitotsu";
+ *
+ * console.log(longestColour(["R70", "R20", "B50"]));
+ * ```
+ */
 export function longestColour(hand: readonly HitotsuCard[]): HitotsuColour {
   const count = (colour: HitotsuColour) => hand.filter((card) => colourOf(card) === colour).length;
   return HITOTSU_COLOURS.reduce((best, colour) => (count(colour) > count(best) ? colour : best));
@@ -74,6 +106,18 @@ function playsOf(view: HitotsuView): Play[] {
   return cards.map((card) => bestWay(view, plays.filter((move) => cardOf(move) === card)));
 }
 
+/** Choose a move for the current player from the legal choices. Call only while the game is playing.
+ *
+ * @param game - The current native game; it is left unchanged.
+ * @returns A native legal move for the current player while the game is playing.
+ * @example
+ * ```ts
+ * import { HITOTSU_CLASSIC, hitotsuComputer, startHitotsu } from "@johnmorrisdotca/hitotsu";
+ *
+ * const game = startHitotsu(1, ["Aki", "Ben"], 42, HITOTSU_CLASSIC, [true, true])!;
+ * console.log(hitotsuComputer(game));
+ * ```
+ */
 export function hitotsuComputer(game: HitotsuGame): HitotsuMove {
   const view = hitotsuView(game);
   const plays = playsOf(view);
@@ -116,6 +160,16 @@ export function hitotsuComputer(game: HitotsuGame): HitotsuMove {
  * A computer's card played out of turn, where the table jumps in: the first
  * computer seat round from the player to move that holds a card identical to
  * the top one. Null when none can, or jump-in is not played.
+ *
+ * @param game - The current native game; it is left unchanged.
+ * @returns A computer's card played out of turn, where the table jumps in: the first computer seat round from the player to move that holds a card identical to the top one. null when none can, or jump-in is not played.
+ * @example
+ * ```ts
+ * import { HITOTSU_CLASSIC, hitotsuComputerJump, startHitotsu } from "@johnmorrisdotca/hitotsu";
+ *
+ * const game = startHitotsu(1, ["Aki", "Ben"], 42, HITOTSU_CLASSIC, [true, true])!;
+ * console.log(hitotsuComputerJump(game));
+ * ```
  */
 export function hitotsuComputerJump(game: HitotsuGame): HitotsuMove | null {
   const jumps = hitotsuJumpIns(game);

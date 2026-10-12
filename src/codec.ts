@@ -18,7 +18,17 @@ const KEPT_NAME = "hitotsu";
 const isColour = (value: unknown) => typeof value === "string" && (HITOTSU_COLOURS as readonly string[]).includes(value);
 const isSeat = (value: unknown) => Number.isInteger(value) && (value as number) >= 0 && (value as number) < 8;
 
-/** House rules as something sent them, checked for shape, or null. */
+/** House rules as something sent them, checked for shape, or null.
+ *
+ * @param value - The unknown card, move or rules value to validate.
+ * @returns Validated house rules, or null when the object does not have the supported fields and values.
+ * @example
+ * ```ts
+ * import { HITOTSU_PARTY, readHitotsuOptions } from "@johnmorrisdotca/hitotsu";
+ *
+ * console.log(readHitotsuOptions(HITOTSU_PARTY));
+ * ```
+ */
 export function readHitotsuOptions(value: unknown): HitotsuOptions | null {
   if (typeof value !== "object" || value === null) return null;
   const { stacking, jumpIn, sevenZero, drawToMatch, wildFour, deal } = value as Record<string, unknown>;
@@ -29,7 +39,17 @@ export function readHitotsuOptions(value: unknown): HitotsuOptions | null {
   return { stacking, jumpIn, sevenZero, drawToMatch, wildFour, deal };
 }
 
-/** A move as something sent it, checked for its shape only: whether it may be made is the rules'. */
+/** A move as something sent it, checked for its shape only: whether it may be made is the rules'.
+ *
+ * @param value - The unknown card, move or rules value to validate.
+ * @returns A structurally valid move, or null for an invalid shape. Use playHitotsu to check whether it is legal now.
+ * @example
+ * ```ts
+ * import { readHitotsuMove } from "@johnmorrisdotca/hitotsu";
+ *
+ * console.log(readHitotsuMove({ draw: true }));
+ * ```
+ */
 export function readHitotsuMove(value: unknown): HitotsuMove | null {
   if (typeof value !== "object" || value === null) return null;
   const move = value as Record<string, unknown>;
@@ -58,10 +78,34 @@ export function readHitotsuMove(value: unknown): HitotsuMove | null {
   return null;
 }
 
+/** Save the setup, seed and ordered move log as JSON text; hands and piles are reconstructed when decoded.
+ *
+ * @param game - The current native game; it is left unchanged.
+ * @returns Save the setup, seed and ordered move log as JSON text; hands and piles are reconstructed when decoded.
+ * @example
+ * ```ts
+ * import { HITOTSU_CLASSIC, encodeHitotsu, startHitotsu } from "@johnmorrisdotca/hitotsu";
+ *
+ * const game = startHitotsu(1, ["Aki", "Ben"], 42, HITOTSU_CLASSIC, [true, true])!;
+ * console.log(encodeHitotsu(game));
+ * ```
+ */
 export function encodeHitotsu(game: HitotsuGame): string {
   return JSON.stringify({ v: KEPT_VERSION, g: KEPT_NAME, size: game.size, players: game.players, computers: game.computers, seed: game.seed, options: game.options, moves: game.moves });
 }
 
+/** Read a saved setup and replay every logged move through the native rules; null for an unreadable, unsupported or illegal saved game.
+ *
+ * @param text - The encoded saved game, or null when none was supplied.
+ * @returns Read a saved setup and replay every logged move through the native rules; null for an unreadable, unsupported or illegal saved game.
+ * @example
+ * ```ts
+ * import { HITOTSU_CLASSIC, decodeHitotsu, encodeHitotsu, startHitotsu } from "@johnmorrisdotca/hitotsu";
+ *
+ * const game = startHitotsu(1, ["Aki", "Ben"], 42, HITOTSU_CLASSIC, [true, true])!;
+ * console.log(decodeHitotsu(encodeHitotsu(game))?.hands[0]);
+ * ```
+ */
 export function decodeHitotsu(text: string | null): HitotsuGame | null {
   if (text === null) return null;
   let kept: unknown;

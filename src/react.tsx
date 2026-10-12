@@ -29,6 +29,16 @@ function Shape({ shape }: { shape: HitotsuShape }) {
  * or the back for `null`. `called` marks a wild on the pile with the colour it
  * called. The design is `hitotsuCardShapes`, so this and `hitotsuCardSvg`
  * always agree.
+ *
+ * @param options - Native table, rules, sound or drawing settings; omitted fields retain their defaults.
+ * @returns The card’s React SVG shapes, or the back when card is null.
+ * @example
+ * ```ts
+ * import { HitotsuCardDrawing } from "@johnmorrisdotca/hitotsu/react";
+ *
+ * import { createElement } from "react";
+ * console.log(createElement(HitotsuCardDrawing, { card: "R70" }).props.card);
+ * ```
  */
 export function HitotsuCardDrawing({ card, called }: { card: HitotsuCard | null; called?: HitotsuColour }) {
   return (
@@ -40,7 +50,18 @@ export function HitotsuCardDrawing({ card, called }: { card: HitotsuCard | null;
   );
 }
 
-/** A card as a whole SVG, sized by its parent or its own `width`: `<HitotsuCardImage card="R70" width={80} />`. */
+/** A card as a whole SVG, sized by its parent or its own `width`: `<HitotsuCardImage card="R70" width={80} />`.
+ *
+ * @param options - Native table, rules, sound or drawing settings; omitted fields retain their defaults.
+ * @returns A React SVG element containing the complete card drawing.
+ * @example
+ * ```ts
+ * import { HitotsuCardImage } from "@johnmorrisdotca/hitotsu/react";
+ *
+ * import { createElement } from "react";
+ * console.log(createElement(HitotsuCardImage, { card: "R70", width: 80 }).props.width);
+ * ```
+ */
 export function HitotsuCardImage({ card, called, ...svg }: { card: HitotsuCard | null; called?: HitotsuColour } & SVGAttributes<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 100 140" aria-hidden="true" {...svg}>
@@ -49,6 +70,17 @@ export function HitotsuCardImage({ card, called, ...svg }: { card: HitotsuCard |
   );
 }
 
+/** Native table settings and div attributes for the React component, with an optional onReady callback.
+ *
+ * @example
+ * ```ts
+ * import type { HitotsuTableProps } from "@johnmorrisdotca/hitotsu/react";
+ *
+ *
+ * const value: HitotsuTableProps = { players: ["Aki", "Ben"], seed: 42 };
+ * console.log(value.seed);
+ * ```
+ */
 export type HitotsuTableProps = HitotsuTableOptions & { onReady?: (table: HitotsuHandle) => void } & Omit<HTMLAttributes<HTMLDivElement>, keyof HitotsuTableOptions>;
 
 const OPTION_NAMES = ["players", "computers", "rules", "size", "seed", "language", "strings", "sound", "computerMs", "theme", "onMove", "onReady"] as const;

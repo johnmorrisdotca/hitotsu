@@ -15,7 +15,14 @@ import type { HitotsuCard, HitotsuColour } from "./types.ts";
  * is ink with 一つ in a ring of the four colours.
  */
 
-/** Each colour's fill, the ink written on it, its element and its name; `W` is the wilds' and the back's. */
+/** Each colour's fill, the ink written on it, its element and its name; `W` is the wilds' and the back's.
+ *
+ * @example
+ * ```ts
+ * import { HITOTSU_COLOUR_LOOK } from "@johnmorrisdotca/hitotsu";
+ * console.log(HITOTSU_COLOUR_LOOK.R.element);
+ * ```
+ */
 export const HITOTSU_COLOUR_LOOK: Record<HitotsuColour | "W", { fill: string; ink: string; element: string; name: string }> = {
   R: { fill: "#c8372d", ink: "#ffffff", element: "火", name: "Red" },
   Y: { fill: "#dfa11b", ink: "#1f1a12", element: "土", name: "Yellow" },
@@ -24,16 +31,47 @@ export const HITOTSU_COLOUR_LOOK: Record<HitotsuColour | "W", { fill: string; in
   W: { fill: "#24201d", ink: "#ffffff", element: "五", name: "Wild" },
 };
 
-/** What each face shows in the middle of a card and in its corners; a number shows itself. */
+/** What each face shows in the middle of a card and in its corners; a number shows itself.
+ *
+ * @example
+ * ```ts
+ * import { HITOTSU_FACE_MARK } from "@johnmorrisdotca/hitotsu";
+ * console.log(HITOTSU_FACE_MARK);
+ * ```
+ */
 export const HITOTSU_FACE_MARK: Record<string, string> = { S: "⊘", R: "⇄", D: "+2", W: "", F: "+4" };
 
-/** The card's paper, round every card and under the diamond. */
+/** The card's paper, round every card and under the diamond.
+ *
+ * @example
+ * ```ts
+ * import { HITOTSU_PAPER } from "@johnmorrisdotca/hitotsu";
+ * console.log(HITOTSU_PAPER);
+ * ```
+ */
 export const HITOTSU_PAPER = "#fffdf6";
 
-/** The card's width and height in the design's units. */
+/** The card's width and height in the design's units.
+ *
+ * @example
+ * ```ts
+ * import { HITOTSU_CARD_BOX } from "@johnmorrisdotca/hitotsu";
+ * console.log(HITOTSU_CARD_BOX);
+ * ```
+ */
 export const HITOTSU_CARD_BOX = { width: 100, height: 140 } as const;
 
-/** One shape of the design. Text is centred on its `x`, and its `y` is the baseline. */
+/** One shape of the design. Text is centred on its `x`, and its `y` is the baseline.
+ *
+ * @example
+ * ```ts
+ * import type { HitotsuShape } from "@johnmorrisdotca/hitotsu";
+ * import { hitotsuCardShapes } from "@johnmorrisdotca/hitotsu";
+ *
+ * const value: HitotsuShape = hitotsuCardShapes("R70")[0]!;
+ * console.log(value.kind);
+ * ```
+ */
 export type HitotsuShape =
   | { kind: "rect"; x: number; y: number; width: number; height: number; rx: number; fill: string; stroke?: string; strokeWidth?: number; transform?: string }
   | { kind: "path"; d: string; fill: string }
@@ -59,6 +97,16 @@ function quarters(cx: number, cy: number, r: number): HitotsuShape[] {
 /**
  * The shapes of one card, in drawing order: a face, or the back for `null`.
  * `called` marks a wild on the pile with the colour it called.
+ *
+ * @param card - The physical card id; null draws the back where supported.
+ * @param called - The colour called by a wild card on the pile.
+ * @returns The shapes of one card, in drawing order: a face, or the back for `null`. `called` marks a wild on the pile with the colour it called.
+ * @example
+ * ```ts
+ * import { hitotsuCardShapes } from "@johnmorrisdotca/hitotsu";
+ *
+ * console.log(hitotsuCardShapes("R70").map((shape) => shape.kind));
+ * ```
  */
 export function hitotsuCardShapes(card: HitotsuCard | null, called?: HitotsuColour): HitotsuShape[] {
   const ink = HITOTSU_COLOUR_LOOK.W.fill;
@@ -103,7 +151,17 @@ function attributes(values: Record<string, string | number | undefined>): string
     .join("");
 }
 
-/** One shape as SVG markup. */
+/** One shape as SVG markup.
+ *
+ * @param shape - One of the native card drawing shapes.
+ * @returns One shape as SVG markup.
+ * @example
+ * ```ts
+ * import { hitotsuCardShapes, hitotsuShapeSvg } from "@johnmorrisdotca/hitotsu";
+ *
+ * console.log(hitotsuShapeSvg(hitotsuCardShapes("R70")[0]!));
+ * ```
+ */
 export function hitotsuShapeSvg(shape: HitotsuShape): string {
   switch (shape.kind) {
     case "rect":
@@ -117,7 +175,18 @@ export function hitotsuShapeSvg(shape: HitotsuShape): string {
   }
 }
 
-/** A whole card as an SVG document, `width` pixels wide (140/100 of it tall): a face, or the back for `null`. */
+/** A whole card as an SVG document, `width` pixels wide (140/100 of it tall): a face, or the back for `null`.
+ *
+ * @param card - The physical card id; null draws the back where supported.
+ * @param options - Native table, rules, sound or drawing settings; omitted fields retain their defaults.
+ * @returns The complete SVG document for the card or its back.
+ * @example
+ * ```ts
+ * import { hitotsuCardSvg } from "@johnmorrisdotca/hitotsu";
+ *
+ * console.log(hitotsuCardSvg("R70", { width: 80, title: "Red seven" }).slice(0, 120));
+ * ```
+ */
 export function hitotsuCardSvg(card: HitotsuCard | null, { width = 100, called, title }: { width?: number; called?: HitotsuColour; title?: string } = {}): string {
   const height = Math.round((width * HITOTSU_CARD_BOX.height) / HITOTSU_CARD_BOX.width);
   const label = title === undefined ? ` aria-hidden="true"` : ` role="img" aria-label="${escaped(title)}"`;

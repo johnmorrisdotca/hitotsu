@@ -6,7 +6,17 @@
  * `rules.ts`.
  */
 
-/** A card's colour: red, yellow, green or blue. A wild card has none until it is played and one is called. */
+/** A card's colour: red, yellow, green or blue. A wild card has none until it is played and one is called.
+ *
+ * @example
+ * ```ts
+ * import type { HitotsuColour } from "@johnmorrisdotca/hitotsu";
+ *
+ *
+ * const value: HitotsuColour = "R";
+ * console.log(value);
+ * ```
+ */
 export type HitotsuColour = "R" | "Y" | "G" | "B";
 
 /**
@@ -14,10 +24,29 @@ export type HitotsuColour = "R" | "Y" | "G" | "B";
  * digit, `S` skip, `R` reverse, `D` draw two, `W` wild, `F` wild draw four —
  * and which copy of that card it is, so the two red fives are `R50` and `R51`.
  * Two cards are the same card to play when their first two letters are.
+ *
+ * @example
+ * ```ts
+ * import type { HitotsuCard } from "@johnmorrisdotca/hitotsu";
+ * import { hitotsuWords } from "@johnmorrisdotca/hitotsu";
+ *
+ * const value: HitotsuCard = "R70";
+ * console.log(hitotsuWords(value));
+ * ```
  */
 export type HitotsuCard = string;
 
-/** How the house plays: each popular variant, as a choice at the set-up. */
+/** How the house plays: each popular variant, as a choice at the set-up.
+ *
+ * @example
+ * ```ts
+ * import type { HitotsuOptions } from "@johnmorrisdotca/hitotsu";
+ * import { HITOTSU_PARTY } from "@johnmorrisdotca/hitotsu";
+ *
+ * const value: HitotsuOptions = HITOTSU_PARTY;
+ * console.log(value.stacking);
+ * ```
+ */
 export type HitotsuOptions = {
   /**
    * Stacking a draw card on a draw card, so the next player takes the total:
@@ -41,7 +70,17 @@ export type HitotsuOptions = {
   deal: 7 | 5;
 };
 
-/** One move: a card played, a draw, a turn passed, a pending draw taken, a Wild Draw Four challenged, or a card played out of turn. */
+/** One move: a card played, a draw, a turn passed, a pending draw taken, a Wild Draw Four challenged, or a card played out of turn.
+ *
+ * @example
+ * ```ts
+ * import type { HitotsuMove } from "@johnmorrisdotca/hitotsu";
+ *
+ *
+ * const value: HitotsuMove = { draw: true };
+ * console.log(value);
+ * ```
+ */
 export type HitotsuMove =
   | {
       play: HitotsuCard;
@@ -58,7 +97,17 @@ export type HitotsuMove =
   | { challenge: true }
   | { jump: HitotsuCard; seat: number; colour?: HitotsuColour; swap?: number; call?: boolean };
 
-/** Something that happened in the last move, for the table to say: nothing a player could not have seen. */
+/** Something that happened in the last move, for the table to say: nothing a player could not have seen.
+ *
+ * @example
+ * ```ts
+ * import type { HitotsuNews } from "@johnmorrisdotca/hitotsu";
+ *
+ *
+ * const value: HitotsuNews = { kind: "drew", seat: 0, count: 1 };
+ * console.log(value.kind);
+ * ```
+ */
 export type HitotsuNews =
   | { kind: "caught"; seat: number }
   | { kind: "took"; seat: number; count: number }
@@ -70,16 +119,45 @@ export type HitotsuNews =
   | { kind: "reversed" }
   | { kind: "drew"; seat: number; count: number };
 
-/** How a hand ended: who won it and what they scored, or who held least when nobody could go on. */
+/** How a hand ended: who won it and what they scored, or who held least when nobody could go on.
+ *
+ * @example
+ * ```ts
+ * import type { HitotsuResult } from "@johnmorrisdotca/hitotsu";
+ *
+ *
+ * const value: HitotsuResult = { winners: [0], points: 40, blocked: false };
+ * console.log(value.points);
+ * ```
+ */
 export type HitotsuResult = { winners: number[]; points: number; blocked: boolean };
 
-/** A Wild Draw Four the player to move may challenge: who played it, and whether they held a card of the colour it was played on. */
+/** A Wild Draw Four the player to move may challenge: who played it, and whether they held a card of the colour it was played on.
+ *
+ * @example
+ * ```ts
+ * import type { HitotsuChallenge } from "@johnmorrisdotca/hitotsu";
+ *
+ *
+ * const value: HitotsuChallenge = { by: 1, bluffed: false };
+ * console.log(value.by);
+ * ```
+ */
 export type HitotsuChallenge = { by: number; bluffed: boolean };
 
 /**
  * A GAME OF HITOTSU: its table and moves (what is kept), and the hand they
  * have reached. `size` is the score that wins — 200 or 500 — or 1 for a game
  * of a single hand.
+ *
+ * @example
+ * ```ts
+ * import type { HitotsuGame } from "@johnmorrisdotca/hitotsu";
+ * import { startHitotsu } from "@johnmorrisdotca/hitotsu";
+ *
+ * const value: HitotsuGame = startHitotsu(1, ["Aki", "Ben"], 42)!;
+ * console.log(value.hands.map((hand) => hand.length));
+ * ```
  */
 export type HitotsuGame = {
   size: number;

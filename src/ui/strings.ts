@@ -142,15 +142,45 @@ export const HITOTSU_STRINGS_JA: Required<HitotsuStrings> = {
   },
 };
 
-/** The languages the table speaks: English, and Japanese (`"ja"`). */
+/** The languages the table speaks: English, and Japanese (`"ja"`).
+ *
+ * @example
+ * ```ts
+ * import type { HitotsuLanguage } from "@johnmorrisdotca/hitotsu";
+ *
+ *
+ * const value: HitotsuLanguage = "ja";
+ * console.log(value);
+ * ```
+ */
 export type HitotsuLanguage = "en" | "ja";
 
-/** The table's words in a language: `HITOTSU_STRINGS` for `"en"`, `HITOTSU_STRINGS_JA` for `"ja"`. */
+/** The table's words in a language: `HITOTSU_STRINGS` for `"en"`, `HITOTSU_STRINGS_JA` for `"ja"`.
+ *
+ * @param language - English or Japanese for the displayed words.
+ * @returns The complete native string table for the requested language.
+ * @example
+ * ```ts
+ * import { hitotsuStrings } from "@johnmorrisdotca/hitotsu";
+ *
+ * console.log(hitotsuStrings("ja").yourTurn);
+ * ```
+ */
 export function hitotsuStrings(language: HitotsuLanguage): Required<HitotsuStrings> {
   return language === "ja" ? HITOTSU_STRINGS_JA : HITOTSU_STRINGS;
 }
 
-/** The language a language tag such as `"ja"`, `"ja-JP"` or `"en-GB"` asks for: Japanese for any `ja`, English for everything else, and for nothing. */
+/** The language a language tag such as `"ja"`, `"ja-JP"` or `"en-GB"` asks for: Japanese for any `ja`, English for everything else, and for nothing.
+ *
+ * @param tag - The language tag to interpret.
+ * @returns The language a language tag such as `"ja"`, `"ja-JP"` or `"en-GB"` asks for: Japanese for any `ja`, English for everything else, and for nothing.
+ * @example
+ * ```ts
+ * import { hitotsuLanguageOf } from "@johnmorrisdotca/hitotsu";
+ *
+ * console.log(hitotsuLanguageOf("ja-JP"));
+ * ```
+ */
 export function hitotsuLanguageOf(tag: string | null | undefined): HitotsuLanguage {
   return /^ja(?:[-_]|$)/i.test(tag ?? "") ? "ja" : "en";
 }
