@@ -11,7 +11,7 @@ const icon = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewB
 const frame = ({ title, description, links, body, scripts }) => `<!doctype html>
 <html lang="en">
   <head>
-    ${familyHead({ id, title, description, ogTitle: "Hitotsu 一つ: the colour-card game", ogDescription: "Match the colour or the number, and call Hitotsu! with one card left. Play against computers." })}
+    ${familyHead({ id, title, description, ogTitle: "Hitotsu 一つ — Colour-card shedding game for two to eight", ogDescription: "Match the colour or the number, and call Hitotsu! with one card left. Play against computers." })}
     <link rel="icon" href="${icon}" />
     <link rel="stylesheet" href="family.css" />
     <link rel="stylesheet" href="hitotsu.css" />
@@ -36,9 +36,9 @@ cpSync("dist", "site/dist", { recursive: true });
 writeFileSync(
   "site/index.html",
   frame({
-    title: "Hitotsu · the colour-card game, against computers",
+    title: "Hitotsu 一つ — Colour-card shedding game for two to eight",
     description: "Play Hitotsu against one to seven computers: match the colour or the number, and call Hitotsu! with one card left. Classic rules or party mode, in English and Japanese. Free and open source.",
-    links: [{ href: "api.html", say: "pageApi" }, { href: "builder.html", say: "pageBuilder" }],
+    links: [{ href: "docs/index.html", say: "pageDocs" }, { href: "api.html", say: "pageApi" }, { href: "builder.html", say: "pageBuilder" }],
     body: readFileSync("demo/body.html", "utf8").replace("__UNREVIEWED__", familyUnreviewed({ id })).trimEnd(),
     scripts: `<script type="module" src="page.js"></script>`,
   }),
@@ -48,7 +48,7 @@ const api = apiBody();
 writeFileSync(
   "site/api.html",
   frame({
-    title: "Hitotsu API reference: every export, with its signature",
+    title: "Hitotsu 一つ — Colour-card shedding game for two to eight",
     description: "The API reference of the Hitotsu package: every export of every entry point, with its signature and its documentation, made from the source.",
     links: [{ href: "./", say: "pageBack" }],
     body: `      ${api.html}\n      ${familyUnreviewed({ id })}`,
@@ -67,7 +67,7 @@ writeFileSync(
 console.log(`site/ is ready (${api.total} exports in api.html): serve it, or let the Pages workflow publish it.`);
 
 writeFileSync("site/family-embed-builder.js", `export const FAMILY_EMBED_BUILDER_WORDS = ${JSON.stringify(FAMILY_EMBED_BUILDER_WORDS)};\nexport ${familyEmbedBuilder.toString()};\n`);
-const builderParts = { builderHead: familyHead({ id, title: "Hitotsu · build a table embed", description: "Choose rules and a seed, preview a colour-card table and copy the embed code." }), builderHeader: familyHeader({ id, links: [{ href: "./", say: "toGallery" }] }), unreviewed: familyUnreviewed({ id }), footer: familyFooter({ id }), script: `<script>${FAMILY_SCRIPT}</script>` };
+const builderParts = { builderHead: familyHead({ id, title: "Hitotsu 一つ — Colour-card shedding game for two to eight", description: "Choose rules and a seed, preview a colour-card table and copy the embed code." }), builderHeader: familyHeader({ id, links: [{ href: "./", say: "toGallery" }, { href: "docs/index.html", say: "pageDocs" }, { href: "api.html", say: "pageApi" }] }), unreviewed: familyUnreviewed({ id }), footer: familyFooter({ id }), script: `<script>${FAMILY_SCRIPT}</script>` };
 writeFileSync("site/builder.html", readFileSync("demo/builder.html", "utf8").replace(/<!-- family:([A-Za-z]+) -->/g, (_match, key) => builderParts[key]));
 cpSync("demo/embed", "site/embed", { recursive: true });
 for (const file of ["builder.js", "builder.css"]) cpSync(`demo/${file}`, `site/${file}`);

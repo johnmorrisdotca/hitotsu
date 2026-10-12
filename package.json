@@ -1,7 +1,7 @@
 {
   "name": "@johnmorrisdotca/hitotsu",
   "version": "1.3.2",
-  "description": "Hitotsu, a colour-card shedding game for two to eight: the familiar play, the popular house rules as options, a computer player, a table for several devices, and its own deck. Zero dependencies.",
+  "description": "Hitotsu \u4e00\u3064 \u2014 Colour-card shedding game for two to eight: classic and party rules, a computer player, a table for several devices and its own deck. Zero dependencies.",
   "license": "MIT",
   "author": "John Morris",
   "homepage": "https://johnmorrisdotca.github.io/hitotsu/",
@@ -75,6 +75,7 @@
     "tabletop",
     "turn-based-game",
     "typescript",
+    "uno-like",
     "web-component",
     "wild-draw-four",
     "zero-dependencies"
@@ -140,7 +141,10 @@
     "test:cli": "pnpm build && node scripts/check-cli.mjs",
     "test:package": "pnpm build && node scripts/check-package.mjs",
     "family:readme": "node scripts/family-readme.mjs",
-    "test:demo": "pnpm site && playwright test"
+    "test:demo": "pnpm site && node scripts/docs-site.mjs build && playwright test",
+    "docs:site": "pnpm build && node scripts/docs-site.mjs build",
+    "docs:check": "pnpm build && node scripts/docs-site.mjs check",
+    "size": "node scripts/docs-site.mjs size"
   },
   "devDependencies": {
     "@eslint/js": "^9.0.0",
@@ -150,7 +154,10 @@
     "react": "^19.0.0",
     "typescript": "^5.9.0",
     "typescript-eslint": "^8.0.0",
-    "vitest": "^5.0.0"
+    "vitest": "^5.0.0",
+    "pagefind": "^1.5.2",
+    "marked": "^18.0.0",
+    "esbuild": "^0.28.0"
   },
   "peerDependencies": {
     "react": ">=18"

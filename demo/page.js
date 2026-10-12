@@ -12,6 +12,7 @@ const WORDS = {
     pitch: "Match the colour or the number, and call Hitotsu! with one card left. Play against one to seven computers, by the classic rules or the party ones.",
     name: "Hitotsu is Japanese for “one”: the call you make with one card left.",
     nameLink: "About the name",
+    pageDocs: "Docs",
     pageApi: "API reference",
     pageBack: "The table",
     pageApiIntro: "Every export of every entry point, with its signature and its doc comment. Made from the source when the site is built, so it cannot fall behind the code.",
@@ -43,6 +44,7 @@ const WORDS = {
     pitch: "色か数字をそろえて出し、手札が1枚になったら「ヒトツ！」と言います。コンピューター1〜7人と、クラシックかパーティーのルールで遊べます。",
     name: "「ヒトツ」は「一つ」。手札が1枚になったときに言う言葉です。",
     nameLink: "名前について（英語）",
+    pageDocs: "ドキュメント",
     pageApi: "API リファレンス",
     pageBack: "テーブル",
     pageApiIntro: "すべてのエントリポイントのすべてのエクスポートを、シグネチャとドキュメントコメントつきで載せています。サイトをビルドするときにソースから作るので、コードとずれません。",
@@ -122,6 +124,7 @@ function mount() {
 }
 
 function note() {
+  document.querySelector('[data-say="pageDocs"]')?.setAttribute("href", language.lang === "ja" ? "docs/ja/index.html" : "docs/index.html");
   $("rules-note").textContent = language.word(mode === "party" ? "noteParty" : "noteClassic");
 }
 

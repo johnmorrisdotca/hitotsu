@@ -156,11 +156,15 @@ test("in Japanese the page and the table speak Japanese, and the unreviewed note
   await expect(page.locator("#unreviewed")).toBeHidden();
 });
 
-test("the API reference is in the family's frame and links back", async ({ page }) => {
+test("the existing API address keeps export anchors and links to the documentation", async ({ page }) => {
   const errors = await open(page, "api.html?lang=en");
-  await expect(page.locator("h1")).toHaveText("Hitotsu一つ");
-  expect(await page.locator("article[data-kind]").count()).toBeGreaterThan(50);
-  await expect(page.locator("header nav a", { hasText: "The table" })).toHaveAttribute("href", "./");
+  await expect(page.locator("h1")).toHaveText("Hitotsu API: every export");
+  expect(await page.locator("article[id]").count()).toBeGreaterThan(50);
+  await expect(page.locator("#main-startHitotsu h3 a")).toHaveAttribute("href", "docs/api/main/startHitotsu.html");
+  await expect(page.locator(".docs-crumbs a")).toHaveAttribute("href", "docs/index.html");
+  await page.locator(".docs-crumbs a").click();
+  await page.getByRole("link", { name: "Demo", exact: true }).click();
+  await expect(page.locator("html")).toHaveAttribute("data-ready", "true");
   await sound(page, errors);
 });
 

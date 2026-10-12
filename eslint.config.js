@@ -5,7 +5,7 @@ const browser = Object.fromEntries(["document", "window", "location", "history",
 
 export default tseslint.config(
   { ignores: ["dist/", "site/", "node_modules/", "test-results/", "playwright-report/"] },
-  { ignores: [".readme-examples/"] },
+  { ignores: [".readme-examples/", ".docs-examples/"] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   { files: ["scripts/**/*.mjs"], languageOptions: { globals: { console: "readonly" } } },

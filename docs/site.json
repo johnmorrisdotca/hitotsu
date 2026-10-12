@@ -1,0 +1,38 @@
+{
+  "job": "Colour-card shedding game for two to eight",
+  "pitch": {
+    "en": "Match the colour or number, call with one card left, and play classic or party rules against computers or at a shared table.",
+    "ja": "色か数字をそろえて出し、手札が1枚になったら声をかけます。クラシックやパーティーのルールで、コンピューターや共有のテーブルで遊べます。"
+  },
+  "name": {
+    "en": "Hitotsu is Japanese for one: the call with one card left.",
+    "ja": "「ヒトツ」は「一つ」。手札が1枚になったときに言う言葉です。"
+  },
+  "icon": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect x='14' y='6' width='72' height='88' rx='12' fill='%23b5452c' stroke='%23fffdf8' stroke-width='6'/%3E%3Cpath d='M36 54 H64' stroke='%23fffdf8' stroke-width='9' stroke-linecap='round'/%3E%3C/svg%3E",
+  "entries": {
+    ".": {
+      "en": "Game engine and table",
+      "ja": "ゲームとテーブル"
+    },
+    "./react": {
+      "en": "React components",
+      "ja": "Reactコンポーネント"
+    },
+    "./element": {
+      "en": "Table element",
+      "ja": "テーブルの要素"
+    },
+    "./element/define": {
+      "en": "Register the tag",
+      "ja": "タグの登録"
+    },
+    "./element-define": {
+      "en": "Registration alias",
+      "ja": "登録の別名"
+    },
+    "./card-sounds": {
+      "en": "Card sounds",
+      "ja": "カードの音"
+    }
+  }
+}

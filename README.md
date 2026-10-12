@@ -1,4 +1,4 @@
-<h1 align="center">Hitotsu <sub>一つ</sub></h1>
+<h1 align="center">Hitotsu <sub>一つ</sub> — Colour-card shedding game for two to eight</h1>
 
 <p align="center"><strong>The colour-card game, with the house rules people actually play.</strong><br>
 Match the colour or the number, and call Hitotsu with one card left. Two to eight players, a computer for any seat, a table for several devices, and a deck of its own.</p>
@@ -9,16 +9,18 @@ Match the colour or the number, and call Hitotsu with one card left. Two to eigh
   <a href="./LICENSE"><img alt="MIT licence" src="https://img.shields.io/badge/licence-MIT-2f5d4a"></a>
   <img alt="No dependencies" src="https://img.shields.io/badge/dependencies-0-2f5d4a">
   <img alt="TypeScript" src="https://img.shields.io/badge/types-TypeScript-3178c6">
+  <a href="https://johnmorrisdotca.github.io/hitotsu/docs/api/main/index.html"><img alt="42.2 kB minified and gzipped" src="https://img.shields.io/badge/min%2Bgzip-42.2%20kB-2f5d4a"></a>
+  <a href="https://www.npmjs.com/package/@johnmorrisdotca/hitotsu#provenance"><img alt="Published with npm provenance" src="https://img.shields.io/badge/npm-provenance-2f5d4a"></a>
 </p>
 
-<p align="center"><a href="https://johnmorrisdotca.github.io/hitotsu/"><strong>Play a hand →</strong></a> · <a href="https://johnmorrisdotca.github.io/hitotsu/api.html">API reference</a></p>
+<p align="center"><a href="https://johnmorrisdotca.github.io/hitotsu/"><strong>Play a hand →</strong></a> · <a href="https://johnmorrisdotca.github.io/hitotsu/docs/">Documentation</a> · <a href="https://johnmorrisdotca.github.io/hitotsu/docs/guides/getting-started.html">Getting started</a> · <a href="https://johnmorrisdotca.github.io/hitotsu/api.html">API reference</a></p>
 
 <table align="center">
 <tr>
 <td align="center" valign="top">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/hitotsu/main/docs/images/hero-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/hitotsu/main/docs/images/hero-desk-light.webp" alt="The demo on a desk, in English, a few turns into a classic game for four: the page header with the language chooser, five cloth patches and the Help switch, the choices of rules, computers and sound, the seats along the top (You outlined because it is your turn, and three computers), the stock face down and a card in play on the green felt, and your hand with the cards that may be played glowing" width="600">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/hitotsu/main/docs/images/hero-desk-light.webp" alt="The demo on a desk, in English, a few turns into a classic game for four: the page header with the language chooser, Docs and API reference links, five cloth patches and the Help switch, the choices of rules, computers and sound, the seats along the top (You outlined because it is your turn, and three computers), the stock face down and a card in play on the green felt, and your hand with the cards that may be played glowing" width="600">
 </picture>
 <br><em>The demo on a desk: a classic game for four, three turns in.</em>
 </td>
@@ -159,6 +161,17 @@ Each picture is the real table, drawn by the package and taken from [the demo](h
 </table>
 
 ## Use it in your project
+
+### Install under another name
+
+```sh
+npm install card-game@npm:@johnmorrisdotca/hitotsu
+```
+
+```ts no-check
+import { startHitotsu } from "card-game";
+console.log(startHitotsu);
+```
 
 ### Install
 
@@ -601,7 +614,7 @@ the day its licence was checked.
 
 ## API
 
-The [API reference](https://johnmorrisdotca.github.io/hitotsu/api.html) lists every export of every entry point with its signature and its doc comment. It is made from the source by `pnpm site`, so it cannot fall behind the code.
+The [documentation](https://johnmorrisdotca.github.io/hitotsu/docs/) has bilingual guides, local search and every public export’s signature, parameters, return values and checked examples. `pnpm docs:site` builds it from the source; the [API index](https://johnmorrisdotca.github.io/hitotsu/api.html) keeps its existing anchors.
 
 Every function is pure, and every type is exported.
 
@@ -824,7 +837,7 @@ src/
 ```
 
 Tests sit beside the code they test (`*.test.ts`). `scripts/` builds the demo
-and its API reference page, and `demo/` is the page published on GitHub Pages.
+and its bilingual documentation and API index; `demo/` supplies the native pages published beside them on GitHub Pages.
 
 ## The name
 

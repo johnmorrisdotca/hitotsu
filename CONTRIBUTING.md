@@ -136,3 +136,7 @@ pnpm test:package     # packed, installed from the tarball, and used as publishe
 - A rule change comes with a test in `src/rules.test.ts` that plays the
   position it is about.
 - Keep the core free of the DOM.
+
+## Documentation site
+
+`pnpm docs:check` typechecks public examples, runs the Node examples and checks guide links. `pnpm docs:site` builds the bilingual reference and local search. Keep summaries, parameters, return values and standalone examples with public exports; browser examples use `ts no-run`. Update paired guides in `docs/guides/` and `docs/guides/ja/`, and mark new Japanese for review before release. Shared generator and test files are copied unchanged from the family pilot.
