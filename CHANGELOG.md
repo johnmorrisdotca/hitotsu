@@ -6,26 +6,23 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
-- Synchronize documentation tooling for repository layouts, generated type references, Node entry points and repository-specific README links.
+## [1.4.0] - 2026-10-14
 
-- Keep large documentation resource catalogues on the entry index and the active resource beside core navigation, preserving every reference page; render valid default imports in HTML and Markdown.
+The table takes the family's standard embed attributes and has a shared builder, and the package has an English and Japanese documentation site with a checked example for every export. The rules, shuffles and saved games are unchanged.
 
 ### Added
 
 - Add the bilingual documentation site with checked public examples, guides, local search and machine-readable pages.
-
 - Add shared table builder and validated no-storage iframe, reflected presentation settings, `points` and host `options`; keep numeric `size` match aliases and existing game/deal access.
 - Preserve play while changing words, colours and sound; support custom tags and shadow-root styles.
 - Compose move/load/finish/error events with JSON-safe data; event games use seat labels while local getters and callbacks keep private names.
-
-### Added
-
 - Share a package-independent embed builder for option controls, preview adapters, code tabs and shareable links.
 
 ### Changed
 
+- Synchronize documentation tooling for repository layouts, generated type references, Node entry points and repository-specific README links.
+- Keep large documentation resource catalogues on the entry index and the active resource beside core navigation, preserving every reference page; render valid default imports in HTML and Markdown.
 - Group the package family by kind, alphabetize each group, and include the geography packages and REST in Pieces in the shared footer and README.
-
 - Update the shared family description for addresses in all seven supported countries, including France and Germany.
 
 ## [1.3.2] - 2026-10-06
@@ -170,7 +167,8 @@ Nothing that was exported has been changed or removed.
   `@johnmorrisdotca/hitotsu/react`.
 - A static demo, published to GitHub Pages.
 
-[Unreleased]: https://github.com/johnmorrisdotca/hitotsu/compare/v1.3.1...HEAD
+[Unreleased]: https://github.com/johnmorrisdotca/hitotsu/compare/v1.4.0...HEAD
+[1.4.0]: https://github.com/johnmorrisdotca/hitotsu/compare/v1.3.2...v1.4.0
 [1.3.1]: https://github.com/johnmorrisdotca/hitotsu/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/johnmorrisdotca/hitotsu/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/johnmorrisdotca/hitotsu/compare/v1.1.0...v1.2.0

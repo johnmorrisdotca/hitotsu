@@ -2,7 +2,7 @@
 title: Getting started
 section: tutorial
 order: 1
-description: Learn getting started.
+description: Install Hitotsu, deal from a seed and play one legal move.
 ---
 
 Install Hitotsu, deal a deterministic hand and apply one legal move. The rules engine works in Node 22 or later and in a browser, with no runtime dependency.

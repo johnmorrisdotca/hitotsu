@@ -2,12 +2,12 @@
 title: カード・言語・音
 section: explanation
 order: 8
-description: カード・言語・音の使い方と注意点。
+description: カードを同じ描画モデルで描き、色に頼らずに読み、録音した音は必要になってから読み込みます。
 ---
 
 ## 同じ描画モデル
 
-`hitotsuCardShapes`が描画の要素を返します。`hitotsuCardSvg`は SVG 文書にし、React のカードも同じ形を使います。基本の大きさは 100×140 です。カードが null なら裏面を描き、`called`で場のワイルドの色を示します。
+`hitotsuCardShapes`が描画の要素を返します。`hitotsuCardSvg`はSVG文書にし、Reactのカードも同じ形を使います。基本の大きさは100×140です。カードがnullなら裏面を描き、`called`で場のワイルドの色を示します。
 
 ```ts
 import { hitotsuCardShapes, hitotsuCardSvg, hitotsuWords } from "@johnmorrisdotca/hitotsu";
@@ -23,4 +23,4 @@ console.log(hitotsuCardSvg("R70", { width: 80 }).slice(0, 120));
 
 ## 必要になってから音を読む
 
-[card-sounds](entry:card-sounds)に `createCardSounds`があります。読み込みや最初の音が必要になるまで、音声コンテキストも録音の取得も始めません。音はユーザーの操作から始め、希望に合わせて消音します。自分で作った音のハンドルは片付けるときに close を呼びます。`soundTimes`は全体の時間幅を保ちながら同時に使う録音数を制限します。
+[card-sounds](entry:card-sounds)に`createCardSounds`があります。読み込みや最初の音が必要になるまで、音声コンテキストも録音の取得も始めません。音はユーザーの操作から始め、希望に合わせて消音します。自分で作った音のハンドルは片付けるときにcloseを呼びます。`soundTimes`は全体の時間幅を保ちながら同時に使う録音数を制限します。

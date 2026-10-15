@@ -1,6 +1,6 @@
 {
   "name": "@johnmorrisdotca/hitotsu",
-  "version": "1.3.2",
+  "version": "1.4.0",
   "description": "Hitotsu \u4e00\u3064 \u2014 Colour-card shedding game for two to eight: classic and party rules, a computer player, a table for several devices and its own deck. Zero dependencies.",
   "license": "MIT",
   "author": "John Morris",

@@ -2,7 +2,7 @@
 title: Choose house rules
 section: how-to
 order: 2
-description: Learn choose house rules.
+description: Choose the classic or party rules, set the match length and check the settings you receive.
 ---
 
 ## Start from a preset

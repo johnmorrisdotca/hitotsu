@@ -2,7 +2,7 @@
 title: The engine and its state
 section: explanation
 order: 7
-description: Learn the engine and its state.
+description: Read the game state, card identity, seeded shuffles and scoring of the rules engine.
 ---
 
 ## Plain data and new states

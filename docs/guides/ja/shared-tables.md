@@ -2,7 +2,7 @@
 title: 共有テーブルのアダプター
 section: how-to
 order: 6
-description: 共有テーブルのアダプターの使い方と注意点。
+description: アダプターで複数の端末のテーブルをつなぎ、通信と見えない手札はアプリ側で管理します。
 ---
 
 ## 通信はアプリ側に置く
@@ -20,7 +20,7 @@ if (game !== null) console.log(tableToPlay(game), game.computers);
 
 ## 現在の状態で手を確認する
 
-`readTableMove`は形を確認し、割り込みを拒否します。`playHitotsu`は現在出せる手かを確認します。`tableToPlay`は待つ席を返し、終了後は null です。`tableComputerMove`はその席を待っている場合だけ手を返します。
+`readTableMove`は形を確認し、割り込みを拒否します。`playHitotsu`は現在出せる手かを確認します。`tableToPlay`は待つ席を返し、終了後はnullです。`tableComputerMove`はその席を待っている場合だけ手を返します。
 
 ## 公開情報と手札
 

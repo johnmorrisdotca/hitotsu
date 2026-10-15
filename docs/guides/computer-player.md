@@ -2,7 +2,7 @@
 title: Run a computer player
 section: how-to
 order: 3
-description: Learn run a computer player.
+description: Ask the computer player for a move, handle out-of-turn jump-ins, and see what it knows.
 ---
 
 ## Ask only while playing

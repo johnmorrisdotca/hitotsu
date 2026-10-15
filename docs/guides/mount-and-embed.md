@@ -2,7 +2,7 @@
 title: Mount or embed a table
 section: how-to
 order: 5
-description: Learn mount or embed a table.
+description: Put a playable table on a page, change it without a re-deal, and embed it in React, a tag or a frame.
 ---
 
 ## Mount native controls

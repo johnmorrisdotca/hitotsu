@@ -2,7 +2,7 @@
 title: Save and restore a game
 section: how-to
 order: 4
-description: Learn save and restore a game.
+description: Save a game as its setup and moves, restore it by replaying them, and decide what to share.
 ---
 
 ## Save the setup and moves

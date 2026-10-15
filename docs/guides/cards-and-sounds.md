@@ -2,7 +2,7 @@
 title: Cards, language and sounds
 section: explanation
 order: 8
-description: Learn cards, language and sounds.
+description: Draw cards from one shared model, read them without relying on colour, and load recorded sounds only when needed.
 ---
 
 ## One drawing model

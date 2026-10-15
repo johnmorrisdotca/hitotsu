@@ -2,7 +2,7 @@
 title: Use the shared-table adapter
 section: how-to
 order: 6
-description: Learn use the shared-table adapter.
+description: Connect tables on several devices with adapters while your app keeps the network and the hidden hands.
 ---
 
 ## Keep transport in your application

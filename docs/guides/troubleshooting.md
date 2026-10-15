@@ -2,7 +2,7 @@
 title: Troubleshooting & FAQ
 section: troubleshooting
 order: 9
-description: Learn troubleshooting & faq.
+description: Find out why a game will not start, a move is refused, a value is null or a sound stays silent.
 ---
 
 ## A game does not start
