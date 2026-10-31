@@ -20,6 +20,7 @@ export * from "./rules.ts";
 export * from "./seat.ts";
 export * from "./table.ts";
 export * from "./types.ts";
+export { type Cloth, clothVars, HITOTSU_CLOTHS, isCloth } from "./ui/cloth.ts";
 export { type HitotsuHandle, type HitotsuTableOptions, mountHitotsu } from "./ui/mount.ts";
 export {
   HITOTSU_STRINGS,

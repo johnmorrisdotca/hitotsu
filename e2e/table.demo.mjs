@@ -321,3 +321,15 @@ test("the tag works on a page of its own: <hitotsu-table>, its attributes and it
   expect(await page.locator("#t").evaluate((el) => el.game.seed)).toBeGreaterThan(0);
   expect(errors).toEqual([]);
 });
+
+test("the code on the page says which cloth the table is laid in", async ({ page }) => {
+  await open(page);
+  await expect(page.locator("#using-tag")).not.toContainText("cloth=");
+  await tap(page, 'button[data-cloth="blue"]');
+  await expect(page.locator("#using-tag")).toContainText('cloth="blue"');
+  await expect(page.locator("#using-script")).toContainText('cloth: "blue"');
+  await tap(page, '[data-testid="rules"] [data-mode="party"]');
+  await expect(page.locator("#using-tag")).toContainText('rules="party"');
+  await tap(page, 'button[data-cloth="green"]');
+  await expect(page.locator("#using-tag")).not.toContainText("cloth=");
+});

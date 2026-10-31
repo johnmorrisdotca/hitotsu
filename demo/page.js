@@ -230,15 +230,19 @@ function using() {
   const lang = language.lang === "ja" ? "ja" : "en";
   const seedNow = table.game().seed;
   const sound = sounds.muted ? "" : " sound";
+  const cloth = document.documentElement.dataset.cloth ?? "green";
   $("using-tag").textContent =
-    `<script type="module" src="https://cdn.jsdelivr.net/npm/@johnmorrisdotca/hitotsu@1/dist/element-define.js"></script>\n<hitotsu-table rules="${mode}" computers="${computers}" seed="${seedNow}"${lang === "ja" ? ' lang="ja"' : ""}${sound}></hitotsu-table>`;
+    `<script type="module" src="https://cdn.jsdelivr.net/npm/@johnmorrisdotca/hitotsu@1/dist/element-define.js"></script>\n<hitotsu-table rules="${mode}" computers="${computers}" seed="${seedNow}"${cloth === "green" ? "" : ` cloth="${cloth}"`}${lang === "ja" ? ' lang="ja"' : ""}${sound}></hitotsu-table>`;
   $("using-script").textContent =
     `import { ${mode === "party" ? "HITOTSU_PARTY" : "HITOTSU_CLASSIC"}, mountHitotsu } from "@johnmorrisdotca/hitotsu";\n\nmountHitotsu(document.getElementById("table"), {\n  rules: ${mode === "party" ? "HITOTSU_PARTY" : "HITOTSU_CLASSIC"},\n  players: [${chosen()
       .players.map((name) => JSON.stringify(name))
-      .join(", ")}],\n  seed: ${seedNow},\n  language: "${lang}",${sound === "" ? "" : "\n  sound: true,"}\n});`;
+      .join(
+        ", ",
+      )}],\n  seed: ${seedNow},\n  language: "${lang}",${cloth === "green" ? "" : `\n  cloth: "${cloth}",`}${sound === "" ? "" : "\n  sound: true,"}\n});`;
   $("using-cli").textContent =
     `npx @johnmorrisdotca/hitotsu deal --seed ${seedNow} --players ${computers + 1} --rules ${mode}\nnpx @johnmorrisdotca/hitotsu play --seed ${seedNow} --players ${computers + 1} --rules ${mode}`;
 }
+document.addEventListener("family-cloth", using);
 for (const id of ["tag", "script", "cli"])
   $(`copy-${id}`).addEventListener("click", () => copy($(`copy-${id}`), $(`using-${id}`).textContent, "pageCopy"));
 

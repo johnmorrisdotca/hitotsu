@@ -7,6 +7,7 @@ import { hitotsuWinners, playHitotsu, startHitotsu } from "../rules.ts";
 import { callMatters, movesFor, playableFor, waysFor } from "../seat.ts";
 import type { HitotsuCard, HitotsuColour, HitotsuGame, HitotsuMove, HitotsuNews, HitotsuOptions } from "../types.ts";
 import { type CardSounds, createCardSounds } from "./cardSounds.ts";
+import { type Cloth, clothVars, isCloth } from "./cloth.ts";
 import { h, refill } from "./dom.ts";
 import { type HitotsuLanguage, type HitotsuStrings, hitotsuLanguageOf, hitotsuStrings } from "./strings.ts";
 import { injectStyle } from "./style.ts";
@@ -36,6 +37,8 @@ export type HitotsuTableOptions = {
   strings?: Partial<HitotsuStrings>;
   /** How long a computer thinks before it plays, in milliseconds. Long enough to jump in, where the table plays jump-in. */
   computerMs?: number;
+  /** The cloth the felt is laid in: "green", "blue", "red", "black" or "wood", the family's five. `theme` is laid over it. */
+  cloth?: Cloth;
   /** CSS variables for the table, such as `{ "--ht-felt": "#234" }`. */
   theme?: Record<`--ht-${string}`, string>;
   /** Card sounds: `true` for the package's own (cards dealt, played, shuffled; Kenney's Casino Audio, CC0), or a `createCardSounds()` of your own. Off unless asked; nothing is fetched until the first sound. */
@@ -56,9 +59,9 @@ export type HitotsuHandle = {
   /** The game as it stands. */
   game(): HitotsuGame;
   /** Deal again, with any options changed. */
-  restart(options?: Omit<HitotsuTableOptions, "language" | "strings" | "theme" | "sound" | "onMove">): void;
+  restart(options?: Omit<HitotsuTableOptions, "language" | "strings" | "cloth" | "theme" | "sound" | "onMove">): void;
   /** Update words, palette, sound and callback while preserving the current game. */
-  set(options: Pick<HitotsuTableOptions, "language" | "strings" | "theme" | "sound" | "onMove">): void;
+  set(options: Pick<HitotsuTableOptions, "language" | "strings" | "cloth" | "theme" | "sound" | "onMove">): void;
   destroy(): void;
 };
 
@@ -140,7 +143,14 @@ export function mountHitotsu(target: HTMLElement, options: HitotsuTableOptions =
     current.language ?? hitotsuLanguageOf(target.closest("[lang]")?.getAttribute("lang") ?? doc.documentElement.lang);
   let t: Required<HitotsuStrings> = { ...hitotsuStrings(language), ...current.strings };
   const root = h("div", { class: "ht-root" });
-  for (const [name, value] of Object.entries(current.theme ?? {})) root.style.setProperty(name, value);
+  const wear = (cloth: string | undefined, theme: Record<string, string>) => {
+    for (const name of Object.keys(clothVars("green"))) root.style.removeProperty(name);
+    for (const [name, value] of Object.entries<string>({ ...clothVars(cloth), ...theme }))
+      root.style.setProperty(name, value);
+    if (isCloth(cloth)) root.dataset.cloth = cloth;
+    else delete root.dataset.cloth;
+  };
+  wear(current.cloth, current.theme ?? {});
   target.append(root);
 
   let ownSounds = current.sound === true ? createCardSounds() : null;
@@ -394,9 +404,10 @@ export function mountHitotsu(target: HTMLElement, options: HitotsuTableOptions =
         ownSounds = next.sound === true ? createCardSounds() : null;
         sounds = ownSounds ?? (typeof next.sound === "object" ? next.sound : null);
       }
-      if (next.theme !== undefined) {
-        for (const name of Object.keys(current.theme ?? {})) if (!(name in next.theme)) root.style.removeProperty(name);
-        for (const [name, value] of Object.entries(next.theme)) root.style.setProperty(name, value);
+      if (next.theme !== undefined || "cloth" in next) {
+        const theme = next.theme ?? current.theme ?? {};
+        for (const name of Object.keys(current.theme ?? {})) if (!(name in theme)) root.style.removeProperty(name);
+        wear("cloth" in next ? next.cloth : current.cloth, theme);
       }
       current = { ...current, ...next };
       language = current.language ?? language;

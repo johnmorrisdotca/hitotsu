@@ -197,3 +197,30 @@ test("copied iframe forwards JSON events without names or storage", async ({ pag
   for (const name of ["computers", "points", "seed", "lang", "width", "players"])
     await expect(page.locator("hitotsu-table")).not.toHaveAttribute(name, /.*/);
 });
+test("the cloth attribute lays the felt in each of the five and keeps the game; taking it off gives the green back", async ({
+  page,
+}) => {
+  await serve(page);
+  await page.goto("http://hitotsu.test/embed/?seed=42&cloth=blue&computers=1");
+  const table = page.locator("hitotsu-table");
+  await expect(table).toHaveAttribute("cloth", "blue");
+  await expect(table.locator(".ht-felt")).toBeVisible();
+  const felt = () =>
+    table.evaluate((el) => getComputedStyle(el.querySelector(".ht-root")).getPropertyValue("--ht-felt").trim());
+  expect(await felt()).toBe("#2865a6");
+  const game = await table.evaluate((el) => el.game.seed);
+  for (const [name, colour] of [
+    ["green", "#2f5d4a"],
+    ["red", "#a3342e"],
+    ["black", "#2f3236"],
+    ["wood", "#e2ba7a"],
+  ]) {
+    await table.evaluate((el, value) => el.setAttribute("cloth", value), name);
+    await expect.poll(felt).toBe(colour);
+  }
+  expect(await table.evaluate((el) => el.game.seed)).toBe(game);
+  await table.evaluate((el) => el.removeAttribute("cloth"));
+  await expect.poll(felt).not.toBe("#e2ba7a");
+  await page.goto("http://hitotsu.test/embed/?cloth=plaid");
+  await expect(page.locator("hitotsu-table")).not.toHaveAttribute("cloth", /./);
+});

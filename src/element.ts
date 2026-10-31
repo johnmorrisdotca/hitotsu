@@ -1,6 +1,7 @@
 import { HITOTSU_CLASSIC, HITOTSU_PARTY } from "./constants.ts";
 import { freshSeed, SEED_MOST } from "./random.ts";
 import type { HitotsuGame } from "./types.ts";
+import { type Cloth, isCloth } from "./ui/cloth.ts";
 import { type HitotsuHandle, type HitotsuTableOptions, mountHitotsu } from "./ui/mount.ts";
 import { hitotsuLanguageOf, hitotsuStrings } from "./ui/strings.ts";
 import { CSS } from "./ui/style.ts";
@@ -27,6 +28,7 @@ export const HITOTSU_EMBED_OPTION_KEYS = Object.keys({
   seed: true,
   language: true,
   strings: true,
+  cloth: true,
   computerMs: true,
   theme: true,
   sound: true,
@@ -63,6 +65,7 @@ export class HitotsuTableElement extends ElementBase {
     "theme",
     "width",
     "label",
+    "cloth",
   ];
   #table: HitotsuHandle | null = null;
   #options: HitotsuElementOptions = {};
@@ -177,6 +180,13 @@ export class HitotsuTableElement extends ElementBase {
   }
   set points(value: string | number | boolean | null | undefined) {
     this.#write("points", value);
+  }
+  /** The `cloth` attribute, reflected: green, blue, red, black or wood. */
+  get cloth(): string | null {
+    return this.getAttribute("cloth");
+  }
+  set cloth(value: string | number | boolean | null | undefined) {
+    this.#write("cloth", value);
   }
   /** The `theme` attribute, reflected. */
   get theme(): string | null {
@@ -295,6 +305,7 @@ export class HitotsuTableElement extends ElementBase {
       const presentation = {
         language,
         strings: this.#options.strings,
+        cloth: isCloth(this.getAttribute("cloth")) ? (this.getAttribute("cloth") as Cloth) : this.#options.cloth,
         theme: this.#options.theme ?? {},
         sound,
         onMove: (game: HitotsuGame) => {

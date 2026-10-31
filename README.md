@@ -9,7 +9,7 @@ Match the colour or the number, and call Hitotsu with one card left. Two to eigh
   <a href="./LICENSE"><img alt="MIT licence" src="https://img.shields.io/badge/licence-MIT-2f5d4a"></a>
   <img alt="No dependencies" src="https://img.shields.io/badge/dependencies-0-2f5d4a">
   <img alt="TypeScript" src="https://img.shields.io/badge/types-TypeScript-3178c6">
-  <a href="https://johnmorrisdotca.github.io/hitotsu/docs/api/main/index.html"><img alt="42.2 kB minified and gzipped" src="https://img.shields.io/badge/min%2Bgzip-42.2%20kB-2f5d4a"></a>
+  <a href="https://johnmorrisdotca.github.io/hitotsu/docs/api/main/index.html"><img alt="42.6 kB minified and gzipped" src="https://img.shields.io/badge/min%2Bgzip-42.6%20kB-2f5d4a"></a>
   <a href="https://www.npmjs.com/package/@johnmorrisdotca/hitotsu#provenance"><img alt="Published with npm provenance" src="https://img.shields.io/badge/npm-provenance-2f5d4a"></a>
 </p>
 
@@ -210,6 +210,7 @@ compatible match sizes and frame messages.
 | `size` | display `small`, `medium` or `large`; numeric `1`, `200`, `500` remain match-point aliases |
 | `points` | `1` for a single hand (default), or `200` / `500`; overrides numeric `size` |
 | `theme` | `auto` (default), `light` or `dark` |
+| `cloth` | the felt's cloth: `green` (unless said), `blue`, `red`, `black` or `wood`, the family's five; changed in place, keeping the game |
 | `width` | display width in pixels, fitting a narrower host |
 | `label` | an optional spoken label for the table |
 | `seed` | the number the deals are shuffled from; a fresh one if not given |
@@ -726,9 +727,12 @@ Every colour is a CSS variable on `.ht-root`: `--ht-surface`, `--ht-ink`,
 `--ht-muted`, `--ht-rule`, `--ht-felt`, `--ht-felt-deep`, `--ht-felt-ink`,
 `--ht-accent`, `--ht-accent-ink`, `--ht-playable`, `--ht-radius`, `--ht-card`
 and `--ht-font`. Pass them as `theme` when you mount, or set them in a rule on
-`.ht-root`, such as `hitotsu-table .ht-root { --ht-felt: #234; }`. The demo
-passes the family's cloth by reference, so a cloth chosen in its header changes
-the felt at once.
+`.ht-root`, such as `hitotsu-table .ht-root { --ht-felt: #234; }`. For the
+family's five cloths, the same set as the boards on itsutsu.com, say `cloth="blue"`
+on the tag or `cloth: "blue"` when you mount; `set({ cloth })` changes it in place,
+and `theme` is laid over it. `HITOTSU_CLOTHS` lists the colours, and `clothVars`
+gives them as variables. The demo's header patches choose it, and the code on the
+page says which.
 
 ## Limits
 
@@ -832,6 +836,7 @@ src/
 ├── version.ts    the version, held to package.json by a test
 └── ui/  the table that draws and plays a game in plain DOM
     ├── cardSounds.ts  the card sounds: the recordings fetched on the first one played, a made sound if they cannot be
+    ├── cloth.ts    the five cloths a table may be laid in
     ├── dom.ts      a few lines of DOM building, so the table needs no framework
     ├── mount.ts    the table itself: mounting it on a page, and the options it takes
     ├── strings.ts  every word the table says, in English and Japanese, which a host page can replace

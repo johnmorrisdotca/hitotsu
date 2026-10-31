@@ -8,6 +8,7 @@ All notable changes to this project are written here. The format follows
 
 ### Added
 
+- A table can be laid in the family's five cloths by itself, not only by a page's theme: `<hitotsu-table cloth="blue">`, `mountHitotsu(el, { cloth })` and `set({ cloth })`, the `cloth` embed parameter and Builder option, with `HITOTSU_CLOTHS`, `isCloth` and `clothVars`. The demo's code says which cloth is on the table.
 - `pnpm test:frameworks` (`scripts/check-frameworks.mjs`) builds the README's React, Vue, Svelte, Angular and plain-page examples from the packed tarball and plays them in Chromium and WebKit, in CI too.
 
 ## [1.4.2] - 2026-10-31

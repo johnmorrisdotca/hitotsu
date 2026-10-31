@@ -23,10 +23,11 @@ export const CSS = `
 .ht-root *, .ht-root *::before, .ht-root *::after { box-sizing: border-box; }
 .ht-root button { font: inherit; color: inherit; cursor: pointer; }
 .ht-root button:focus-visible { outline: 3px solid var(--ht-accent); outline-offset: 2px; }
+.ht-root, .ht-root * { line-height: 1.35; }
 .ht-seats { display: flex; flex-wrap: wrap; gap: 8px; }
 .ht-seat { flex: 1 1 110px; padding: 8px 10px; border: 1px solid var(--ht-rule); border-radius: 12px; background: var(--ht-surface); display: grid; gap: 2px; }
 .ht-seat[data-turn] { border-color: var(--ht-accent); box-shadow: 0 0 0 2px var(--ht-accent); }
-.ht-seat b { font-size: .95rem; }
+.ht-seat b { font-size: .95rem; min-height: 2.7em; }
 .ht-seat span { font-size: .8rem; color: var(--ht-muted); }
 .ht-felt { position: relative; border-radius: var(--ht-radius); background: radial-gradient(circle at 50% 40%, var(--ht-felt), var(--ht-felt-deep)); color: var(--ht-felt-ink); padding: 18px 16px; display: grid; justify-items: center; gap: 10px; }
 .ht-piles { display: flex; align-items: flex-start; justify-content: center; gap: 22px; }
