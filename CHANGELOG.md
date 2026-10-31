@@ -6,6 +6,10 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- `pnpm test:frameworks` (`scripts/check-frameworks.mjs`) builds the README's React, Vue, Svelte, Angular and plain-page examples from the packed tarball and plays them in Chromium and WebKit, in CI too.
+
 ## [1.4.2] - 2026-10-31
 
 ### Fixed

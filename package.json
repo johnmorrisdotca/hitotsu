@@ -140,6 +140,7 @@
     "prepublishOnly": "pnpm check && pnpm build",
     "test:cli": "pnpm build && node scripts/check-cli.mjs",
     "test:package": "pnpm build && node scripts/check-package.mjs",
+    "test:frameworks": "pnpm build && node scripts/check-frameworks.mjs",
     "family:readme": "node scripts/family-readme.mjs",
     "test:demo": "pnpm site && node scripts/docs-site.mjs build && playwright test",
     "docs:site": "pnpm build && node scripts/docs-site.mjs build",

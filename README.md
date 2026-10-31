@@ -332,6 +332,8 @@ export class TableComponent {
 }
 ```
 
+Each of these is taken from this page as it is written, built from the packed tarball in a project of its own, and played by a tap on the table in Chromium and WebKit, by `scripts/check-frameworks.mjs`, before a release names it.
+
 ## Examples
 
 Each example is a whole recipe: copy it and it works. The ones in TypeScript and JavaScript are run in CI against the built package (`pnpm test:readme`), so none of them is a guess, and the output shown is what they print.
@@ -934,6 +936,7 @@ pnpm site               # build the demo into ./site, then serve it
 pnpm test:demo          # build the demo and tap through it in a real browser
 pnpm test:cli           # the command line, as a child process
 pnpm test:package       # pack it, install the tarball, and use it as published
+pnpm test:frameworks    # the framework examples, built from the packed tarball and played
 pnpm test:readme        # run every example in this README against the built package
 pnpm screenshots:readme # take the README's pictures from the built demo, in light and dark
 ```
