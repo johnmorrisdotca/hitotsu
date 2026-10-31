@@ -67,7 +67,10 @@ const FACES_TWICE = ["1", "2", "3", "4", "5", "6", "7", "8", "9", SKIP, REVERSE,
  * ```
  */
 export const HITOTSU_DECK: readonly HitotsuCard[] = [
-  ...HITOTSU_COLOURS.flatMap((colour) => [`${colour}00`, ...FACES_TWICE.flatMap((face) => [`${colour}${face}0`, `${colour}${face}1`])]),
+  ...HITOTSU_COLOURS.flatMap((colour) => [
+    `${colour}00`,
+    ...FACES_TWICE.flatMap((face) => [`${colour}${face}0`, `${colour}${face}1`]),
+  ]),
   ...[0, 1, 2, 3].flatMap((copy) => [`W${WILD}${copy}`, `W${WILD_FOUR}${copy}`]),
 ];
 
@@ -208,7 +211,8 @@ export function hitotsuPoints(card: HitotsuCard): number {
  */
 export function sortHitotsu(hand: readonly HitotsuCard[]): HitotsuCard[] {
   const faces = "0123456789SRDWF";
-  const key = (card: HitotsuCard) => (isWild(card) ? 400 : HITOTSU_COLOURS.indexOf(card[0] as HitotsuColour) * 100) + faces.indexOf(faceOf(card));
+  const key = (card: HitotsuCard) =>
+    (isWild(card) ? 400 : HITOTSU_COLOURS.indexOf(card[0] as HitotsuColour) * 100) + faces.indexOf(faceOf(card));
   return [...hand].sort((a, b) => key(a) - key(b) || a.localeCompare(b));
 }
 
@@ -216,7 +220,13 @@ const COLOUR_WORDS: Record<HitotsuColour, string> = { R: "red", Y: "yellow", G: 
 const FACE_WORDS: Record<string, string> = { S: "skip", R: "reverse", D: "draw two", W: "wild", F: "wild draw four" };
 
 const COLOUR_WORDS_JA: Record<HitotsuColour, string> = { R: "赤", Y: "黄", G: "緑", B: "青" };
-const FACE_WORDS_JA: Record<string, string> = { S: "スキップ", R: "リバース", D: "ドロー2", W: "ワイルド", F: "ワイルドドローフォー" };
+const FACE_WORDS_JA: Record<string, string> = {
+  S: "スキップ",
+  R: "リバース",
+  D: "ドロー2",
+  W: "ワイルド",
+  F: "ワイルドドローフォー",
+};
 
 /** A colour’s name in English or Japanese.
  *
@@ -253,7 +263,10 @@ export function hitotsuWords(card: HitotsuCard, language: "en" | "ja" = "en"): s
     const colour = colourOf(card);
     return colour === null ? named : `${COLOUR_WORDS_JA[colour]}の${named}`;
   }
-  const named = FACE_WORDS[face] ?? ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"][Number(face)] ?? face;
+  const named =
+    FACE_WORDS[face] ??
+    ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"][Number(face)] ??
+    face;
   const colour = colourOf(card);
   return colour === null ? named : `${COLOUR_WORDS[colour]} ${named}`;
 }

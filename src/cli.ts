@@ -148,22 +148,53 @@ function fillIn(template: string, values: Record<string, string | number>): stri
 }
 
 /** The language the command line speaks: `--lang`, or the environment's, or the system's; Japanese for `ja…`, English for anything else. */
-export function cliLanguage(flag: string | undefined, env: Record<string, string | undefined> = {}, locale?: string): CliLanguage {
-  const named = [flag, env.LC_ALL, env.LC_MESSAGES, env.LANG].find((value) => value !== undefined && value !== "" && value !== "C" && value !== "POSIX" && !value.startsWith("C."));
+export function cliLanguage(
+  flag: string | undefined,
+  env: Record<string, string | undefined> = {},
+  locale?: string,
+): CliLanguage {
+  const named = [flag, env.LC_ALL, env.LC_MESSAGES, env.LANG].find(
+    (value) => value !== undefined && value !== "" && value !== "C" && value !== "POSIX" && !value.startsWith("C."),
+  );
   return (named ?? locale ?? "en").toLowerCase().startsWith("ja") ? "ja" : "en";
 }
 
-const FLAGS_WITH_VALUES: Record<string, string> = { "-s": "seed", "--seed": "seed", "-p": "players", "--players": "players", "--rules": "rules", "--size": "size", "--lang": "lang" };
-const FLAGS: Record<string, string> = { "--saved": "saved", "-j": "json", "--json": "json", "--stdin": "stdin", "-h": "help", "--help": "help", "-v": "version", "--version": "version" };
+const FLAGS_WITH_VALUES: Record<string, string> = {
+  "-s": "seed",
+  "--seed": "seed",
+  "-p": "players",
+  "--players": "players",
+  "--rules": "rules",
+  "--size": "size",
+  "--lang": "lang",
+};
+const FLAGS: Record<string, string> = {
+  "--saved": "saved",
+  "-j": "json",
+  "--json": "json",
+  "--stdin": "stdin",
+  "-h": "help",
+  "--help": "help",
+  "-v": "version",
+  "--version": "version",
+};
 
-type Asked = { values: Record<string, string>; flags: Set<string>; words: string[]; wrong: { message: "unknown" | "needs"; part: string } | null };
+type Asked = {
+  values: Record<string, string>;
+  flags: Set<string>;
+  words: string[];
+  wrong: { message: "unknown" | "needs"; part: string } | null;
+};
 
 /** The arguments sorted into options and words: the command, and what it is given. */
 function sortArguments(args: readonly string[]): Asked {
   const asked: Asked = { values: {}, flags: new Set(), words: [], wrong: null };
   for (let i = 0; i < args.length; i += 1) {
     const arg = args[i] as string;
-    const [name, inline] = arg.startsWith("--") && arg.includes("=") ? [arg.slice(0, arg.indexOf("=")), arg.slice(arg.indexOf("=") + 1)] : [arg, undefined];
+    const [name, inline] =
+      arg.startsWith("--") && arg.includes("=")
+        ? [arg.slice(0, arg.indexOf("=")), arg.slice(arg.indexOf("=") + 1)]
+        : [arg, undefined];
     if (name in FLAGS_WITH_VALUES) {
       const value = inline ?? args[++i];
       if (value === undefined) {
@@ -179,7 +210,8 @@ function sortArguments(args: readonly string[]): Asked {
   return asked;
 }
 
-const whole = (text: string | undefined, least: number, most: number): number | null => (text !== undefined && /^\d{1,10}$/.test(text) && Number(text) >= least && Number(text) <= most ? Number(text) : null);
+const whole = (text: string | undefined, least: number, most: number): number | null =>
+  text !== undefined && /^\d{1,10}$/.test(text) && Number(text) >= least && Number(text) <= most ? Number(text) : null;
 
 /** Computers play a game out, the same way every time for the same table and seed. */
 function playOut(start: HitotsuGame): HitotsuGame {
@@ -209,23 +241,57 @@ export function runCli(args: readonly string[], around: CliSurroundings = {}): C
   if (asked.wrong !== null) return wrong(fillIn(t[asked.wrong.message] as string, { part: asked.wrong.part }));
   if (lang !== undefined && lang !== "en" && lang !== "ja") return wrong(t.langBad as string);
   const [command, ...rest] = asked.words;
-  if (asked.flags.has("help") || (command === undefined && !asked.flags.has("version"))) return { code: 0, out: t.usage as string, err: "" };
+  if (asked.flags.has("help") || (command === undefined && !asked.flags.has("version")))
+    return { code: 0, out: t.usage as string, err: "" };
   if (asked.flags.has("version")) return { code: 0, out: `${VERSION}\n`, err: "" };
   const json = asked.flags.has("json");
-  const print = (body: Record<string, unknown>) => `${JSON.stringify({ generator: `hitotsu ${VERSION}`, ...body }, null, 2)}\n`;
+  const print = (body: Record<string, unknown>) =>
+    `${JSON.stringify({ generator: `hitotsu ${VERSION}`, ...body }, null, 2)}\n`;
   const seatName = (seat: number) => fillIn(t.seatName as string, { n: seat + 1 });
   const winnersText = (names: readonly string[]) => names.join(language === "ja" ? "、" : ", ");
 
   if (command === "check") {
-    const text = asked.flags.has("stdin") ? (around.stdin ?? "") : rest[0] === undefined ? null : rest[0].trimStart().startsWith("{") ? rest.join(" ") : (around.readFile?.(rest[0]) ?? null);
+    const text = asked.flags.has("stdin")
+      ? (around.stdin ?? "")
+      : rest[0] === undefined
+        ? null
+        : rest[0].trimStart().startsWith("{")
+          ? rest.join(" ")
+          : (around.readFile?.(rest[0]) ?? null);
     const nothing = text === null || text.trim() === "";
-    if (nothing) return { code: rest[0] === undefined && !asked.flags.has("stdin") ? 2 : 1, out: "", err: `hitotsu: ${t.noSave}\n${rest[0] === undefined && !asked.flags.has("stdin") ? `${t.tryHelp}\n` : ""}` };
+    if (nothing)
+      return {
+        code: rest[0] === undefined && !asked.flags.has("stdin") ? 2 : 1,
+        out: "",
+        err: `hitotsu: ${t.noSave}\n${rest[0] === undefined && !asked.flags.has("stdin") ? `${t.tryHelp}\n` : ""}`,
+      };
     const game = decodeHitotsu(text.trim());
     if (game === null) return { code: 1, out: json ? print({ ok: false }) : "", err: `hitotsu: ${t.notSaved}\n` };
     const winners = game.phase === "over" ? hitotsuWinners(game) : [];
     const said = { n: game.players.length, seed: game.seed, moves: game.moves.length };
-    if (json) return { code: 0, out: print({ ok: true, size: game.size, players: game.players, seed: game.seed, moves: game.moves.length, over: game.phase === "over", toPlay: game.toPlay, winners, scores: game.scores }), err: "" };
-    const line = game.phase === "over" || game.toPlay === null ? fillIn(t.savedOver as string, { ...said, winners: winnersText(winners.map((seat) => game.players[seat] as string)) }) : fillIn(t.savedGoing as string, { ...said, player: game.players[game.toPlay] as string });
+    if (json)
+      return {
+        code: 0,
+        out: print({
+          ok: true,
+          size: game.size,
+          players: game.players,
+          seed: game.seed,
+          moves: game.moves.length,
+          over: game.phase === "over",
+          toPlay: game.toPlay,
+          winners,
+          scores: game.scores,
+        }),
+        err: "",
+      };
+    const line =
+      game.phase === "over" || game.toPlay === null
+        ? fillIn(t.savedOver as string, {
+            ...said,
+            winners: winnersText(winners.map((seat) => game.players[seat] as string)),
+          })
+        : fillIn(t.savedGoing as string, { ...said, player: game.players[game.toPlay] as string });
     return { code: 0, out: `${line}\n`, err: "" };
   }
 
@@ -249,19 +315,59 @@ export function runCli(args: readonly string[], around: CliSurroundings = {}): C
   const rulesName = asked.values.rules ?? "classic";
   if (rulesName !== "classic" && rulesName !== "party") return wrong(t.rulesBad as string);
   const players = Array.from({ length: count }, (_, seat) => seatName(seat));
-  const start = startHitotsu(size, players, seed, rulesName === "party" ? HITOTSU_PARTY : HITOTSU_CLASSIC, players.map(() => true));
+  const start = startHitotsu(
+    size,
+    players,
+    seed,
+    rulesName === "party" ? HITOTSU_PARTY : HITOTSU_CLASSIC,
+    players.map(() => true),
+  );
   if (start === null) return wrong(t.playersBad as string);
 
   if (command === "deal") {
     const top = start.discard[start.discard.length - 1] as string;
-    if (json) return { code: 0, out: print({ seed, size, rules: rulesName, players, hands: start.hands, top, stock: start.stock.length }), err };
-    return { code: 0, out: `${start.hands.map((hand, seat) => `${fillIn(t.hand as string, { name: players[seat] as string, cards: shown(hand) })}\n`).join("")}${fillIn(t.top as string, { card: shown([top]) })}\n`, err };
+    if (json)
+      return {
+        code: 0,
+        out: print({ seed, size, rules: rulesName, players, hands: start.hands, top, stock: start.stock.length }),
+        err,
+      };
+    return {
+      code: 0,
+      out: `${start.hands.map((hand, seat) => `${fillIn(t.hand as string, { name: players[seat] as string, cards: shown(hand) })}\n`).join("")}${fillIn(t.top as string, { card: shown([top]) })}\n`,
+      err,
+    };
   }
 
   const game = playOut(start);
   const winners = hitotsuWinners(game);
   if (asked.flags.has("saved")) return { code: 0, out: `${encodeHitotsu(game)}\n`, err };
-  if (json) return { code: 0, out: print({ seed, size, rules: rulesName, players, moves: game.moves.length, over: game.phase === "over", winners, scores: game.scores, saved: encodeHitotsu(game) }), err };
-  const named = { n: count, rules: t[rulesName === "party" ? "rulesParty" : "rulesClassic"] as string, seed, moves: game.moves.length, winners: winnersText(winners.map((seat) => players[seat] as string)) };
-  return { code: 0, out: `${fillIn(t.played as string, named)}\n${fillIn(t.scores as string, { scores: game.scores.join(" ") })}\n`, err };
+  if (json)
+    return {
+      code: 0,
+      out: print({
+        seed,
+        size,
+        rules: rulesName,
+        players,
+        moves: game.moves.length,
+        over: game.phase === "over",
+        winners,
+        scores: game.scores,
+        saved: encodeHitotsu(game),
+      }),
+      err,
+    };
+  const named = {
+    n: count,
+    rules: t[rulesName === "party" ? "rulesParty" : "rulesClassic"] as string,
+    seed,
+    moves: game.moves.length,
+    winners: winnersText(winners.map((seat) => players[seat] as string)),
+  };
+  return {
+    code: 0,
+    out: `${fillIn(t.played as string, named)}\n${fillIn(t.scores as string, { scores: game.scores.join(" ") })}\n`,
+    err,
+  };
 }

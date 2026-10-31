@@ -10,11 +10,18 @@ import { runCli } from "../dist/cli.js";
 import { hitotsuWords } from "../dist/index.js";
 
 const site = join(dirname(fileURLToPath(import.meta.url)), "..", "site");
-const TYPES = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css", ".json": "application/json", ".svg": "image/svg+xml" };
+const TYPES = {
+  ".html": "text/html",
+  ".js": "text/javascript",
+  ".css": "text/css",
+  ".json": "application/json",
+  ".svg": "image/svg+xml",
+};
 
 /** Open the demo (or another page of it), the computers moving at once, and collect anything the page complains of. */
 async function open(page, address = "?lang=en") {
-  if (!existsSync(join(site, "index.html"))) throw new Error("site/ is not built: run `pnpm site` first (`pnpm test:demo` does)");
+  if (!existsSync(join(site, "index.html")))
+    throw new Error("site/ is not built: run `pnpm site` first (`pnpm test:demo` does)");
   const errors = [];
   page.on("pageerror", (error) => errors.push(String(error)));
   page.on("console", (message) => message.type() === "error" && errors.push(message.text()));
@@ -22,7 +29,10 @@ async function open(page, address = "?lang=en") {
     const { pathname } = new URL(route.request().url());
     const file = join(site, pathname === "/" ? "index.html" : pathname);
     if (!existsSync(file)) return route.fulfill({ status: 404, body: "" });
-    return route.fulfill({ body: readFileSync(file), contentType: TYPES[file.slice(file.lastIndexOf("."))] ?? "application/octet-stream" });
+    return route.fulfill({
+      body: readFileSync(file),
+      contentType: TYPES[file.slice(file.lastIndexOf("."))] ?? "application/octet-stream",
+    });
   });
   await page.addInitScript(() => {
     window.hitotsuDelay = 60;
@@ -49,7 +59,10 @@ async function sound(page, errors) {
     };
     const small = [...document.querySelectorAll("button:not(:disabled), input, select, nav a, footer .family a")]
       .filter(seen)
-      .map((el) => ({ what: el.id || el.className || el.textContent.trim().slice(0, 20), box: el.getBoundingClientRect() }))
+      .map((el) => ({
+        what: el.id || el.className || el.textContent.trim().slice(0, 20),
+        box: el.getBoundingClientRect(),
+      }))
       .filter(({ box }) => box.width < 43.5 || box.height < 43.5)
       .map(({ what, box }) => `${what} ${Math.round(box.width)}×${Math.round(box.height)}`);
     return { over: document.documentElement.scrollWidth - window.innerWidth, small };
@@ -69,16 +82,24 @@ test("opens on a table of four, in the family's look, with the deck below", asyn
   await expect(page.locator(".ht-hand button")).toHaveCount(7);
   await expect(page.locator('[data-testid="deck"] > svg')).toHaveCount(55);
   await expect(page.locator("footer .family a[aria-current='page']")).toHaveText("Hitotsu");
-  expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toMatch(/^rgb\((244, 239, 228|20, 22, 20)\)$/);
+  expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toMatch(
+    /^rgb\((244, 239, 228|20, 22, 20)\)$/,
+  );
   await sound(page, errors);
 });
 
 test("the draw pile and the card in play sit level with each other", async ({ page }) => {
   await open(page);
-  const tops = async () => page.evaluate(() => {
-    const box = (selector) => document.querySelector(selector).getBoundingClientRect();
-    return { stock: box('[data-testid="ht-stock"] .ht-card'), pile: box('[data-testid="ht-pile"] .ht-card'), stockBox: box('[data-testid="ht-stock"]'), pileBox: box('[data-testid="ht-pile"]') };
-  });
+  const tops = async () =>
+    page.evaluate(() => {
+      const box = (selector) => document.querySelector(selector).getBoundingClientRect();
+      return {
+        stock: box('[data-testid="ht-stock"] .ht-card'),
+        pile: box('[data-testid="ht-pile"] .ht-card'),
+        stockBox: box('[data-testid="ht-stock"]'),
+        pileBox: box('[data-testid="ht-pile"]'),
+      };
+    });
   const level = await tops();
   expect(Math.abs(level.stock.top - level.pile.top)).toBeLessThanOrEqual(0.5);
   expect(Math.abs(level.stock.bottom - level.pile.bottom)).toBeLessThanOrEqual(0.5);
@@ -170,7 +191,9 @@ test("the existing API address keeps export anchors and links to the documentati
 
 // The Help switch in the family header (scripts/family-template.mjs): off, the page is as it was; on, every
 // option row says in one line what it does, in the page's language, and every control in it has hover words.
-test("Help is off at first, and on it shows a line under each option row, in either language, without resizing the play area", async ({ page }) => {
+test("Help is off at first, and on it shows a line under each option row, in either language, without resizing the play area", async ({
+  page,
+}) => {
   const errors = await open(page);
   const lines = page.locator(".fam-help");
   const rows = page.locator("[data-help-en]");
@@ -185,8 +208,16 @@ test("Help is off at first, and on it shows a line under each option row, in eit
     // A row in a tab that is not showing has its line, and shows it when the tab opens.
     if (await row.isVisible()) {
       const shown = await row.evaluate((el) => {
-        const line = el.classList.contains("fam-seg") || el.hasAttribute("data-help-after") ? el.nextElementSibling : el.querySelector(":scope > .fam-help");
-        return line !== null && line.classList.contains("fam-help") && window.getComputedStyle(line).display !== "none" && line.textContent.length > 10;
+        const line =
+          el.classList.contains("fam-seg") || el.hasAttribute("data-help-after")
+            ? el.nextElementSibling
+            : el.querySelector(":scope > .fam-help");
+        return (
+          line !== null &&
+          line.classList.contains("fam-help") &&
+          window.getComputedStyle(line).display !== "none" &&
+          line.textContent.length > 10
+        );
       });
       expect(shown).toBe(true);
     }
@@ -198,7 +229,9 @@ test("Help is off at first, and on it shows a line under each option row, in eit
   expect(Math.abs(after.width - before.width)).toBeLessThan(0.5);
   expect(Math.abs(after.height - before.height)).toBeLessThan(0.5);
   // Every button in an option row says what it does on hover.
-  const untitled = await page.evaluate(() => [...document.querySelectorAll("[data-help-en] button")].filter((b) => !b.title).map((b) => b.textContent.trim()));
+  const untitled = await page.evaluate(() =>
+    [...document.querySelectorAll("[data-help-en] button")].filter((b) => !b.title).map((b) => b.textContent.trim()),
+  );
   expect(untitled).toEqual([]);
   const english = await lines.first().textContent();
   await page.locator('[data-lang="ja"]').click();
@@ -218,12 +251,19 @@ test("an address opens the deal it names, and the command line shows the same ca
   await expect(page.locator('[data-testid="counts"] [data-count="5"]')).toHaveAttribute("aria-pressed", "true");
   await expect(page.locator(".ht-hand button")).toHaveCount(5);
   // The page's own account of how to get this table in a page of your own names this deal.
-  await expect(page.locator('[data-testid="using-tag"]')).toContainText('<hitotsu-table rules="party" computers="5" seed="42"></hitotsu-table>');
+  await expect(page.locator('[data-testid="using-tag"]')).toContainText(
+    '<hitotsu-table rules="party" computers="5" seed="42"></hitotsu-table>',
+  );
   await expect(page.locator('[data-testid="using-script"]')).toContainText("seed: 42");
   const command = await page.locator('[data-testid="using-cli"]').textContent();
   expect(command).toContain("deal --seed 42 --players 6 --rules party");
-  const dealt = runCli(["deal", "--seed", "42", "--players", "6", "--rules", "party"]).out.split("\n")[0].replace("Seat 1: ", "").split(" ");
-  const shown = await page.locator(".ht-hand button").evaluateAll((buttons) => buttons.map((button) => button.getAttribute("aria-label")));
+  const dealt = runCli(["deal", "--seed", "42", "--players", "6", "--rules", "party"])
+    .out.split("\n")[0]
+    .replace("Seat 1: ", "")
+    .split(" ");
+  const shown = await page
+    .locator(".ht-hand button")
+    .evaluateAll((buttons) => buttons.map((button) => button.getAttribute("aria-label")));
   expect([...shown].sort()).toEqual(dealt.map((card) => hitotsuWords(`${card}0`)).sort());
   await sound(page, errors);
 });
@@ -234,7 +274,7 @@ test("the Sound switch is off at first, and on it is written into the tag", asyn
   await expect(page.locator('[data-testid="using-tag"]')).not.toContainText(" sound");
   await tap(page, '[data-testid="sound"] [data-sound="on"]');
   await expect(page.locator('[data-testid="sound"] [data-sound="on"]')).toHaveAttribute("aria-pressed", "true");
-  await expect(page.locator('[data-testid="using-tag"]')).toContainText(' sound></hitotsu-table>');
+  await expect(page.locator('[data-testid="using-tag"]')).toContainText(" sound></hitotsu-table>");
   await tap(page, '[data-testid="sound"] [data-sound="off"]');
   await expect(page.locator('[data-testid="using-tag"]')).not.toContainText(" sound");
   await sound(page, errors);

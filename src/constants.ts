@@ -51,7 +51,14 @@ export const HITOTSU_COLOURS: readonly HitotsuColour[] = ["R", "Y", "G", "B"];
  * console.log(HITOTSU_CLASSIC);
  * ```
  */
-export const HITOTSU_CLASSIC: HitotsuOptions = { stacking: "off", jumpIn: false, sevenZero: false, drawToMatch: false, wildFour: "challenge", deal: 7 };
+export const HITOTSU_CLASSIC: HitotsuOptions = {
+  stacking: "off",
+  jumpIn: false,
+  sevenZero: false,
+  drawToMatch: false,
+  wildFour: "challenge",
+  deal: 7,
+};
 
 /**
  * PARTY MODE: the house rules a big table plays by, and a short game — five
@@ -64,7 +71,14 @@ export const HITOTSU_CLASSIC: HitotsuOptions = { stacking: "off", jumpIn: false,
  * console.log(HITOTSU_PARTY);
  * ```
  */
-export const HITOTSU_PARTY: HitotsuOptions = { stacking: "any", jumpIn: true, sevenZero: true, drawToMatch: false, wildFour: "challenge", deal: 5 };
+export const HITOTSU_PARTY: HitotsuOptions = {
+  stacking: "any",
+  jumpIn: true,
+  sevenZero: true,
+  drawToMatch: false,
+  wildFour: "challenge",
+  deal: 5,
+};
 
 /** What a card left in a hand is worth to the player who went out: its number, twenty an action card, fifty a wild.
  *

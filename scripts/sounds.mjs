@@ -3,7 +3,9 @@
 // A test fails if the two fall out of step.
 import { readFileSync, readdirSync, writeFileSync } from "node:fs";
 
-const files = readdirSync("sounds").filter((name) => name.endsWith(".m4a")).sort();
+const files = readdirSync("sounds")
+  .filter((name) => name.endsWith(".m4a"))
+  .sort();
 const entry = (name) => `  "${name.replace(".m4a", "")}":\n    "${readFileSync(`sounds/${name}`).toString("base64")}",`;
 const lines = [
   "/**",
@@ -22,4 +24,6 @@ const lines = [
   "",
 ];
 writeFileSync("src/sounds.ts", lines.join("\n"));
-console.log(`src/sounds.ts: ${files.length} recordings, ${files.reduce((sum, name) => sum + readFileSync(`sounds/${name}`).length, 0)} bytes of audio.`);
+console.log(
+  `src/sounds.ts: ${files.length} recordings, ${files.reduce((sum, name) => sum + readFileSync(`sounds/${name}`).length, 0)} bytes of audio.`,
+);

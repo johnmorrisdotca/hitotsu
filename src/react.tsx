@@ -10,14 +10,46 @@ import { mountHitotsu, type HitotsuHandle, type HitotsuTableOptions } from "./ui
 function Shape({ shape }: { shape: HitotsuShape }) {
   switch (shape.kind) {
     case "rect":
-      return <rect x={shape.x} y={shape.y} width={shape.width} height={shape.height} rx={shape.rx} fill={shape.fill} stroke={shape.stroke} strokeWidth={shape.strokeWidth} transform={shape.transform} />;
+      return (
+        <rect
+          x={shape.x}
+          y={shape.y}
+          width={shape.width}
+          height={shape.height}
+          rx={shape.rx}
+          fill={shape.fill}
+          stroke={shape.stroke}
+          strokeWidth={shape.strokeWidth}
+          transform={shape.transform}
+        />
+      );
     case "path":
       return <path d={shape.d} fill={shape.fill} />;
     case "circle":
-      return <circle cx={shape.cx} cy={shape.cy} r={shape.r} fill={shape.fill} stroke={shape.stroke} strokeWidth={shape.strokeWidth} />;
+      return (
+        <circle
+          cx={shape.cx}
+          cy={shape.cy}
+          r={shape.r}
+          fill={shape.fill}
+          stroke={shape.stroke}
+          strokeWidth={shape.strokeWidth}
+        />
+      );
     case "text":
       return (
-        <text x={shape.x} y={shape.y} textAnchor="middle" fontSize={shape.fontSize} fontWeight={shape.fontWeight} fill={shape.fill} stroke={shape.stroke} strokeWidth={shape.strokeWidth} fontFamily={shape.fontFamily} transform={shape.transform}>
+        <text
+          x={shape.x}
+          y={shape.y}
+          textAnchor="middle"
+          fontSize={shape.fontSize}
+          fontWeight={shape.fontWeight}
+          fill={shape.fill}
+          stroke={shape.stroke}
+          strokeWidth={shape.strokeWidth}
+          fontFamily={shape.fontFamily}
+          transform={shape.transform}
+        >
           {shape.text}
         </text>
       );
@@ -62,7 +94,11 @@ export function HitotsuCardDrawing({ card, called }: { card: HitotsuCard | null;
  * console.log(createElement(HitotsuCardImage, { card: "R70", width: 80 }).props.width);
  * ```
  */
-export function HitotsuCardImage({ card, called, ...svg }: { card: HitotsuCard | null; called?: HitotsuColour } & SVGAttributes<SVGSVGElement>) {
+export function HitotsuCardImage({
+  card,
+  called,
+  ...svg
+}: { card: HitotsuCard | null; called?: HitotsuColour } & SVGAttributes<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 100 140" aria-hidden="true" {...svg}>
       <HitotsuCardDrawing card={card} called={called} />
@@ -81,9 +117,25 @@ export function HitotsuCardImage({ card, called, ...svg }: { card: HitotsuCard |
  * console.log(value.seed);
  * ```
  */
-export type HitotsuTableProps = HitotsuTableOptions & { onReady?: (table: HitotsuHandle) => void } & Omit<HTMLAttributes<HTMLDivElement>, keyof HitotsuTableOptions>;
+export type HitotsuTableProps = HitotsuTableOptions & { onReady?: (table: HitotsuHandle) => void } & Omit<
+    HTMLAttributes<HTMLDivElement>,
+    keyof HitotsuTableOptions
+  >;
 
-const OPTION_NAMES = ["players", "computers", "rules", "size", "seed", "language", "strings", "sound", "computerMs", "theme", "onMove", "onReady"] as const;
+const OPTION_NAMES = [
+  "players",
+  "computers",
+  "rules",
+  "size",
+  "seed",
+  "language",
+  "strings",
+  "sound",
+  "computerMs",
+  "theme",
+  "onMove",
+  "onReady",
+] as const;
 
 /**
  * A whole table, you against computers, as a React component:

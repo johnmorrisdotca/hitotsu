@@ -15,7 +15,8 @@ import type { HitotsuColour, HitotsuGame, HitotsuMove, HitotsuOptions } from "./
 const KEPT_VERSION = 1;
 const KEPT_NAME = "hitotsu";
 
-const isColour = (value: unknown) => typeof value === "string" && (HITOTSU_COLOURS as readonly string[]).includes(value);
+const isColour = (value: unknown) =>
+  typeof value === "string" && (HITOTSU_COLOURS as readonly string[]).includes(value);
 const isSeat = (value: unknown) => Number.isInteger(value) && (value as number) >= 0 && (value as number) < 8;
 
 /** House rules as something sent them, checked for shape, or null.
@@ -91,7 +92,16 @@ export function readHitotsuMove(value: unknown): HitotsuMove | null {
  * ```
  */
 export function encodeHitotsu(game: HitotsuGame): string {
-  return JSON.stringify({ v: KEPT_VERSION, g: KEPT_NAME, size: game.size, players: game.players, computers: game.computers, seed: game.seed, options: game.options, moves: game.moves });
+  return JSON.stringify({
+    v: KEPT_VERSION,
+    g: KEPT_NAME,
+    size: game.size,
+    players: game.players,
+    computers: game.computers,
+    seed: game.seed,
+    options: game.options,
+    moves: game.moves,
+  });
 }
 
 /** Read a saved setup and replay every logged move through the native rules; null for an unreadable, unsupported or illegal saved game.
@@ -116,9 +126,21 @@ export function decodeHitotsu(text: string | null): HitotsuGame | null {
   }
   if (typeof kept !== "object" || kept === null) return null;
   const { v, g, size, players, computers, seed, options, moves } = kept as Record<string, unknown>;
-  if (v !== KEPT_VERSION || g !== KEPT_NAME || typeof size !== "number" || typeof seed !== "number" || !Number.isInteger(seed)) return null;
+  if (
+    v !== KEPT_VERSION ||
+    g !== KEPT_NAME ||
+    typeof size !== "number" ||
+    typeof seed !== "number" ||
+    !Number.isInteger(seed)
+  )
+    return null;
   if (!Array.isArray(players) || !players.every((name) => typeof name === "string")) return null;
-  if (!Array.isArray(computers) || computers.length !== players.length || !computers.every((seat) => typeof seat === "boolean")) return null;
+  if (
+    !Array.isArray(computers) ||
+    computers.length !== players.length ||
+    !computers.every((seat) => typeof seat === "boolean")
+  )
+    return null;
   const house = readHitotsuOptions(options);
   if (house === null || !Array.isArray(moves)) return null;
   let game = startHitotsu(size, players as string[], seed, house, computers as boolean[]);

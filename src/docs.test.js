@@ -12,7 +12,19 @@ import * as hitotsu from "./index.ts";
 import * as sounds from "./card-sounds.ts";
 import * as element from "./element.ts";
 
-const { HITOTSU_CAUGHT, HITOTSU_CHALLENGE_LOST, HITOTSU_CLASSIC, HITOTSU_DECK_SIZE, HITOTSU_MOST_PLAYERS, HITOTSU_PARTY, HITOTSU_SIZES, HITOTSU_STRINGS, HITOTSU_STRINGS_JA, SEED_MOST, VERSION } = hitotsu;
+const {
+  HITOTSU_CAUGHT,
+  HITOTSU_CHALLENGE_LOST,
+  HITOTSU_CLASSIC,
+  HITOTSU_DECK_SIZE,
+  HITOTSU_MOST_PLAYERS,
+  HITOTSU_PARTY,
+  HITOTSU_SIZES,
+  HITOTSU_STRINGS,
+  HITOTSU_STRINGS_JA,
+  SEED_MOST,
+  VERSION,
+} = hitotsu;
 
 const readme = readFileSync("README.md", "utf8");
 const pkg = JSON.parse(readFileSync("package.json", "utf8"));
@@ -24,7 +36,13 @@ function table(heading, doc = readme) {
   if (from < 0) throw new Error(`no “${heading}”`);
   const rows = [];
   for (const line of doc.slice(from).split("\n").slice(1)) {
-    if (line.startsWith("|")) rows.push(line.split(/(?<!\\)\|/).slice(1, -1).map(cell));
+    if (line.startsWith("|"))
+      rows.push(
+        line
+          .split(/(?<!\\)\|/)
+          .slice(1, -1)
+          .map(cell),
+      );
     else if (rows.length > 0) break;
   }
   return rows.slice(1);
@@ -63,16 +81,26 @@ describe("the README's examples", () => {
   });
 
   it("every entry point the README names is in package.json, and every one in package.json is named", () => {
-    for (const key of Object.keys(pkg.exports).filter((one) => one !== ".")) expect(readme, key).toContain(`@johnmorrisdotca/hitotsu/${key.slice(2)}`);
-    for (const name of readme.match(/@johnmorrisdotca\/hitotsu\/[\w-]+/g) ?? []) expect(pkg.exports[`./${name.split("/").at(-1)}`], name).toBeDefined();
+    for (const key of Object.keys(pkg.exports).filter((one) => one !== "."))
+      expect(readme, key).toContain(`@johnmorrisdotca/hitotsu/${key.slice(2)}`);
+    for (const name of readme.match(/@johnmorrisdotca\/hitotsu\/[\w-]+/g) ?? [])
+      expect(pkg.exports[`./${name.split("/").at(-1)}`], name).toBeDefined();
   });
 
   it("the names in the API section are real exports", () => {
-    const real = new Set([...Object.keys(hitotsu), ...Object.keys(sounds), ...Object.keys(element), "HitotsuTable", "HitotsuCardImage", "HitotsuCardDrawing"]);
+    const real = new Set([
+      ...Object.keys(hitotsu),
+      ...Object.keys(sounds),
+      ...Object.keys(element),
+      "HitotsuTable",
+      "HitotsuCardImage",
+      "HitotsuCardDrawing",
+    ]);
     const api = section("## API").replace(/\/\/.*$/gm, "");
     const calls = new Set([...api.matchAll(/(?<![\w.])([a-z][A-Za-z]+)(?=\()/g)].map((match) => match[1]));
     const known = new Set(["mountHitotsu", "game", "restart", "set", "destroy"]);
-    for (const name of calls) if (!known.has(name)) expect(real.has(name), `${name} is in the API section and not exported`).toBe(true);
+    for (const name of calls)
+      if (!known.has(name)) expect(real.has(name), `${name} is in the API section and not exported`).toBe(true);
     expect(calls.size).toBeGreaterThan(30);
   });
 });
@@ -86,7 +114,10 @@ describe("the README's rules table", () => {
     expect(find("Stacking draw cards").slice(1, 3)).toEqual([HITOTSU_CLASSIC.stacking, "any on any"]);
     expect(HITOTSU_PARTY.stacking).toBe("any");
     expect(find("Jump-in").slice(1, 3).map(value)).toEqual([HITOTSU_CLASSIC.jumpIn, HITOTSU_PARTY.jumpIn]);
-    expect(find("Sevens and zeros").slice(1, 3).map(value)).toEqual([HITOTSU_CLASSIC.sevenZero, HITOTSU_PARTY.sevenZero]);
+    expect(find("Sevens and zeros").slice(1, 3).map(value)).toEqual([
+      HITOTSU_CLASSIC.sevenZero,
+      HITOTSU_PARTY.sevenZero,
+    ]);
     expect(find("Drawing").slice(1, 3)).toEqual(["one card", "one card"]);
     expect(HITOTSU_CLASSIC.drawToMatch || HITOTSU_PARTY.drawToMatch).toBe(false);
     expect(find("Wild Draw Four").slice(1, 3)).toEqual(["may be challenged", "may be challenged"]);
@@ -122,21 +153,27 @@ describe("the README's Limits", () => {
     expect([HITOTSU_CLASSIC.deal, HITOTSU_PARTY.deal]).toEqual([7, 5]);
     expect(named("Cards taken for forgetting")[1]).toBe(String(HITOTSU_CAUGHT));
     expect(named("Cards taken for a Wild")[1]).toBe(String(HITOTSU_CHALLENGE_LOST));
-    expect(named("A seed on the command line")[1]).toBe(`a whole number from 1 to ${SEED_MOST.toLocaleString("en-US")}`);
+    expect(named("A seed on the command line")[1]).toBe(
+      `a whole number from 1 to ${SEED_MOST.toLocaleString("en-US")}`,
+    );
     expect(runCli(["deal", "--seed", String(SEED_MOST + 1)]).code).toBe(2);
     expect(runCli(["deal", "--seed", String(SEED_MOST)]).code).toBe(0);
     expect(runCli(["deal", "--seed", "0"]).code).toBe(2);
   });
 
   it("every constant it names exists", () => {
-    for (const row of rows) for (const name of row[2].match(/`(HITOTSU_\w+|SEED_MOST)`/g) ?? []) expect(Object.keys(hitotsu), name).toContain(name.replaceAll("`", ""));
+    for (const row of rows)
+      for (const name of row[2].match(/`(HITOTSU_\w+|SEED_MOST)`/g) ?? [])
+        expect(Object.keys(hitotsu), name).toContain(name.replaceAll("`", ""));
   });
 });
 
 describe("the README's tag", () => {
   it("lists the attributes the element watches, and no others", () => {
     const rows = table("| Attribute | What it does |");
-    expect(rows.map((row) => row[0].replaceAll("`", "")).sort()).toEqual([...HitotsuTableElement.observedAttributes].sort());
+    expect(rows.map((row) => row[0].replaceAll("`", "")).sort()).toEqual(
+      [...HitotsuTableElement.observedAttributes].sort(),
+    );
   });
 });
 
@@ -154,7 +191,8 @@ describe("the README's command line", () => {
   it("lists the options and commands the help does", () => {
     const rows = table("| Command or option | What it does |").map((row) => row[0]);
     const flags = [...usage.matchAll(/^\s+(?:-\w, )?(--[\w-]+)/gm)].map((match) => match[1]);
-    for (const flag of flags.filter((one) => one !== "--help" && one !== "--version")) expect(rows.join(" "), flag).toContain(flag);
+    for (const flag of flags.filter((one) => one !== "--help" && one !== "--version"))
+      expect(rows.join(" "), flag).toContain(flag);
     for (const command of ["deal", "play", "check"]) expect(rows.join(" ")).toContain(`\`${command}`);
   });
 
@@ -167,10 +205,13 @@ describe("the README's command line", () => {
 
   it("the commands in the README run, and print what is said", () => {
     expect(runCli(["deal", "--seed", "42"]).out).toMatch(/^Seat 1: .*\nOn the pile: /s);
-    expect(runCli(["play", "--seed", "42", "--players", "3", "--rules", "party"]).out).toBe("Hitotsu for 3, party rules, seed 42: 28 moves. Won by Seat 2.\nScores: 0 71 0\n");
+    expect(runCli(["play", "--seed", "42", "--players", "3", "--rules", "party"]).out).toBe(
+      "Hitotsu for 3, party rules, seed 42: 28 moves. Won by Seat 2.\nScores: 0 71 0\n",
+    );
     const saved = runCli(["play", "--seed", "42", "--saved"]).out;
     expect(runCli(["check", saved.trim()]).code).toBe(0);
-    for (const line of readme.match(/^npx @johnmorrisdotca\/hitotsu (deal|play|check) .*$/gm)) expect(line).toMatch(/^npx @johnmorrisdotca\/hitotsu (deal|play|check) --?\w|check game\.json/);
+    for (const line of readme.match(/^npx @johnmorrisdotca\/hitotsu (deal|play|check) .*$/gm))
+      expect(line).toMatch(/^npx @johnmorrisdotca\/hitotsu (deal|play|check) --?\w|check game\.json/);
   });
 });
 
@@ -191,7 +232,13 @@ describe("docs/strings-ja.md", () => {
     won: ["{who}"],
     stock: ["{count}"],
   };
-  const NEWS = { caught: ["{who}"], took: ["{who}", "{count}"], swap: ["{who}", "{other}"], jump: ["{who}"], drew: ["{who}", "{count}"] };
+  const NEWS = {
+    caught: ["{who}"],
+    took: ["{who}", "{count}"],
+    swap: ["{who}", "{other}"],
+    jump: ["{who}"],
+    drew: ["{who}", "{count}"],
+  };
   const rowsOf = (strings) => {
     const rows = {};
     for (const [key, value] of Object.entries(strings)) {
@@ -266,7 +313,8 @@ describe("docs/strings-ja.md", () => {
       expect(places(ja[key]), key).toEqual(places(en[key]));
     }
     for (const key of Object.keys(CLI_STRINGS.en)) {
-      if (!["hand", "rulesClassic", "rulesParty"].includes(key)) expect(CLI_STRINGS.ja[key], key).not.toBe(CLI_STRINGS.en[key]);
+      if (!["hand", "rulesClassic", "rulesParty"].includes(key))
+        expect(CLI_STRINGS.ja[key], key).not.toBe(CLI_STRINGS.en[key]);
       expect(places(CLI_STRINGS.ja[key]), key).toEqual(places(CLI_STRINGS.en[key]));
     }
   });
@@ -307,12 +355,23 @@ describe("the family's look", () => {
   });
 
   it("scripts/family-template.mjs is the family's file too", () => {
-    expect(createHash("sha256").update(readFileSync("scripts/family-template.mjs")).digest("hex")).toBe("fcc192026cf284303344e108b20e6181126607c670a881a6b3bf8479da26ab03");
+    expect(createHash("sha256").update(readFileSync("scripts/family-template.mjs")).digest("hex")).toBe(
+      "fcc192026cf284303344e108b20e6181126607c670a881a6b3bf8479da26ab03",
+    );
   });
 
   it("the site script uses the family's header and footer", () => {
     const site = readFileSync("scripts/site.mjs", "utf8");
-    for (const part of ["familyHead(", "familyHeader(", "familyUnreviewed(", "familyFooter(", "FAMILY_SCRIPT", 'href="family.css"', 'href="hitotsu.css"']) expect(site).toContain(part);
+    for (const part of [
+      "familyHead(",
+      "familyHeader(",
+      "familyUnreviewed(",
+      "familyFooter(",
+      "FAMILY_SCRIPT",
+      'href="family.css"',
+      'href="hitotsu.css"',
+    ])
+      expect(site).toContain(part);
     expect(site.indexOf('href="family.css"')).toBeLessThan(site.indexOf('href="hitotsu.css"'));
   });
 });

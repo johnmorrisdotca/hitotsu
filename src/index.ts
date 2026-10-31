@@ -21,4 +21,11 @@ export * from "./codec.ts";
 export * from "./table.ts";
 export * from "./card.ts";
 export { mountHitotsu, type HitotsuHandle, type HitotsuTableOptions } from "./ui/mount.ts";
-export { HITOTSU_STRINGS, HITOTSU_STRINGS_JA, hitotsuLanguageOf, hitotsuStrings, type HitotsuLanguage, type HitotsuStrings } from "./ui/strings.ts";
+export {
+  HITOTSU_STRINGS,
+  HITOTSU_STRINGS_JA,
+  hitotsuLanguageOf,
+  hitotsuStrings,
+  type HitotsuLanguage,
+  type HitotsuStrings,
+} from "./ui/strings.ts";

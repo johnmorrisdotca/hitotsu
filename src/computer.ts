@@ -66,7 +66,10 @@ export function hitotsuView(game: HitotsuGame, seat: number = game.toPlay ?? 0):
     next: (((seat + game.direction) % count) + count) % count,
     drawn: game.drawn,
     challengeFrom: game.challenge?.by ?? null,
-    legal: seat === game.toPlay ? hitotsuMoves(game) : hitotsuJumpIns(game).filter((move) => "jump" in move && move.seat === seat),
+    legal:
+      seat === game.toPlay
+        ? hitotsuMoves(game)
+        : hitotsuJumpIns(game).filter((move) => "jump" in move && move.seat === seat),
   };
 }
 
@@ -94,8 +97,12 @@ function bestWay(view: HitotsuView, ways: readonly Play[]): Play {
   const card = cardOf(ways[0]!);
   const rest = view.hand.filter((held) => held !== card);
   const colour = longestColour(rest);
-  const smallest = view.counts.reduce((best, count, seat) => (seat !== view.seat && (best < 0 || count < view.counts[best]!) ? seat : best), -1);
-  const score = (way: Play) => (way.colour === colour ? 4 : 0) + (way.swap === smallest ? 2 : 0) + (way.call === true ? 1 : 0);
+  const smallest = view.counts.reduce(
+    (best, count, seat) => (seat !== view.seat && (best < 0 || count < view.counts[best]!) ? seat : best),
+    -1,
+  );
+  const score = (way: Play) =>
+    (way.colour === colour ? 4 : 0) + (way.swap === smallest ? 2 : 0) + (way.call === true ? 1 : 0);
   return ways.reduce((best, way) => (score(way) > score(best) ? way : best));
 }
 
@@ -103,7 +110,12 @@ function bestWay(view: HitotsuView, ways: readonly Play[]): Play {
 function playsOf(view: HitotsuView): Play[] {
   const plays = view.legal.filter((move): move is Play => "play" in move || "jump" in move);
   const cards = [...new Set(plays.map(cardOf))];
-  return cards.map((card) => bestWay(view, plays.filter((move) => cardOf(move) === card)));
+  return cards.map((card) =>
+    bestWay(
+      view,
+      plays.filter((move) => cardOf(move) === card),
+    ),
+  );
 }
 
 /** Choose a move for the current player from the legal choices. Call only while the game is playing.

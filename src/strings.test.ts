@@ -6,7 +6,15 @@ import { HITOTSU_STRINGS, HITOTSU_STRINGS_JA, hitotsuLanguageOf, hitotsuStrings 
 describe("the table's languages", () => {
   it("read a language tag: Japanese for any ja, English for anything else, and for nothing", () => {
     expect(["ja", "ja-JP", "JA", "ja_JP"].map(hitotsuLanguageOf)).toEqual(["ja", "ja", "ja", "ja"]);
-    expect(["en", "en-GB", "jam", "fr", "", null, undefined].map(hitotsuLanguageOf)).toEqual(["en", "en", "en", "en", "en", "en", "en"]);
+    expect(["en", "en-GB", "jam", "fr", "", null, undefined].map(hitotsuLanguageOf)).toEqual([
+      "en",
+      "en",
+      "en",
+      "en",
+      "en",
+      "en",
+      "en",
+    ]);
   });
 
   it("hand back each language's own words", () => {
@@ -17,7 +25,10 @@ describe("the table's languages", () => {
   });
 
   it("have the same shape: every English word has a Japanese one of the same kind", () => {
-    const shape = (strings: object): string[] => Object.entries(strings).flatMap(([key, value]) => (typeof value === "object" ? shape(value).map((inner) => `${key}.${inner}`) : [`${key}:${typeof value}`]));
+    const shape = (strings: object): string[] =>
+      Object.entries(strings).flatMap(([key, value]) =>
+        typeof value === "object" ? shape(value).map((inner) => `${key}.${inner}`) : [`${key}:${typeof value}`],
+      );
     expect(shape(HITOTSU_STRINGS_JA)).toEqual(shape(HITOTSU_STRINGS));
   });
 

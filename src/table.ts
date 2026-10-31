@@ -69,12 +69,23 @@ export function readTableSetUp(sent: unknown): HitotsuTableSetUp | null {
  * console.log(startTable(1, 4, { seed: 42, options: HITOTSU_CLASSIC }, [1, 2, 3])?.computers);
  * ```
  */
-export function startTable(size: number, count: number, sent: unknown, computers: readonly number[] = []): HitotsuGame | null {
+export function startTable(
+  size: number,
+  count: number,
+  sent: unknown,
+  computers: readonly number[] = [],
+): HitotsuGame | null {
   const setUp = readTableSetUp(sent);
   if (setUp === null) return null;
   const blanks = new Array<string>(count).fill("");
   const played = new Set(computers);
-  return startHitotsu(size, blanks, setUp.seed, setUp.options, blanks.map((_, seat) => played.has(seat)));
+  return startHitotsu(
+    size,
+    blanks,
+    setUp.seed,
+    setUp.options,
+    blanks.map((_, seat) => played.has(seat)),
+  );
 }
 
 /** A move as a device sent it, checked for its shape, or null; a jump is never a move at a table on several devices.

@@ -65,7 +65,11 @@ export function movesFor(game: HitotsuGame, seat: number): HitotsuMove[] {
  * ```
  */
 export function playableFor(game: HitotsuGame, seat: number): HitotsuCard[] {
-  return [...new Set(movesFor(game, seat).flatMap((move) => ("play" in move ? [move.play] : "jump" in move ? [move.jump] : [])))];
+  return [
+    ...new Set(
+      movesFor(game, seat).flatMap((move) => ("play" in move ? [move.play] : "jump" in move ? [move.jump] : [])),
+    ),
+  ];
 }
 
 /** Whether the call is a choice now: this seat is about to play its second-last card.

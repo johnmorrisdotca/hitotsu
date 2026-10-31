@@ -13,7 +13,8 @@ describe("hitotsu: the card design", () => {
   });
 
   it("puts a colour's element in the corners, so no card is told by colour alone", () => {
-    const texts = (card: string) => hitotsuCardShapes(card).flatMap((shape) => (shape.kind === "text" ? [shape.text] : []));
+    const texts = (card: string) =>
+      hitotsuCardShapes(card).flatMap((shape) => (shape.kind === "text" ? [shape.text] : []));
     expect(texts("R50")).toEqual(["5", "5", "5", "火", "火"]);
     expect(texts("BS0")).toContain("水");
     expect(texts("WW0")).toEqual(["★", "★", "五", "五"]);

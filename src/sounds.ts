@@ -29,4 +29,14 @@ export const CARD_SOUND_DATA: Readonly<Record<CardSoundFile, string>> = {
 };
 
 /** The name of one recording: its kind of sound and a number, such as `deal-2`. */
-export type CardSoundFile = "deal-1" | "deal-2" | "deal-3" | "deal-4" | "flip-1" | "flip-2" | "play-1" | "play-2" | "play-3" | "shuffle-1";
+export type CardSoundFile =
+  | "deal-1"
+  | "deal-2"
+  | "deal-3"
+  | "deal-4"
+  | "flip-1"
+  | "flip-2"
+  | "play-1"
+  | "play-2"
+  | "play-3"
+  | "shuffle-1";

@@ -73,7 +73,10 @@ export function cardElement(card: HitotsuCard | null, called?: HitotsuColour): H
     const el = document.createElementNS(SVG, shape.kind);
     for (const [name, value] of Object.entries(shape)) {
       if (value === undefined || name === "kind" || name === "text") continue;
-      el.setAttribute(name.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`), String(value));
+      el.setAttribute(
+        name.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`),
+        String(value),
+      );
     }
     if (shape.kind === "text") {
       el.setAttribute("text-anchor", "middle");
@@ -131,7 +134,8 @@ function newsLine(news: readonly HitotsuNews[], t: HitotsuStrings, name: (seat: 
 export function mountHitotsu(target: HTMLElement, options: HitotsuTableOptions = {}): HitotsuHandle {
   const doc = target.ownerDocument;
   injectStyle(doc, target.getRootNode());
-  let language = options.language ?? hitotsuLanguageOf(target.closest("[lang]")?.getAttribute("lang") ?? doc.documentElement.lang);
+  let language =
+    options.language ?? hitotsuLanguageOf(target.closest("[lang]")?.getAttribute("lang") ?? doc.documentElement.lang);
   let t: Required<HitotsuStrings> = { ...hitotsuStrings(language), ...options.strings };
   const root = h("div", { class: "ht-root" });
   for (const [name, value] of Object.entries(options.theme ?? {})) root.style.setProperty(name, value);
@@ -139,16 +143,36 @@ export function mountHitotsu(target: HTMLElement, options: HitotsuTableOptions =
 
   let ownSounds = options.sound === true ? createCardSounds() : null;
   let sounds: CardSounds | null = ownSounds ?? (typeof options.sound === "object" ? options.sound : null);
-  let settings = { players: options.players, computers: options.computers, rules: options.rules, size: options.size, seed: options.seed, computerMs: options.computerMs };
+  let settings = {
+    players: options.players,
+    computers: options.computers,
+    rules: options.rules,
+    size: options.size,
+    seed: options.seed,
+    computerMs: options.computerMs,
+  };
   let game: HitotsuGame;
   let chosen: HitotsuCard | null = null;
   let calling = false;
   let timer: ReturnType<typeof setTimeout> | undefined;
 
   const deal = () => {
-    if (settings.players === undefined && (!Number.isInteger(settings.computers ?? 3) || (settings.computers ?? 3) < 1 || (settings.computers ?? 3) > 7)) throw new RangeError("Choose one to seven computers.");
-    const players = settings.players ?? [t.you, ...Array.from({ length: settings.computers ?? 3 }, (_, at) => t.computer(at + 1))];
-    const started = startHitotsu(settings.size ?? HITOTSU_ONE_HAND, players, settings.seed ?? freshSeed(), settings.rules ?? HITOTSU_CLASSIC, players.map((_, seat) => seat !== 0));
+    if (
+      settings.players === undefined &&
+      (!Number.isInteger(settings.computers ?? 3) || (settings.computers ?? 3) < 1 || (settings.computers ?? 3) > 7)
+    )
+      throw new RangeError("Choose one to seven computers.");
+    const players = settings.players ?? [
+      t.you,
+      ...Array.from({ length: settings.computers ?? 3 }, (_, at) => t.computer(at + 1)),
+    ];
+    const started = startHitotsu(
+      settings.size ?? HITOTSU_ONE_HAND,
+      players,
+      settings.seed ?? freshSeed(),
+      settings.rules ?? HITOTSU_CLASSIC,
+      players.map((_, seat) => seat !== 0),
+    );
     if (started === null) throw new Error("Hitotsu is played by two to eight, to 1, 200 or 500.");
     game = started;
     chosen = null;
@@ -187,24 +211,61 @@ export function mountHitotsu(target: HTMLElement, options: HitotsuTableOptions =
   };
 
   const press = (label: string, move: HitotsuMove | null, extra: Record<string, string | boolean> = {}) =>
-    h("button", { type: "button", disabled: move === null, onclick: () => move !== null && play(move), ...extra }, label);
+    h(
+      "button",
+      { type: "button", disabled: move === null, onclick: () => move !== null && play(move), ...extra },
+      label,
+    );
 
   function actions(): HTMLElement {
     const bar = h("div", { class: "ht-actions" });
     if (game.phase === "over") {
-      bar.append(h("button", { type: "button", "data-strong": true, onclick: () => (deal(), sounds?.play("shuffle"), sounds?.play("deal", { count: game.hands[0]?.length ?? 1, delay: 700 }), render()) }, t.again));
+      bar.append(
+        h(
+          "button",
+          {
+            type: "button",
+            "data-strong": true,
+            onclick: () => (
+              deal(),
+              sounds?.play("shuffle"),
+              sounds?.play("deal", { count: game.hands[0]?.length ?? 1, delay: 700 }),
+              render()
+            ),
+          },
+          t.again,
+        ),
+      );
       return bar;
     }
     const mine = movesFor(game, 0);
     if (chosen !== null) {
       const ways = waysFor(game, 0, chosen, calling);
       for (const way of ways) {
-        if (way.colour !== undefined) bar.append(press(t.colour[way.colour], way, { "data-colour": true, style: `background:${HITOTSU_COLOUR_LOOK[way.colour].fill}` }));
+        if (way.colour !== undefined)
+          bar.append(
+            press(t.colour[way.colour], way, {
+              "data-colour": true,
+              style: `background:${HITOTSU_COLOUR_LOOK[way.colour].fill}`,
+            }),
+          );
         else if (way.swap !== undefined) bar.append(press(t.swapWith(name(way.swap)), way));
       }
       return bar;
     }
-    if (callMatters(game, 0)) bar.append(h("button", { type: "button", "data-on": calling, "aria-pressed": String(calling), onclick: () => ((calling = !calling), render()) }, calling ? t.called : t.call));
+    if (callMatters(game, 0))
+      bar.append(
+        h(
+          "button",
+          {
+            type: "button",
+            "data-on": calling,
+            "aria-pressed": String(calling),
+            onclick: () => ((calling = !calling), render()),
+          },
+          calling ? t.called : t.call,
+        ),
+      );
     const find = (key: "take" | "challenge" | "pass") => mine.find((move) => key in move) ?? null;
     if (find("challenge") !== null) bar.append(press(t.challenge, find("challenge"), { "data-strong": true }));
     if (find("take") !== null) bar.append(press(t.take(game.pending), find("take")));
@@ -241,8 +302,23 @@ export function mountHitotsu(target: HTMLElement, options: HitotsuTableOptions =
                 ? `${t.yourTurn}${language === "ja" ? "。" : ". "}${t.follow(t.colour[game.colour])}`
                 : t.toPlay(name(game.toPlay));
 
-    const stock = h("button", { type: "button", class: "ht-stock", "data-testid": "ht-stock", disabled: drawMove === null, "aria-label": t.draw, onclick: () => drawMove !== null && play(drawMove) }, cardElement(null), h("span", {}, t.stock(game.stock.length)));
-    const inPlay = top === null ? h("span", { class: "ht-card", "aria-hidden": "true", style: "visibility:hidden" }) : cardElement(top, top[0] === "W" ? game.colour : undefined);
+    const stock = h(
+      "button",
+      {
+        type: "button",
+        class: "ht-stock",
+        "data-testid": "ht-stock",
+        disabled: drawMove === null,
+        "aria-label": t.draw,
+        onclick: () => drawMove !== null && play(drawMove),
+      },
+      cardElement(null),
+      h("span", {}, t.stock(game.stock.length)),
+    );
+    const inPlay =
+      top === null
+        ? h("span", { class: "ht-card", "aria-hidden": "true", style: "visibility:hidden" })
+        : cardElement(top, top[0] === "W" ? game.colour : undefined);
     if (top !== null) inPlay.setAttribute("aria-label", hitotsuWords(top, language));
     const pile = h("span", { class: "ht-pile", "data-testid": "ht-pile" }, inPlay, h("span", {}, t.inPlay));
     refill(
@@ -251,13 +327,25 @@ export function mountHitotsu(target: HTMLElement, options: HitotsuTableOptions =
         "div",
         { class: "ht-seats" },
         ...game.players.map((player, seat) =>
-          h("div", { class: "ht-seat", "data-turn": !over && game.toPlay === seat }, h("b", {}, player), h("span", {}, t.cards(game.hands[seat]?.length ?? 0)), h("span", {}, t.points(game.scores[seat] ?? 0))),
+          h(
+            "div",
+            { class: "ht-seat", "data-turn": !over && game.toPlay === seat },
+            h("b", {}, player),
+            h("span", {}, t.cards(game.hands[seat]?.length ?? 0)),
+            h("span", {}, t.points(game.scores[seat] ?? 0)),
+          ),
         ),
       ),
       h(
         "div",
         { class: "ht-felt" },
-        h("div", { class: "ht-piles" }, stock, h("span", { class: "ht-dir", "aria-hidden": "true" }, game.direction === 1 ? "↻" : "↺"), pile),
+        h(
+          "div",
+          { class: "ht-piles" },
+          stock,
+          h("span", { class: "ht-dir", "aria-hidden": "true" }, game.direction === 1 ? "↻" : "↺"),
+          pile,
+        ),
         h("p", { class: "ht-status", "aria-live": "polite" }, status),
         h("p", { class: "ht-news" }, newsLine(game.news, t, name)),
       ),
@@ -265,7 +353,14 @@ export function mountHitotsu(target: HTMLElement, options: HitotsuTableOptions =
         "div",
         { class: "ht-hand" },
         ...(game.hands[0] ?? []).map((card) => {
-          const button = h("button", { type: "button", "aria-label": hitotsuWords(card, language), disabled: !playable.includes(card), "data-playable": playable.includes(card), title: game.toPlay !== 0 && playable.includes(card) ? t.jumpIn : undefined, onclick: () => tapCard(card) });
+          const button = h("button", {
+            type: "button",
+            "aria-label": hitotsuWords(card, language),
+            disabled: !playable.includes(card),
+            "data-playable": playable.includes(card),
+            title: game.toPlay !== 0 && playable.includes(card) ? t.jumpIn : undefined,
+            onclick: () => tapCard(card),
+          });
           button.append(cardElement(card));
           return button;
         }),
@@ -314,4 +409,3 @@ export function mountHitotsu(target: HTMLElement, options: HitotsuTableOptions =
     },
   };
 }
-

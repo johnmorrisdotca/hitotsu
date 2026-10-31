@@ -84,7 +84,8 @@ export const HITOTSU_STRINGS: Required<HitotsuStrings> = {
   news: {
     caught: (who) => `${who} forgot to call Hitotsu!: two cards.`,
     took: (who, count) => `${who} took ${count}.`,
-    challenge: (who, by, guilty) => (guilty ? `${who} challenged ${by}, who had the colour.` : `${who} challenged ${by}, who did not have the colour.`),
+    challenge: (who, by, guilty) =>
+      guilty ? `${who} challenged ${by}, who had the colour.` : `${who} challenged ${by}, who did not have the colour.`,
     swap: (who, other) => `${who} swapped hands with ${other}.`,
     rotate: "Every hand passed on.",
     jump: (who) => `${who} jumped in!`,
@@ -132,7 +133,10 @@ export const HITOTSU_STRINGS_JA: Required<HitotsuStrings> = {
   news: {
     caught: (who) => `${who}は「ヒトツ！」と言い忘れました。2枚引きます。`,
     took: (who, count) => `${who}は${count}枚引きました。`,
-    challenge: (who, by, guilty) => (guilty ? `${who}が${by}に挑戦しました。${by}はその色を持っていました。` : `${who}が${by}に挑戦しました。${by}はその色を持っていませんでした。`),
+    challenge: (who, by, guilty) =>
+      guilty
+        ? `${who}が${by}に挑戦しました。${by}はその色を持っていました。`
+        : `${who}が${by}に挑戦しました。${by}はその色を持っていませんでした。`,
     swap: (who, other) => `${who}は${other}と手札を交換しました。`,
     rotate: "全員の手札が回りました。",
     jump: (who) => `${who}が割り込みました！`,

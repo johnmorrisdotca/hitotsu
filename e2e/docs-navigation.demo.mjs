@@ -9,7 +9,10 @@ for (const path of ["/", "/builder.html"]) {
     await page.route("http://hitotsu.test/**", (route) => {
       const pathname = new URL(route.request().url()).pathname;
       const file = join(process.cwd(), "site", pathname === "/" ? "index.html" : pathname);
-      return route.fulfill({ body: readFileSync(file), contentType: types[file.slice(file.lastIndexOf("."))] ?? "application/octet-stream" });
+      return route.fulfill({
+        body: readFileSync(file),
+        contentType: types[file.slice(file.lastIndexOf("."))] ?? "application/octet-stream",
+      });
     });
     await page.goto(`http://hitotsu.test${path}?lang=ja`);
     const docs = page.locator('[data-say="pageDocs"]');

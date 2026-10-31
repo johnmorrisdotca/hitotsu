@@ -1,4 +1,11 @@
-import { HITOTSU_CAUGHT, HITOTSU_CHALLENGE_LOST, HITOTSU_CLASSIC, HITOTSU_COLOURS, HITOTSU_ONE_HAND, HITOTSU_SIZES } from "./constants.ts";
+import {
+  HITOTSU_CAUGHT,
+  HITOTSU_CHALLENGE_LOST,
+  HITOTSU_CLASSIC,
+  HITOTSU_COLOURS,
+  HITOTSU_ONE_HAND,
+  HITOTSU_SIZES,
+} from "./constants.ts";
 import type { HitotsuCard, HitotsuColour, HitotsuGame, HitotsuMove, HitotsuNews, HitotsuOptions } from "./types.ts";
 import {
   DRAW_TWO,
@@ -148,15 +155,25 @@ function movesHands(game: HitotsuGame, card: HitotsuCard): boolean {
 }
 
 /** Every way of playing one card from a seat: the colour a wild calls, the seat a seven swaps with, and the call, where each applies. */
-function waysToPlay(game: HitotsuGame, seat: number, card: HitotsuCard): { colour?: HitotsuColour; swap?: number; call?: boolean }[] {
+function waysToPlay(
+  game: HitotsuGame,
+  seat: number,
+  card: HitotsuCard,
+): { colour?: HitotsuColour; swap?: number; call?: boolean }[] {
   const hand = handOf(game, seat);
   const colours: (HitotsuColour | undefined)[] = isWild(card) ? [...HITOTSU_COLOURS] : [undefined];
   const swaps: (number | undefined)[] =
-    game.options.sevenZero && faceOf(card) === "7" && hand.length > 1 ? game.players.flatMap((_, at) => (at === seat ? [] : [at])) : [undefined];
+    game.options.sevenZero && faceOf(card) === "7" && hand.length > 1
+      ? game.players.flatMap((_, at) => (at === seat ? [] : [at]))
+      : [undefined];
   const calls: (boolean | undefined)[] = hand.length === 2 && !movesHands(game, card) ? [true, undefined] : [undefined];
   return colours.flatMap((colour) =>
     swaps.flatMap((swap) =>
-      calls.map((call) => ({ ...(colour === undefined ? {} : { colour }), ...(swap === undefined ? {} : { swap }), ...(call === undefined ? {} : { call }) })),
+      calls.map((call) => ({
+        ...(colour === undefined ? {} : { colour }),
+        ...(swap === undefined ? {} : { swap }),
+        ...(call === undefined ? {} : { call }),
+      })),
     ),
   );
 }
@@ -181,7 +198,9 @@ function canDraw(game: HitotsuGame): boolean {
 export function hitotsuMoves(game: HitotsuGame): HitotsuMove[] {
   if (game.phase === "over" || game.toPlay === null) return [];
   const seat = game.toPlay;
-  const plays = hitotsuPlayable(game).flatMap((card) => waysToPlay(game, seat, card).map((way): HitotsuMove => ({ play: card, ...way })));
+  const plays = hitotsuPlayable(game).flatMap((card) =>
+    waysToPlay(game, seat, card).map((way): HitotsuMove => ({ play: card, ...way })),
+  );
   if (game.challenge !== null) return [...plays, { take: true }, { challenge: true }];
   if (game.pending > 0) return [...plays, { take: true }];
   if (game.drawn !== null) return [...plays, { pass: true }];
@@ -212,13 +231,22 @@ export function hitotsuJumpIns(game: HitotsuGame): HitotsuMove[] {
   const top = hitotsuTop(game);
   if (isWild(top)) return [];
   return game.hands.flatMap((hand, seat) =>
-    seat === game.toPlay ? [] : hand.filter((card) => identical(card, top)).flatMap((card) => waysToPlay(game, seat, card).map((way): HitotsuMove => ({ jump: card, seat, ...way }))),
+    seat === game.toPlay
+      ? []
+      : hand
+          .filter((card) => identical(card, top))
+          .flatMap((card) => waysToPlay(game, seat, card).map((way): HitotsuMove => ({ jump: card, seat, ...way }))),
   );
 }
 
 /** Two moves the same: every field alike, a call not made counted as no call. */
 function sameMove(a: HitotsuMove, b: HitotsuMove): boolean {
-  const flat = (move: HitotsuMove) => JSON.stringify(Object.entries(move).filter(([key, value]) => value !== undefined && !(key === "call" && value === false)).sort(([x], [y]) => x.localeCompare(y)));
+  const flat = (move: HitotsuMove) =>
+    JSON.stringify(
+      Object.entries(move)
+        .filter(([key, value]) => value !== undefined && !(key === "call" && value === false))
+        .sort(([x], [y]) => x.localeCompare(y)),
+    );
   return flat(a) === flat(b);
 }
 
@@ -248,11 +276,31 @@ function drawInto(game: HitotsuGame, seat: number, count: number): HitotsuGame {
   return state;
 }
 
-function dealHand(base: Omit<HitotsuGame, "hands" | "stock" | "discard" | "colour" | "direction" | "toPlay" | "drawn" | "pending" | "pendingFace" | "challenge" | "passes" | "turnovers" | "phase" | "news">): HitotsuGame {
+function dealHand(
+  base: Omit<
+    HitotsuGame,
+    | "hands"
+    | "stock"
+    | "discard"
+    | "colour"
+    | "direction"
+    | "toPlay"
+    | "drawn"
+    | "pending"
+    | "pendingFace"
+    | "challenge"
+    | "passes"
+    | "turnovers"
+    | "phase"
+    | "news"
+  >,
+): HitotsuGame {
   const seats = base.players.length;
   const deck = shuffledHitotsu(base.seed, base.hand);
   const dealt = seats * base.options.deal;
-  const hands = Array.from({ length: seats }, (_, seat) => sortHitotsu(deck.filter((_, at) => at < dealt && at % seats === seat)));
+  const hands = Array.from({ length: seats }, (_, seat) =>
+    sortHitotsu(deck.filter((_, at) => at < dealt && at % seats === seat)),
+  );
   let stock = deck.slice(dealt);
   // The first number card turned up starts the pile; anything else goes back under the stock.
   while (stock.length > 0 && !isNumber(stock[0]!)) stock = [...stock.slice(1), stock[0]!];
@@ -291,7 +339,13 @@ function dealHand(base: Omit<HitotsuGame, "hands" | "stock" | "discard" | "colou
  * console.log(startHitotsu(1, ["Aki", "Ben"], 42, HITOTSU_CLASSIC)?.hands.map((hand) => hand.length));
  * ```
  */
-export function startHitotsu(size: number, players: readonly string[], seed = 1, options: HitotsuOptions = HITOTSU_CLASSIC, computers?: readonly boolean[]): HitotsuGame | null {
+export function startHitotsu(
+  size: number,
+  players: readonly string[],
+  seed = 1,
+  options: HitotsuOptions = HITOTSU_CLASSIC,
+  computers?: readonly boolean[],
+): HitotsuGame | null {
   if (!(HITOTSU_SIZES as readonly number[]).includes(size)) return null;
   if (players.length < 2 || players.length > HITOTSU_MOST_PLAYERS) return null;
   return dealHand({
@@ -309,7 +363,11 @@ export function startHitotsu(size: number, players: readonly string[], seed = 1,
 
 /** The hand is over: the winners score everything the others hold, and either the game is over or the next hand is dealt. */
 function endHand(game: HitotsuGame, winners: number[], blocked: boolean): HitotsuGame {
-  const points = game.hands.reduce((sum, hand, seat) => (winners.includes(seat) ? sum : sum + hand.reduce((held, card) => held + hitotsuPoints(card), 0)), 0);
+  const points = game.hands.reduce(
+    (sum, hand, seat) =>
+      winners.includes(seat) ? sum : sum + hand.reduce((held, card) => held + hitotsuPoints(card), 0),
+    0,
+  );
   const scores = game.scores.map((score, seat) => (winners.includes(seat) ? score + points : score));
   const finished = { ...game, scores, results: [...game.results, { winners, points, blocked }] };
   if (game.size === HITOTSU_ONE_HAND || Math.max(...scores) >= game.size) {
@@ -332,13 +390,30 @@ function drawCardPlayed(game: HitotsuGame, seat: number, face: string, bluffed: 
 }
 
 /** A card goes down from a seat, in turn or jumping in, and does what it does. */
-function place(game: HitotsuGame, seat: number, card: HitotsuCard, way: { colour?: HitotsuColour; swap?: number; call?: boolean }, jumped: boolean): HitotsuGame {
+function place(
+  game: HitotsuGame,
+  seat: number,
+  card: HitotsuCard,
+  way: { colour?: HitotsuColour; swap?: number; call?: boolean },
+  jumped: boolean,
+): HitotsuGame {
   const face = faceOf(card);
   const before = game.pending;
   const bluffed = handOf(game, seat).some((held) => held !== card && colourOf(held) === game.colour);
   const hands = game.hands.map((hand, at) => (at === seat ? hand.filter((held) => held !== card) : hand));
   const news: HitotsuNews[] = jumped ? [{ kind: "jump", seat }] : [];
-  let state: HitotsuGame = { ...game, hands, discard: [...game.discard, card], colour: way.colour ?? colourOf(card)!, drawn: null, passes: 0, news, toPlay: seat, pending: before, challenge: null };
+  let state: HitotsuGame = {
+    ...game,
+    hands,
+    discard: [...game.discard, card],
+    colour: way.colour ?? colourOf(card)!,
+    drawn: null,
+    passes: 0,
+    news,
+    toPlay: seat,
+    pending: before,
+    challenge: null,
+  };
   if (hands[seat]?.length === 0) {
     // Out. A draw card played last is still taken by the next player, and counts against them.
     if (isDrawCard(card)) {
@@ -353,9 +428,19 @@ function place(game: HitotsuGame, seat: number, card: HitotsuCard, way: { colour
     state = drawInto(state, seat, HITOTSU_CAUGHT);
     state = { ...state, news: [...state.news, { kind: "caught", seat }] };
   }
-  if (face === SKIP) return { ...state, toPlay: along(state, seat, 2), news: [...state.news, { kind: "skipped", seat: along(state, seat, 1) }] };
+  if (face === SKIP)
+    return {
+      ...state,
+      toPlay: along(state, seat, 2),
+      news: [...state.news, { kind: "skipped", seat: along(state, seat, 1) }],
+    };
   if (face === REVERSE) {
-    if (state.players.length === 2) return { ...state, toPlay: along(state, seat, 2), news: [...state.news, { kind: "skipped", seat: along(state, seat, 1) }] };
+    if (state.players.length === 2)
+      return {
+        ...state,
+        toPlay: along(state, seat, 2),
+        news: [...state.news, { kind: "skipped", seat: along(state, seat, 1) }],
+      };
     const turned: HitotsuGame = { ...state, direction: state.direction === 1 ? -1 : 1 };
     return { ...turned, toPlay: along(turned, seat, 1), news: [...state.news, { kind: "reversed" }] };
   }
@@ -364,11 +449,21 @@ function place(game: HitotsuGame, seat: number, card: HitotsuCard, way: { colour
     const mine = handOf(state, seat);
     const theirs = handOf(state, way.swap);
     const swapped = state.hands.map((hand, at) => (at === seat ? theirs : at === way.swap ? mine : hand));
-    return { ...state, hands: swapped, toPlay: along(state, seat, 1), news: [...state.news, { kind: "swap", seat, with: way.swap }] };
+    return {
+      ...state,
+      hands: swapped,
+      toPlay: along(state, seat, 1),
+      news: [...state.news, { kind: "swap", seat, with: way.swap }],
+    };
   }
   if (movesHands(game, card) && face === "0") {
     const passed = state.hands.map((_, at) => handOf(state, along(state, at, -1)));
-    return { ...state, hands: passed, toPlay: along(state, seat, 1), news: [...state.news, { kind: "rotate", direction: state.direction }] };
+    return {
+      ...state,
+      hands: passed,
+      toPlay: along(state, seat, 1),
+      news: [...state.news, { kind: "rotate", direction: state.direction }],
+    };
   }
   return { ...state, toPlay: along(state, seat, 1) };
 }
@@ -383,7 +478,8 @@ function drawTurn(game: HitotsuGame, seat: number): HitotsuGame | null {
     if (got === null) break;
     state = got.game;
     count += 1;
-    if (hitotsuMatches(state, got.card) && (faceOf(got.card) !== WILD_FOUR || fourAllowed(state, handOf(state, seat)))) drawn = got.card;
+    if (hitotsuMatches(state, got.card) && (faceOf(got.card) !== WILD_FOUR || fourAllowed(state, handOf(state, seat))))
+      drawn = got.card;
   } while (game.options.drawToMatch && drawn === null);
   if (count === 0) return null;
   const said: HitotsuNews[] = [{ kind: "drew", seat, count }];
@@ -398,7 +494,11 @@ function passTurn(game: HitotsuGame, seat: number): HitotsuGame {
   if (passes < game.players.length) return { ...game, passes, toPlay: along(game, seat, 1), news: [] };
   const held = game.hands.map((hand) => hand.reduce((sum, card) => sum + hitotsuPoints(card), 0));
   const least = Math.min(...held);
-  return endHand({ ...game, news: [] }, held.flatMap((points, at) => (points === least ? [at] : [])), true);
+  return endHand(
+    { ...game, news: [] },
+    held.flatMap((points, at) => (points === least ? [at] : [])),
+    true,
+  );
 }
 
 /** The draw waiting is taken, and the turn is lost. */
@@ -417,11 +517,25 @@ function challengeFour(game: HitotsuGame, seat: number): HitotsuGame {
   const base = { ...game, pending: 0, pendingFace: null, challenge: null, news: [] };
   if (bluffed) {
     const drew = drawInto(base, by, game.pending);
-    return { ...drew, toPlay: seat, news: [{ kind: "challenge", seat, by, guilty: true }, { kind: "took", seat: by, count: game.pending }] };
+    return {
+      ...drew,
+      toPlay: seat,
+      news: [
+        { kind: "challenge", seat, by, guilty: true },
+        { kind: "took", seat: by, count: game.pending },
+      ],
+    };
   }
   const count = game.pending + HITOTSU_CHALLENGE_LOST - 4;
   const drew = drawInto(base, seat, count);
-  return { ...drew, toPlay: along(drew, seat, 1), news: [{ kind: "challenge", seat, by, guilty: false }, { kind: "took", seat, count }] };
+  return {
+    ...drew,
+    toPlay: along(drew, seat, 1),
+    news: [
+      { kind: "challenge", seat, by, guilty: false },
+      { kind: "took", seat, count },
+    ],
+  };
 }
 
 /** Apply a legal move and return a new game with that move recorded; null for an illegal move or a finished game. The input game is unchanged.
@@ -442,7 +556,8 @@ export function playHitotsu(game: HitotsuGame, move: HitotsuMove): HitotsuGame |
   if (game.phase === "over" || seat === null) return null;
   let next: HitotsuGame | null = null;
   if ("jump" in move) {
-    if (hitotsuJumpIns(game).some((offered) => sameMove(offered, move))) next = place(game, move.seat, move.jump, move, true);
+    if (hitotsuJumpIns(game).some((offered) => sameMove(offered, move)))
+      next = place(game, move.seat, move.jump, move, true);
   } else if (hitotsuMoves(game).some((offered) => sameMove(offered, move))) {
     if ("play" in move) next = place(game, seat, move.play, move, false);
     else if ("draw" in move) next = drawTurn(game, seat);

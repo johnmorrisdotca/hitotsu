@@ -7,7 +7,10 @@ import { namedTable, readTableMove, readTableSetUp, startTable, tableComputerMov
 
 describe("hitotsu: a table on several devices", () => {
   it("reads a set-up, and takes jumping in off whatever was sent", () => {
-    expect(readTableSetUp({ seed: 42, options: HITOTSU_PARTY })).toEqual({ seed: 42, options: { ...HITOTSU_PARTY, jumpIn: false } });
+    expect(readTableSetUp({ seed: 42, options: HITOTSU_PARTY })).toEqual({
+      seed: 42,
+      options: { ...HITOTSU_PARTY, jumpIn: false },
+    });
     expect(readTableSetUp({ seed: 0, options: HITOTSU_PARTY })).toBeNull();
     expect(readTableSetUp({ seed: 1.5, options: HITOTSU_PARTY })).toBeNull();
     expect(readTableSetUp({ seed: 42, options: { ...HITOTSU_PARTY, deal: 6 } })).toBeNull();

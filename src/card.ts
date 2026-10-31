@@ -23,7 +23,10 @@ import type { HitotsuCard, HitotsuColour } from "./types.ts";
  * console.log(HITOTSU_COLOUR_LOOK.R.element);
  * ```
  */
-export const HITOTSU_COLOUR_LOOK: Record<HitotsuColour | "W", { fill: string; ink: string; element: string; name: string }> = {
+export const HITOTSU_COLOUR_LOOK: Record<
+  HitotsuColour | "W",
+  { fill: string; ink: string; element: string; name: string }
+> = {
   R: { fill: "#c8372d", ink: "#ffffff", element: "火", name: "Red" },
   Y: { fill: "#dfa11b", ink: "#1f1a12", element: "土", name: "Yellow" },
   G: { fill: "#2f8a4f", ink: "#ffffff", element: "木", name: "Green" },
@@ -73,10 +76,33 @@ export const HITOTSU_CARD_BOX = { width: 100, height: 140 } as const;
  * ```
  */
 export type HitotsuShape =
-  | { kind: "rect"; x: number; y: number; width: number; height: number; rx: number; fill: string; stroke?: string; strokeWidth?: number; transform?: string }
+  | {
+      kind: "rect";
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+      rx: number;
+      fill: string;
+      stroke?: string;
+      strokeWidth?: number;
+      transform?: string;
+    }
   | { kind: "path"; d: string; fill: string }
   | { kind: "circle"; cx: number; cy: number; r: number; fill: string; stroke?: string; strokeWidth?: number }
-  | { kind: "text"; x: number; y: number; text: string; fontSize: number; fontWeight?: string; fill: string; stroke?: string; strokeWidth?: number; fontFamily: string; transform?: string };
+  | {
+      kind: "text";
+      x: number;
+      y: number;
+      text: string;
+      fontSize: number;
+      fontWeight?: string;
+      fill: string;
+      stroke?: string;
+      strokeWidth?: number;
+      fontFamily: string;
+      transform?: string;
+    };
 
 /** How far below its middle a line of text puts its baseline, as a share of its size: the same in every browser, where `dominant-baseline` is not. */
 const TEXT_DROP = 0.35;
@@ -117,7 +143,16 @@ export function hitotsuCardShapes(card: HitotsuCard | null, called?: HitotsuColo
       { kind: "circle", cx: 50, cy: 70, r: 31, fill: HITOTSU_PAPER },
       ...quarters(50, 70, 28),
       { kind: "circle", cx: 50, cy: 70, r: 19, fill: ink },
-      { kind: "text", x: 50, y: middled(71, 15), text: "一つ", fontSize: 15, fontWeight: "700", fill: HITOTSU_PAPER, fontFamily: "serif" },
+      {
+        kind: "text",
+        x: 50,
+        y: middled(71, 15),
+        text: "一つ",
+        fontSize: 15,
+        fontWeight: "700",
+        fill: HITOTSU_PAPER,
+        fontFamily: "serif",
+      },
     ];
   }
   const look = HITOTSU_COLOUR_LOOK[colourOf(card) ?? "W"];
@@ -129,20 +164,76 @@ export function hitotsuCardShapes(card: HitotsuCard | null, called?: HitotsuColo
   return [
     { kind: "rect", x: 0, y: 0, width: 100, height: 140, rx: 9, fill: HITOTSU_PAPER },
     { kind: "rect", x: 5, y: 5, width: 90, height: 130, rx: 6, fill: look.fill },
-    { kind: "rect", x: -27, y: -27, width: 54, height: 54, rx: 6, fill: wild ? ink : HITOTSU_PAPER, stroke: HITOTSU_PAPER, strokeWidth: 3, transform: "translate(50 70) rotate(45)" },
+    {
+      kind: "rect",
+      x: -27,
+      y: -27,
+      width: 54,
+      height: 54,
+      rx: 6,
+      fill: wild ? ink : HITOTSU_PAPER,
+      stroke: HITOTSU_PAPER,
+      strokeWidth: 3,
+      transform: "translate(50 70) rotate(45)",
+    },
     ...(wild ? quarters(50, 70, face === "F" ? 20 : 26) : []),
     ...(mark === ""
       ? []
-      : [{ kind: "text", x: 50, y: middled(70, middle), text: mark, fontSize: middle, fontWeight: "800", fill: wild ? HITOTSU_PAPER : look.fill, stroke: wild ? ink : "none", strokeWidth: wild ? 1.5 : 0, fontFamily: SANS } as HitotsuShape]),
+      : [
+          {
+            kind: "text",
+            x: 50,
+            y: middled(70, middle),
+            text: mark,
+            fontSize: middle,
+            fontWeight: "800",
+            fill: wild ? HITOTSU_PAPER : look.fill,
+            stroke: wild ? ink : "none",
+            strokeWidth: wild ? 1.5 : 0,
+            fontFamily: SANS,
+          } as HitotsuShape,
+        ]),
     { kind: "text", x: 15, y: 22, text: corner, fontSize: 17, fontWeight: "800", fill: look.ink, fontFamily: SANS },
-    { kind: "text", x: 85, y: 130, text: corner, fontSize: 17, fontWeight: "800", fill: look.ink, fontFamily: SANS, transform: "rotate(180 85 124)" },
+    {
+      kind: "text",
+      x: 85,
+      y: 130,
+      text: corner,
+      fontSize: 17,
+      fontWeight: "800",
+      fill: look.ink,
+      fontFamily: SANS,
+      transform: "rotate(180 85 124)",
+    },
     { kind: "text", x: 85, y: 22, text: look.element, fontSize: 14, fill: look.ink, fontFamily: "serif" },
-    { kind: "text", x: 15, y: 130, text: look.element, fontSize: 14, fill: look.ink, fontFamily: "serif", transform: "rotate(180 15 124)" },
-    ...(called === undefined ? [] : [{ kind: "circle", cx: 50, cy: 118, r: 7, fill: HITOTSU_COLOUR_LOOK[called].fill, stroke: HITOTSU_PAPER, strokeWidth: 2.5 } as HitotsuShape]),
+    {
+      kind: "text",
+      x: 15,
+      y: 130,
+      text: look.element,
+      fontSize: 14,
+      fill: look.ink,
+      fontFamily: "serif",
+      transform: "rotate(180 15 124)",
+    },
+    ...(called === undefined
+      ? []
+      : [
+          {
+            kind: "circle",
+            cx: 50,
+            cy: 118,
+            r: 7,
+            fill: HITOTSU_COLOUR_LOOK[called].fill,
+            stroke: HITOTSU_PAPER,
+            strokeWidth: 2.5,
+          } as HitotsuShape,
+        ]),
   ];
 }
 
-const escaped = (text: string) => text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+const escaped = (text: string) =>
+  text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
 function attributes(values: Record<string, string | number | undefined>): string {
   return Object.entries(values)
@@ -187,7 +278,10 @@ export function hitotsuShapeSvg(shape: HitotsuShape): string {
  * console.log(hitotsuCardSvg("R70", { width: 80, title: "Red seven" }).slice(0, 120));
  * ```
  */
-export function hitotsuCardSvg(card: HitotsuCard | null, { width = 100, called, title }: { width?: number; called?: HitotsuColour; title?: string } = {}): string {
+export function hitotsuCardSvg(
+  card: HitotsuCard | null,
+  { width = 100, called, title }: { width?: number; called?: HitotsuColour; title?: string } = {},
+): string {
   const height = Math.round((width * HITOTSU_CARD_BOX.height) / HITOTSU_CARD_BOX.width);
   const label = title === undefined ? ` aria-hidden="true"` : ` role="img" aria-label="${escaped(title)}"`;
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 140" width="${width}" height="${height}"${label}>${hitotsuCardShapes(card, called).map(hitotsuShapeSvg).join("")}</svg>`;
