@@ -944,7 +944,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md). Please follow the [code of conduct](./
 
 ## Changes
 
-See [CHANGELOG.md](./CHANGELOG.md). The latest release, 1.4.0, adds the shared embed builder and the table's standard embed attributes, and the documentation site with a checked example for every export.
+See [CHANGELOG.md](./CHANGELOG.md). The latest release, 1.4.1, changes nothing a player sees.
 
 ## Licence
 
