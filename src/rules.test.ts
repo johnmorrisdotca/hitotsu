@@ -294,6 +294,8 @@ describe("hitotsu: played out", () => {
         }
       }
     },
+    // Node 24 took 4.4s here, and the release runner went past the 5s default.
+    20_000,
   );
 
   it("a computer beats players choosing at random", () => {

@@ -944,7 +944,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md). Please follow the [code of conduct](./
 
 ## Changes
 
-See [CHANGELOG.md](./CHANGELOG.md). The latest release, 1.4.1, changes nothing a player sees.
+See [CHANGELOG.md](./CHANGELOG.md). The latest release, 1.4.2, changes nothing a player sees.
 
 ## Licence
 

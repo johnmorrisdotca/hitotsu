@@ -6,6 +6,12 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [1.4.2] - 2026-10-31
+
+### Fixed
+
+- The release check no longer fails when the full-table play-out takes a little over five seconds. On Node 24 that case took about 4.4 seconds, and the release runner went past the five-second limit.
+
 ## [1.4.1] - 2026-10-31
 
 ### Changed
