@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
-
+import { decodeHitotsu, encodeHitotsu } from "./codec.ts";
 import { HITOTSU_PARTY } from "./constants.ts";
-import { encodeHitotsu, decodeHitotsu } from "./codec.ts";
 import { playHitotsu } from "./rules.ts";
 import { namedTable, readTableMove, readTableSetUp, startTable, tableComputerMove, tableToPlay } from "./table.ts";
 

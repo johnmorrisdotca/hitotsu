@@ -1,7 +1,7 @@
 import { HITOTSU_COLOURS } from "./constants.ts";
+import { colourOf, DRAW_TWO, faceOf, hitotsuPoints, isWild, REVERSE, SKIP, WILD, WILD_FOUR } from "./deck.ts";
 import { hitotsuJumpIns, hitotsuMoves } from "./rules.ts";
 import type { HitotsuCard, HitotsuColour, HitotsuGame, HitotsuMove } from "./types.ts";
-import { DRAW_TWO, REVERSE, SKIP, WILD, WILD_FOUR, colourOf, faceOf, hitotsuPoints, isWild } from "./deck.ts";
 
 /**
  * A COMPUTER AT THE HITOTSU TABLE. It sees its own hand, the pile, the colour

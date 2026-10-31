@@ -13,7 +13,7 @@
  *
  * The recordings themselves are loaded by the first sound played. Kenney's Casino Audio, CC0: see CREDITS.md.
  */
-export { CARD_SOUND_KINDS, MOST_SOUNDS_AT_ONCE, createCardSounds, soundTimes } from "./ui/cardSounds.ts";
+
 export type {
   CardSoundData,
   CardSoundKind,
@@ -22,3 +22,4 @@ export type {
   CardSoundWindow,
   PlayCardSoundOptions,
 } from "./ui/cardSounds.ts";
+export { CARD_SOUND_KINDS, createCardSounds, MOST_SOUNDS_AT_ONCE, soundTimes } from "./ui/cardSounds.ts";

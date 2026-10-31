@@ -1,12 +1,11 @@
 import { describe, expect, it } from "vitest";
-
+import { decodeHitotsu, encodeHitotsu, readHitotsuMove } from "./codec.ts";
+import { hitotsuComputer, hitotsuComputerJump } from "./computer.ts";
 import { HITOTSU_CLASSIC, HITOTSU_DECK_SIZE, HITOTSU_PARTY, HITOTSU_SIZES } from "./constants.ts";
+import { HITOTSU_DECK, hitotsuPoints, hitotsuWords, isNumber } from "./deck.ts";
+import { seededRandom } from "./random.ts";
 import { hitotsuJumpIns, hitotsuMatches, hitotsuMoves, hitotsuWinners, playHitotsu, startHitotsu } from "./rules.ts";
 import type { HitotsuGame, HitotsuMove, HitotsuOptions } from "./types.ts";
-import { HITOTSU_DECK, hitotsuPoints, hitotsuWords, isNumber } from "./deck.ts";
-import { hitotsuComputer, hitotsuComputerJump } from "./computer.ts";
-import { decodeHitotsu, encodeHitotsu, readHitotsuMove } from "./codec.ts";
-import { seededRandom } from "./random.ts";
 
 /** A hitotsu game in a given position: these hands and piles, the first seat to play, published rules unless others are given. */
 function at(
@@ -287,7 +286,9 @@ describe("hitotsu: played out", () => {
               options,
               new Array<boolean>(count).fill(false),
             );
-            hitotsuWinners(end).forEach((seat) => won.add(seat));
+            hitotsuWinners(end).forEach((seat) => {
+              won.add(seat);
+            });
           }
           expect(won.size, `${size} for ${count}: a seat never won`).toBe(count);
         }

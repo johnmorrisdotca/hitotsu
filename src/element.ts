@@ -1,9 +1,9 @@
 import { HITOTSU_CLASSIC, HITOTSU_PARTY } from "./constants.ts";
 import { freshSeed, SEED_MOST } from "./random.ts";
-import { mountHitotsu, type HitotsuHandle, type HitotsuTableOptions } from "./ui/mount.ts";
+import type { HitotsuGame } from "./types.ts";
+import { type HitotsuHandle, type HitotsuTableOptions, mountHitotsu } from "./ui/mount.ts";
 import { hitotsuLanguageOf, hitotsuStrings } from "./ui/strings.ts";
 import { CSS } from "./ui/style.ts";
-import type { HitotsuGame } from "./types.ts";
 
 const ElementBase: typeof HTMLElement =
   typeof HTMLElement === "undefined" ? (class {} as unknown as typeof HTMLElement) : HTMLElement;
@@ -202,8 +202,8 @@ export class HitotsuTableElement extends ElementBase {
   #frame(): void {
     this.style.display = "block";
     this.style.maxWidth = "100%";
-    const width = Number(this.getAttribute("width")),
-      size = this.getAttribute("size");
+    const width = Number(this.getAttribute("width"));
+    const size = this.getAttribute("size");
     const pixels =
       this.hasAttribute("width") && width > 0 && Number.isFinite(width)
         ? Math.min(width, 2000)
@@ -225,9 +225,9 @@ export class HitotsuTableElement extends ElementBase {
     const theme = this.getAttribute("theme");
     this.style.colorScheme = theme === "light" || theme === "dark" ? theme : "light dark";
     this.setAttribute("data-hitotsu-embed", "");
-    const root = this.getRootNode(),
-      target: ParentNode =
-        typeof ShadowRoot !== "undefined" && root instanceof ShadowRoot ? root : this.ownerDocument.head;
+    const root = this.getRootNode();
+    const target: ParentNode =
+      typeof ShadowRoot !== "undefined" && root instanceof ShadowRoot ? root : this.ownerDocument.head;
     if (target.querySelector("style[data-hitotsu-embed-style]") === null) {
       const style = this.ownerDocument.createElement("style");
       style.setAttribute("data-hitotsu-embed-style", "");
@@ -336,8 +336,8 @@ export class HitotsuTableElement extends ElementBase {
       this.#table?.destroy();
       this.#table = null;
       this.#key = "";
-      const message = error instanceof Error ? error.message : String(error),
-        status = this.ownerDocument.createElement("p");
+      const message = error instanceof Error ? error.message : String(error);
+      const status = this.ownerDocument.createElement("p");
       status.setAttribute("role", "status");
       status.textContent =
         hitotsuLanguageOf(

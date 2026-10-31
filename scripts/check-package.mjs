@@ -91,7 +91,7 @@ let game = startHitotsu(1, ["Ann", "Ben", "Cy"], 42, HITOTSU_PARTY);
 while (game.phase === "playing") game = playHitotsu(game, hitotsuComputer(game));
 if (game.moves.length !== 28 || hitotsuWinners(game).join() !== "1") throw new Error("seed 42 of Hitotsu played out differently");
 if (decodeHitotsu(encodeHitotsu(game)).moves.length !== 28) throw new Error("the saved game did not read back");
-const react = all[names.indexOf(${JSON.stringify(pkg.name + "/react")})];
+const react = all[names.indexOf(${JSON.stringify(`${pkg.name}/react`)})];
 if (typeof react.HitotsuTable !== "function" || typeof react.HitotsuCardImage !== "function") throw new Error("the React entry lacks its components");
 console.log(names.join(" "));
 `,

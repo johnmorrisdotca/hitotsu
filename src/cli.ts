@@ -1,7 +1,7 @@
-import { HITOTSU_CLASSIC, HITOTSU_PARTY, HITOTSU_SIZES } from "./constants.ts";
 import { decodeHitotsu, encodeHitotsu } from "./codec.ts";
 import { hitotsuComputer } from "./computer.ts";
-import { SEED_MOST, freshSeed } from "./random.ts";
+import { HITOTSU_CLASSIC, HITOTSU_PARTY, HITOTSU_SIZES } from "./constants.ts";
+import { freshSeed, SEED_MOST } from "./random.ts";
 import { hitotsuWinners, playHitotsu, startHitotsu } from "./rules.ts";
 import type { HitotsuGame } from "./types.ts";
 import { VERSION } from "./version.ts";

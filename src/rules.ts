@@ -6,23 +6,23 @@ import {
   HITOTSU_ONE_HAND,
   HITOTSU_SIZES,
 } from "./constants.ts";
-import type { HitotsuCard, HitotsuColour, HitotsuGame, HitotsuMove, HitotsuNews, HitotsuOptions } from "./types.ts";
 import {
-  DRAW_TWO,
-  REVERSE,
-  SKIP,
-  WILD_FOUR,
   colourOf,
+  DRAW_TWO,
   faceOf,
   hitotsuPoints,
   identical,
   isDrawCard,
   isNumber,
   isWild,
+  REVERSE,
   reshuffledHitotsu,
+  SKIP,
   shuffledHitotsu,
   sortHitotsu,
+  WILD_FOUR,
 } from "./deck.ts";
+import type { HitotsuCard, HitotsuColour, HitotsuGame, HitotsuMove, HitotsuNews, HitotsuOptions } from "./types.ts";
 
 /**
  * HITOTSU 一つ: the rules, and nothing else. Our own game of the colour-card

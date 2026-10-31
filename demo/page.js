@@ -1,6 +1,8 @@
 // The Hitotsu demo: a table against the computers, set up with a few presses. The table is the package's own
 // (`mountHitotsu`); this page chooses the rules and how many computers, gives it the family's cloth, and says
 // everything in English or Japanese.
+
+import { createCardSounds } from "./dist/card-sounds.js";
 import {
   HITOTSU_CLASSIC,
   HITOTSU_DECK,
@@ -9,7 +11,6 @@ import {
   hitotsuStrings,
   mountHitotsu,
 } from "./dist/index.js";
-import { createCardSounds } from "./dist/card-sounds.js";
 
 const $ = (id) => document.getElementById(id);
 

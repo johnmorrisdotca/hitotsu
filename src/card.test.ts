@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
-
-import { HITOTSU_DECK } from "./deck.ts";
 import { HITOTSU_COLOUR_LOOK, hitotsuCardShapes, hitotsuCardSvg } from "./card.ts";
+import { HITOTSU_DECK } from "./deck.ts";
 
 describe("hitotsu: the card design", () => {
   it("draws every card in the deck, and the back", () => {

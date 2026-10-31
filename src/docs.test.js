@@ -5,12 +5,11 @@ import { readFileSync, writeFileSync } from "node:fs";
 import process from "node:process";
 
 import { describe, expect, it } from "vitest";
-
+import * as sounds from "./card-sounds.ts";
 import { CLI_STRINGS, runCli } from "./cli.ts";
+import * as element from "./element.ts";
 import { HitotsuTableElement } from "./element.ts";
 import * as hitotsu from "./index.ts";
-import * as sounds from "./card-sounds.ts";
-import * as element from "./element.ts";
 
 const {
   HITOTSU_CAUGHT,
@@ -216,7 +215,7 @@ describe("the README's command line", () => {
 });
 
 describe("docs/strings-ja.md", () => {
-  const escape = (text) => text.replaceAll("|", "\\|").replaceAll("\n", "<br>");
+  const escapeCell = (text) => text.replaceAll("|", "\\|").replaceAll("\n", "<br>");
   /** What to give each function of the table so that its places show: the names in braces. */
   const SAMPLE = {
     computer: ["{n}"],
@@ -271,7 +270,7 @@ describe("docs/strings-ja.md", () => {
     "",
     "| Name | English | Japanese |",
     "| --- | --- | --- |",
-    ...Object.keys(en).map((key) => `| \`${key}\` | ${escape(en[key])} | ${escape(ja[key])} |`),
+    ...Object.keys(en).map((key) => `| \`${key}\` | ${escapeCell(en[key])} | ${escapeCell(ja[key])} |`),
     "",
     "## The command line",
     "",
@@ -279,7 +278,7 @@ describe("docs/strings-ja.md", () => {
     "",
     "| Name | English | Japanese |",
     "| --- | --- | --- |",
-    ...cli.map((key) => `| \`${key}\` | ${escape(CLI_STRINGS.en[key])} | ${escape(CLI_STRINGS.ja[key])} |`),
+    ...cli.map((key) => `| \`${key}\` | ${escapeCell(CLI_STRINGS.en[key])} | ${escapeCell(CLI_STRINGS.ja[key])} |`),
     "",
     "### The help",
     "",

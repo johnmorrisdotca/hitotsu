@@ -2,11 +2,12 @@ import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { expect, test } from "@playwright/test";
+
 const site = join(dirname(fileURLToPath(import.meta.url)), "..", "site");
 async function serve(page) {
   await page.route("http://hitotsu.test/**", (route) => {
-    const { pathname } = new URL(route.request().url()),
-      file = join(site, pathname.endsWith("/") ? `${pathname}index.html` : pathname);
+    const { pathname } = new URL(route.request().url());
+    const file = join(site, pathname.endsWith("/") ? `${pathname}index.html` : pathname);
     if (!existsSync(file)) return route.fulfill({ status: 404, body: "" });
     return route.fulfill({
       body: readFileSync(file),
@@ -33,8 +34,8 @@ test("presentation changes keep the native hand, score, moves and handle", async
   await serve(page);
   await page.goto("http://hitotsu.test/embed/?seed=42&size=small&computers=1");
   const result = await page.locator("hitotsu-table").evaluate(async (table) => {
-    const native = table.table,
-      game = table.game;
+    const native = table.table;
+    const game = table.game;
     table.options = { computerMs: 1000000 };
     const before = table.game;
     const handle = table.table;
@@ -86,8 +87,8 @@ test("custom shadow-root tables retain private names but events redact them", as
     const { defineTable } = await import("../dist/element.js");
     defineTable("article-cards");
     defineTable("article-cards");
-    const host = document.createElement("div"),
-      shadow = host.attachShadow({ mode: "open" });
+    const host = document.createElement("div");
+    const shadow = host.attachShadow({ mode: "open" });
     document.body.append(host);
     const table = document.createElement("article-cards");
     let local;

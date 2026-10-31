@@ -1,5 +1,5 @@
-import { mixSeed, seededRandom, shuffled } from "./random.ts";
 import { HITOTSU_COLOURS, HITOTSU_POINTS } from "./constants.ts";
+import { mixSeed, seededRandom, shuffled } from "./random.ts";
 import type { HitotsuCard, HitotsuColour } from "./types.ts";
 
 /**

@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useRef, type HTMLAttributes, type SVGAttributes } from "react";
+import { type HTMLAttributes, type SVGAttributes, useEffect, useRef } from "react";
 
-import { hitotsuCardShapes, type HitotsuShape } from "./card.ts";
+import { type HitotsuShape, hitotsuCardShapes } from "./card.ts";
 import type { HitotsuCard, HitotsuColour } from "./types.ts";
-import { mountHitotsu, type HitotsuHandle, type HitotsuTableOptions } from "./ui/mount.ts";
+import { type HitotsuHandle, type HitotsuTableOptions, mountHitotsu } from "./ui/mount.ts";
 
 /** One shape of the design as a React element. */
 function Shape({ shape }: { shape: HitotsuShape }) {

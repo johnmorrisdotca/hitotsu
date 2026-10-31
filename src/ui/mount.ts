@@ -1,15 +1,15 @@
 import { HITOTSU_COLOUR_LOOK, hitotsuCardShapes } from "../card.ts";
+import { hitotsuComputer, hitotsuComputerJump } from "../computer.ts";
 import { HITOTSU_CLASSIC, HITOTSU_ONE_HAND } from "../constants.ts";
 import { hitotsuWords } from "../deck.ts";
 import { freshSeed } from "../random.ts";
-import { hitotsuComputer, hitotsuComputerJump } from "../computer.ts";
 import { hitotsuWinners, playHitotsu, startHitotsu } from "../rules.ts";
 import { callMatters, movesFor, playableFor, waysFor } from "../seat.ts";
 import type { HitotsuCard, HitotsuColour, HitotsuGame, HitotsuMove, HitotsuNews, HitotsuOptions } from "../types.ts";
-import { createCardSounds, type CardSounds } from "./cardSounds.ts";
+import { type CardSounds, createCardSounds } from "./cardSounds.ts";
 import { h, refill } from "./dom.ts";
+import { type HitotsuLanguage, type HitotsuStrings, hitotsuLanguageOf, hitotsuStrings } from "./strings.ts";
 import { injectStyle } from "./style.ts";
-import { hitotsuLanguageOf, hitotsuStrings, type HitotsuLanguage, type HitotsuStrings } from "./strings.ts";
 
 /** Native table settings, including private player names and callbacks.
  * @example
@@ -112,6 +112,7 @@ function newsLine(news: readonly HitotsuNews[], t: HitotsuStrings, name: (seat: 
         case "drew":
           return t.news.drew(name(item.seat), item.count);
       }
+      return "";
     })
     .join(" ");
 }
@@ -132,24 +133,25 @@ function newsLine(news: readonly HitotsuNews[], t: HitotsuStrings, name: (seat: 
  * ```
  */
 export function mountHitotsu(target: HTMLElement, options: HitotsuTableOptions = {}): HitotsuHandle {
+  let current = options;
   const doc = target.ownerDocument;
   injectStyle(doc, target.getRootNode());
   let language =
-    options.language ?? hitotsuLanguageOf(target.closest("[lang]")?.getAttribute("lang") ?? doc.documentElement.lang);
-  let t: Required<HitotsuStrings> = { ...hitotsuStrings(language), ...options.strings };
+    current.language ?? hitotsuLanguageOf(target.closest("[lang]")?.getAttribute("lang") ?? doc.documentElement.lang);
+  let t: Required<HitotsuStrings> = { ...hitotsuStrings(language), ...current.strings };
   const root = h("div", { class: "ht-root" });
-  for (const [name, value] of Object.entries(options.theme ?? {})) root.style.setProperty(name, value);
+  for (const [name, value] of Object.entries(current.theme ?? {})) root.style.setProperty(name, value);
   target.append(root);
 
-  let ownSounds = options.sound === true ? createCardSounds() : null;
-  let sounds: CardSounds | null = ownSounds ?? (typeof options.sound === "object" ? options.sound : null);
+  let ownSounds = current.sound === true ? createCardSounds() : null;
+  let sounds: CardSounds | null = ownSounds ?? (typeof current.sound === "object" ? current.sound : null);
   let settings = {
-    players: options.players,
-    computers: options.computers,
-    rules: options.rules,
-    size: options.size,
-    seed: options.seed,
-    computerMs: options.computerMs,
+    players: current.players,
+    computers: current.computers,
+    rules: current.rules,
+    size: current.size,
+    seed: current.seed,
+    computerMs: current.computerMs,
   };
   let game: HitotsuGame;
   let chosen: HitotsuCard | null = null;
@@ -194,7 +196,7 @@ export function mountHitotsu(target: HTMLElement, options: HitotsuTableOptions =
     game = next;
     chosen = null;
     calling = false;
-    options.onMove?.(game);
+    current.onMove?.(game);
     render();
   };
 
@@ -226,12 +228,12 @@ export function mountHitotsu(target: HTMLElement, options: HitotsuTableOptions =
           {
             type: "button",
             "data-strong": true,
-            onclick: () => (
-              deal(),
-              sounds?.play("shuffle"),
-              sounds?.play("deal", { count: game.hands[0]?.length ?? 1, delay: 700 }),
-              render()
-            ),
+            onclick: () => {
+              deal();
+              sounds?.play("shuffle");
+              sounds?.play("deal", { count: game.hands[0]?.length ?? 1, delay: 700 });
+              render();
+            },
           },
           t.again,
         ),
@@ -261,7 +263,10 @@ export function mountHitotsu(target: HTMLElement, options: HitotsuTableOptions =
             type: "button",
             "data-on": calling,
             "aria-pressed": String(calling),
-            onclick: () => ((calling = !calling), render()),
+            onclick: () => {
+              calling = !calling;
+              render();
+            },
           },
           calling ? t.called : t.call,
         ),
@@ -384,18 +389,18 @@ export function mountHitotsu(target: HTMLElement, options: HitotsuTableOptions =
       render();
     },
     set(next) {
-      if (next.sound !== undefined && next.sound !== options.sound) {
+      if (next.sound !== undefined && next.sound !== current.sound) {
         ownSounds?.close();
         ownSounds = next.sound === true ? createCardSounds() : null;
         sounds = ownSounds ?? (typeof next.sound === "object" ? next.sound : null);
       }
       if (next.theme !== undefined) {
-        for (const name of Object.keys(options.theme ?? {})) if (!(name in next.theme)) root.style.removeProperty(name);
+        for (const name of Object.keys(current.theme ?? {})) if (!(name in next.theme)) root.style.removeProperty(name);
         for (const [name, value] of Object.entries(next.theme)) root.style.setProperty(name, value);
       }
-      options = { ...options, ...next };
-      language = options.language ?? language;
-      t = { ...hitotsuStrings(language), ...options.strings };
+      current = { ...current, ...next };
+      language = current.language ?? language;
+      t = { ...hitotsuStrings(language), ...current.strings };
       if (settings.players === undefined) {
         const names = [t.you, ...game.players.slice(1).map((_, at) => t.computer(at + 1))];
         if (names.some((name, at) => game.players[at] !== name)) game = { ...game, players: names };
