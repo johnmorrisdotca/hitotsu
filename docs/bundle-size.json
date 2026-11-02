@@ -2,24 +2,24 @@
   "measured": "esbuild 0.28.2, bundled, minified, ES2020, gzip level 9",
   "entries": {
     ".": {
-      "minified": 83826,
-      "gzip": 42574
+      "minified": 85087,
+      "gzip": 42965
     },
     "./react": {
-      "minified": 117087,
-      "gzip": 54583
+      "minified": 118065,
+      "gzip": 54911
     },
     "./element": {
-      "minified": 86298,
-      "gzip": 43206
+      "minified": 87583,
+      "gzip": 43604
     },
     "./element/define": {
-      "minified": 86303,
-      "gzip": 43207
+      "minified": 87588,
+      "gzip": 43606
     },
     "./element-define": {
-      "minified": 86303,
-      "gzip": 43207
+      "minified": 87588,
+      "gzip": 43606
     },
     "./card-sounds": {
       "minified": 51023,

@@ -125,7 +125,8 @@ describe("the README's rules table", () => {
       HITOTSU_CLASSIC.finishOnNumber,
       HITOTSU_PARTY.finishOnNumber,
     ]);
-    expect(rows).toHaveLength(7);
+    expect(find("Mode").slice(1, 3)).toEqual([HITOTSU_CLASSIC.mode, HITOTSU_PARTY.mode]);
+    expect(rows).toHaveLength(8);
   });
 
   it("the scores in the text are the points", () => {

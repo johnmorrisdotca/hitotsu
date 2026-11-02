@@ -9,7 +9,7 @@ Match the colour or the number, and call Hitotsu with one card left. Two to eigh
   <a href="./LICENSE"><img alt="MIT licence" src="https://img.shields.io/badge/licence-MIT-2f5d4a"></a>
   <img alt="No dependencies" src="https://img.shields.io/badge/dependencies-0-2f5d4a">
   <img alt="TypeScript" src="https://img.shields.io/badge/types-TypeScript-3178c6">
-  <a href="https://johnmorrisdotca.github.io/hitotsu/docs/api/main/index.html"><img alt="42.6 kB minified and gzipped" src="https://img.shields.io/badge/min%2Bgzip-42.6%20kB-2f5d4a"></a>
+  <a href="https://johnmorrisdotca.github.io/hitotsu/docs/api/main/index.html"><img alt="43.0 kB minified and gzipped" src="https://img.shields.io/badge/min%2Bgzip-43.0%20kB-2f5d4a"></a>
   <a href="https://www.npmjs.com/package/@johnmorrisdotca/hitotsu#provenance"><img alt="Published with npm provenance" src="https://img.shields.io/badge/npm-provenance-2f5d4a"></a>
 </p>
 
@@ -205,6 +205,7 @@ compatible match sizes and frame messages.
 | Attribute | What it does |
 | --- | --- |
 | `rules` | `classic` (the default) or `party` |
+| `mode` | `classic` (the default), `all-wild` (a deck of wilds only) or `launcher` (a random number of cards fired in place of a draw) |
 | `computers` | how many computers sit with you, 1 to 7 |
 | `players` | the names at the table, comma-separated, seat 0 first (yours); two to eight of them |
 | `size` | display `small`, `medium` or `large`; numeric `1`, `200`, `500` remain match-point aliases |
@@ -451,7 +452,8 @@ console.log(startHitotsu(1, ["only one"], 1), startHitotsu(7, ["Ann", "Ben"], 1)
   drawToMatch: false,
   wildFour: 'challenge',
   deal: 7,
-  finishOnNumber: false
+  finishOnNumber: false,
+  mode: 'classic'
 }
 same true [ 7, 7 ] 5
 null null
@@ -558,6 +560,7 @@ document.querySelector("#unmute")!.addEventListener("click", () => sound.setMute
 | Drawing | one card | one card | `drawToMatch` |
 | Wild Draw Four | may be challenged | may be challenged | `wildFour: "challenge" \| "strict"` |
 | Finish on a number card (an action card or a wild cannot be the last card of a hand: that player draws instead) | off | off | `finishOnNumber` |
+| Mode: the deck and how a draw is dealt (`all-wild`: 112 wilds, nothing else; `launcher`: a draw fires 1 to 4 cards, a Draw Two 2 to 6, a Wild Draw Four 4 to 10, and nothing stacks) | classic | classic | `mode: "classic" \| "all-wild" \| "launcher"` |
 
 The length is separate: `startHitotsu(size, …)` with 200 or 500 points, or 1
 for a single hand. A card left in a hand scores its number, an action card 20
@@ -828,6 +831,8 @@ src/
 ├── element-define.ts  the "/element/define" entry (also "/element-define"): registers <hitotsu-table> by being imported
 ├── element.ts    the "/element" entry: the <hitotsu-table> class, and defineHitotsuTable()
 ├── index.ts      the main entry: the rules, the deck, the computer player, the codec, and the table to mount
+├── modes/  the ways to play besides the classic deck
+│   └── modes.ts   the modes: a deck of wilds only, and a launcher; the colour an all-wild hand opens on, and how many cards the launcher fires
 ├── random.ts     a seeded source of numbers in [0, 1)
 ├── react.tsx     the "/react" entry: the card's drawing as React elements
 ├── rules.ts      the rules and nothing else: deal, list the legal moves, play one, score a hand

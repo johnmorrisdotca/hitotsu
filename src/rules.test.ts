@@ -322,6 +322,9 @@ describe("hitotsu: played out", () => {
       { ...HITOTSU_CLASSIC, stacking: "same", wildFour: "strict", drawToMatch: true },
     ],
     ["finishing on a number card, with stacking and jumping in", { ...HITOTSU_PARTY, finishOnNumber: true }],
+    ["a deck of wilds only", { ...HITOTSU_CLASSIC, mode: "all-wild" }],
+    ["a deck of wilds only, with the party rules", { ...HITOTSU_PARTY, mode: "all-wild" }],
+    ["a launcher, with the party rules", { ...HITOTSU_PARTY, mode: "launcher" }],
   ];
 
   it.each(houses)(

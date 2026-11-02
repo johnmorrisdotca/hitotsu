@@ -1,6 +1,7 @@
 import { HITOTSU_CLASSIC, HITOTSU_PARTY } from "./constants.ts";
+import { HITOTSU_MODES } from "./modes/modes.ts";
 import { freshSeed, SEED_MOST } from "./random.ts";
-import type { HitotsuGame } from "./types.ts";
+import type { HitotsuGame, HitotsuMode } from "./types.ts";
 import { type Cloth, isCloth } from "./ui/cloth.ts";
 import { type HitotsuHandle, type HitotsuTableOptions, mountHitotsu } from "./ui/mount.ts";
 import { hitotsuLanguageOf, hitotsuStrings } from "./ui/strings.ts";
@@ -55,6 +56,7 @@ export type HitotsuElementOptions = HitotsuTableOptions;
 export class HitotsuTableElement extends ElementBase {
   static observedAttributes = [
     "rules",
+    "mode",
     "computers",
     "players",
     "size",
@@ -138,6 +140,13 @@ export class HitotsuTableElement extends ElementBase {
   }
   set rules(value: string | number | boolean | null | undefined) {
     this.#write("rules", value);
+  }
+  /** The `mode` attribute, reflected. */
+  get mode(): string | null {
+    return this.getAttribute("mode");
+  }
+  set mode(value: string | number | boolean | null | undefined) {
+    this.#write("mode", value);
   }
   /** The `computers` attribute, reflected. */
   get computers(): string | null {
@@ -291,11 +300,14 @@ export class HitotsuTableElement extends ElementBase {
       const seed = whole(this.getAttribute("seed")) ?? this.#options.seed ?? this.#seed;
       if (!Number.isInteger(seed) || seed < 1 || seed > SEED_MOST)
         throw new RangeError("Choose a seed from 1 to 2147483647.");
-      const rules = this.hasAttribute("rules")
+      const chosen = this.hasAttribute("rules")
         ? this.getAttribute("rules") === "party"
           ? HITOTSU_PARTY
           : HITOTSU_CLASSIC
         : (this.#options.rules ?? HITOTSU_CLASSIC);
+      const mode = this.getAttribute("mode") ?? chosen.mode;
+      if (!HITOTSU_MODES.includes(mode as never)) throw new RangeError("Choose a mode: classic, all-wild or launcher.");
+      const rules = { ...chosen, mode: mode as HitotsuMode };
       const sound = isOn(this.getAttribute("sound"), this.#options.sound !== undefined && this.#options.sound !== false)
         ? typeof this.#options.sound === "object"
           ? this.#options.sound

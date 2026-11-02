@@ -59,6 +59,7 @@ export const HITOTSU_CLASSIC: HitotsuOptions = {
   wildFour: "challenge",
   deal: 7,
   finishOnNumber: false,
+  mode: "classic",
 };
 
 /**
@@ -80,6 +81,7 @@ export const HITOTSU_PARTY: HitotsuOptions = {
   wildFour: "challenge",
   deal: 5,
   finishOnNumber: false,
+  mode: "classic",
 };
 
 /** What a card left in a hand is worth to the player who went out: its number, twenty an action card, fifty a wild.

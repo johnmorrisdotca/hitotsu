@@ -63,6 +63,17 @@ const options = [
     },
   ),
   row(
+    "mode",
+    "choice",
+    ["Mode", "The classic deck, a deck of wilds only, or a launcher that fires a random number of cards."],
+    ["モード", "基本のデッキ、ワイルドだけのデッキ、ランダムな枚数のカードを発射するランチャーから選びます。"],
+    {
+      default: "classic",
+      choices: ["classic", "all-wild", "launcher"],
+      choiceLabels: { ja: { classic: "基本", "all-wild": "ワイルドのみ", launcher: "ランチャー" } },
+    },
+  ),
+  row(
     "computers",
     "number",
     ["Computers", "One to seven computer seats."],

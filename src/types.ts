@@ -36,6 +36,18 @@ export type HitotsuColour = "R" | "Y" | "G" | "B";
  */
 export type HitotsuCard = string;
 
+/** Which deck and which kind of drawing a table plays with: the classic game, a deck of wilds only (`all-wild`), or a launcher that fires a random number of cards in place of a draw pile (`launcher`).
+ *
+ * @example
+ * ```ts
+ * import type { HitotsuMode } from "@johnmorrisdotca/hitotsu";
+ *
+ * const value: HitotsuMode = "all-wild";
+ * console.log(value);
+ * ```
+ */
+export type HitotsuMode = "classic" | "all-wild" | "launcher";
+
 /** How the house plays: each popular variant, as a choice at the set-up.
  *
  * @example
@@ -75,6 +87,8 @@ export type HitotsuOptions = {
    * out on an action card.
    */
   finishOnNumber: boolean;
+  /** The deck and the way of drawing: classic unless the table chose otherwise. */
+  mode: HitotsuMode;
 };
 
 /** One move: a card played, a draw, a turn passed, a pending draw taken, a Wild Draw Four challenged, or a card played out of turn.

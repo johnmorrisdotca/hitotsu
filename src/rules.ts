@@ -20,8 +20,10 @@ import {
   SKIP,
   shuffledHitotsu,
   sortHitotsu,
+  WILD,
   WILD_FOUR,
 } from "./deck.ts";
+import { hitotsuLaunch, hitotsuOpeningColour } from "./modes/modes.ts";
 import type { HitotsuCard, HitotsuColour, HitotsuGame, HitotsuMove, HitotsuNews, HitotsuOptions } from "./types.ts";
 
 /**
@@ -122,16 +124,18 @@ function fourAllowed(game: HitotsuGame, hand: readonly HitotsuCard[]): boolean {
 
 /** With "finish on a number card", the last card of a hand goes down only if it is a number. */
 function mayGoOut(game: HitotsuGame, hand: readonly HitotsuCard[], card: HitotsuCard): boolean {
-  return !game.options.finishOnNumber || hand.length > 1 || isNumber(card);
+  return !game.options.finishOnNumber || game.options.mode === "all-wild" || hand.length > 1 || isNumber(card);
 }
 
 /** Whether a card may be stacked on the draw the player to move faces. */
 function stacks(game: HitotsuGame, card: HitotsuCard): boolean {
   const { stacking } = game.options;
-  if (stacking === "off") return false;
+  if (stacking === "off" || game.options.mode === "launcher") return false;
   const face = faceOf(card);
   if (game.pendingFace === DRAW_TWO) return face === DRAW_TWO || (stacking === "any" && face === WILD_FOUR);
-  return face === WILD_FOUR || (stacking === "any" && face === DRAW_TWO && colourOf(card) === game.colour);
+  return (
+    face === WILD_FOUR || (stacking === "any" && face === DRAW_TWO && (isWild(card) || colourOf(card) === game.colour))
+  );
 }
 
 /** The cards the player to move may play now: on a draw, what stacks; after drawing, the card drawn if it goes.
@@ -306,14 +310,16 @@ function dealHand(
   >,
 ): HitotsuGame {
   const seats = base.players.length;
-  const deck = shuffledHitotsu(base.seed, base.hand);
+  const deck = shuffledHitotsu(base.seed, base.hand, base.options.mode);
   const dealt = seats * base.options.deal;
   const hands = Array.from({ length: seats }, (_, seat) =>
     sortHitotsu(deck.filter((_, at) => at < dealt && at % seats === seat)),
   );
   let stock = deck.slice(dealt);
-  // The first number card turned up starts the pile; anything else goes back under the stock.
-  while (stock.length > 0 && !isNumber(stock[0]!)) stock = [...stock.slice(1), stock[0]!];
+  // The first number card turned up starts the pile; anything else goes back under the stock. With no numbers in the deck, a plain wild starts it, on a colour the seed picks.
+  const wilds = base.options.mode === "all-wild";
+  const starts = (card: HitotsuCard) => (wilds ? faceOf(card) === WILD : isNumber(card));
+  while (stock.length > 0 && !starts(stock[0]!)) stock = [...stock.slice(1), stock[0]!];
   const [start = "", ...rest] = stock;
   return {
     ...base,
@@ -321,7 +327,7 @@ function dealHand(
     hands,
     stock: rest,
     discard: [start],
-    colour: colourOf(start)!,
+    colour: wilds ? hitotsuOpeningColour(base.seed, base.hand) : colourOf(start)!,
     direction: 1,
     toPlay: base.hand % seats,
     drawn: null,
@@ -391,12 +397,18 @@ function drawCardPlayed(game: HitotsuGame, seat: number, face: string, bluffed: 
   const pending = before + (face === DRAW_TWO ? 2 : 4);
   const next = along(game, seat, 1);
   const pendingFace = face === DRAW_TWO ? DRAW_TWO : WILD_FOUR;
-  if (face === WILD_FOUR && game.options.wildFour === "challenge" && before === 0) {
+  if (face === WILD_FOUR && game.options.wildFour === "challenge" && before === 0 && game.options.mode === "classic") {
     return { ...game, pending, pendingFace, challenge: { by: seat, bluffed }, toPlay: next };
   }
-  if (game.options.stacking !== "off") return { ...game, pending, pendingFace, challenge: null, toPlay: next };
-  const drew = drawInto({ ...game, pending: 0, pendingFace: null, challenge: null }, next, pending);
-  return { ...drew, toPlay: along(drew, seat, 2), news: [...drew.news, { kind: "took", seat: next, count: pending }] };
+  if (game.options.stacking !== "off" && game.options.mode !== "launcher")
+    return { ...game, pending, pendingFace, challenge: null, toPlay: next };
+  // At a launcher table the launcher fires, 2 to 6 cards for a Draw Two and 4 to 10 for a Wild Draw Four.
+  const fired =
+    game.options.mode === "launcher"
+      ? hitotsuLaunch(game.seed, game.moves.length, face === DRAW_TWO ? 2 : 4, face === DRAW_TWO ? 6 : 10)
+      : pending;
+  const drew = drawInto({ ...game, pending: 0, pendingFace: null, challenge: null }, next, fired);
+  return { ...drew, toPlay: along(drew, seat, 2), news: [...drew.news, { kind: "took", seat: next, count: fired }] };
 }
 
 /** A card goes down from a seat, in turn or jumping in, and does what it does. */
@@ -483,6 +495,8 @@ function drawTurn(game: HitotsuGame, seat: number): HitotsuGame | null {
   let state = { ...game, news: [] as HitotsuNews[] };
   let drawn: HitotsuCard | null = null;
   let count = 0;
+  // At a launcher table a draw is a number of cards fired at the player, and the turn goes on.
+  const fired = game.options.mode === "launcher" ? hitotsuLaunch(game.seed, game.moves.length, 1, 4) : 0;
   do {
     const got = takeOne(state, seat);
     if (got === null) break;
@@ -490,8 +504,9 @@ function drawTurn(game: HitotsuGame, seat: number): HitotsuGame | null {
     count += 1;
     if (hitotsuMatches(state, got.card) && (faceOf(got.card) !== WILD_FOUR || fourAllowed(state, handOf(state, seat))))
       drawn = got.card;
-  } while (game.options.drawToMatch && drawn === null);
+  } while (fired > 0 ? count < fired : game.options.drawToMatch && drawn === null);
   if (count === 0) return null;
+  if (fired > 0) drawn = null;
   const said: HitotsuNews[] = [{ kind: "drew", seat, count }];
   if (drawn !== null) return { ...state, drawn, passes: 0, news: said };
   return { ...state, toPlay: along(state, seat, 1), drawn: null, passes: 0, news: said };

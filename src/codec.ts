@@ -40,6 +40,7 @@ export function readHitotsuOptions(value: unknown): HitotsuOptions | null {
     wildFour,
     deal,
     finishOnNumber = false,
+    mode = "classic",
   } = value as Record<string, unknown>;
   if (stacking !== "off" && stacking !== "same" && stacking !== "any") return null;
   if (typeof jumpIn !== "boolean" || typeof sevenZero !== "boolean" || typeof drawToMatch !== "boolean") return null;
@@ -47,7 +48,9 @@ export function readHitotsuOptions(value: unknown): HitotsuOptions | null {
   if (deal !== 7 && deal !== 5) return null;
   // A game or table kept before this house rule existed has no such field: it was played without it.
   if (typeof finishOnNumber !== "boolean") return null;
-  return { stacking, jumpIn, sevenZero, drawToMatch, wildFour, deal, finishOnNumber };
+  // A table kept before the modes existed plays the classic deck.
+  if (mode !== "classic" && mode !== "all-wild" && mode !== "launcher") return null;
+  return { stacking, jumpIn, sevenZero, drawToMatch, wildFour, deal, finishOnNumber, mode };
 }
 
 /** A move as something sent it, checked for its shape only: whether it may be made is the rules'.

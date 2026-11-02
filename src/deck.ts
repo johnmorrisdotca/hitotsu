@@ -1,6 +1,6 @@
 import { HITOTSU_COLOURS, HITOTSU_POINTS } from "./constants.ts";
 import { mixSeed, seededRandom, shuffled } from "./random.ts";
-import type { HitotsuCard, HitotsuColour } from "./types.ts";
+import type { HitotsuCard, HitotsuColour, HitotsuMode } from "./types.ts";
 
 /**
  * HITOTSU'S DECK, as the rules see it: 108 short names. Each colour has one
@@ -74,7 +74,22 @@ export const HITOTSU_DECK: readonly HitotsuCard[] = [
   ...[0, 1, 2, 3].flatMap((copy) => [`W${WILD}${copy}`, `W${WILD_FOUR}${copy}`]),
 ];
 
-const EVERY_CARD = new Set(HITOTSU_DECK);
+/** The cards of the all-wild deck: 112 wilds, none of them with a colour: 32 plain, 24 each of Skip and Reverse, 20 Draw Two and 12 Wild Draw Four. Fewer of the draw cards than a classic deck has per card, because every card here may be played on any other, and with more of them hands only ever grow.
+ *
+ * @example
+ * ```ts
+ * import { HITOTSU_ALL_WILD_DECK } from "@johnmorrisdotca/hitotsu";
+ * console.log(HITOTSU_ALL_WILD_DECK.length);
+ * ```
+ */
+export const HITOTSU_ALL_WILD_DECK: readonly HitotsuCard[] = [
+  ...Array.from({ length: 32 }, (_, copy) => `W${WILD}${copy}`),
+  ...[SKIP, REVERSE].flatMap((face) => Array.from({ length: 24 }, (_, copy) => `W${face}${copy}`)),
+  ...Array.from({ length: 20 }, (_, copy) => `W${DRAW_TWO}${copy}`),
+  ...Array.from({ length: 12 }, (_, copy) => `W${WILD_FOUR}${copy}`),
+];
+
+const EVERY_CARD = new Set([...HITOTSU_DECK, ...HITOTSU_ALL_WILD_DECK]);
 
 /** Whether an unknown value is an actual physical card id from the deck.
  *
@@ -261,20 +276,24 @@ export function hitotsuWords(card: HitotsuCard, language: "en" | "ja" = "en"): s
   if (language === "ja") {
     const named = FACE_WORDS_JA[face] ?? face;
     const colour = colourOf(card);
-    return colour === null ? named : `${COLOUR_WORDS_JA[colour]}の${named}`;
+    // A skip, a reverse or a draw two with no colour is a wild one.
+    if (colour === null) return face === WILD || face === WILD_FOUR ? named : `ワイルドの${named}`;
+    return `${COLOUR_WORDS_JA[colour]}の${named}`;
   }
   const named =
     FACE_WORDS[face] ??
     ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"][Number(face)] ??
     face;
   const colour = colourOf(card);
-  return colour === null ? named : `${COLOUR_WORDS[colour]} ${named}`;
+  if (colour === null) return face === WILD || face === WILD_FOUR ? named : `wild ${named}`;
+  return `${COLOUR_WORDS[colour]} ${named}`;
 }
 
 /** The deck shuffled for one hand of one game: the same seed and hand always the same order.
  *
  * @param seed - The numeric seed that reproduces the same random sequence or deal.
  * @param hand - The hand number for deterministic shuffling, or the held cards where an array is accepted.
+ * @param mode - The table's mode: the all-wild mode shuffles the all-wild deck.
  * @returns The deck shuffled for one hand of one game: the same seed and hand always the same order.
  * @example
  * ```ts
@@ -283,8 +302,8 @@ export function hitotsuWords(card: HitotsuCard, language: "en" | "ja" = "en"): s
  * console.log(shuffledHitotsu(42, 0).slice(0, 7));
  * ```
  */
-export function shuffledHitotsu(seed: number, hand: number): HitotsuCard[] {
-  return shuffled(HITOTSU_DECK, seededRandom(mixSeed(seed, hand)));
+export function shuffledHitotsu(seed: number, hand: number, mode: HitotsuMode = "classic"): HitotsuCard[] {
+  return shuffled(mode === "all-wild" ? HITOTSU_ALL_WILD_DECK : HITOTSU_DECK, seededRandom(mixSeed(seed, hand)));
 }
 
 /** These cards shuffled again, the same way for the same seed and salt: a pile turned over to make a new stock.

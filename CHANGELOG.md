@@ -8,6 +8,7 @@ All notable changes to this project are written here. The format follows
 
 ### Added
 
+- **Two modes, chosen at the set-up** (`mode: "classic" | "all-wild" | "launcher"`, the `mode` attribute and a Builder row; `classic`, the game as it was, is the default and a table kept before this reads as classic). **All wild** plays a deck of 112 wilds with no colour and no number (plain wilds, Skip, Reverse, Draw Two, Wild Draw Four): every card goes on any card, the first wild opens on a colour the seed picks, and there is no challenging a Wild Draw Four. **Launcher** has no draw pile to count: a draw fires 1 to 4 cards at the player, a Draw Two 2 to 6 and a Wild Draw Four 4 to 10, drawn from the seed and the move number so a kept game plays out the same, and nothing stacks. `HITOTSU_MODES`, `HITOTSU_ALL_WILD_DECK`, `hitotsuLaunch` and `hitotsuOpeningColour` are exported. Ruthless and Flip are not here yet.
 - A table can be laid in the family's five cloths by itself, not only by a page's theme: `<hitotsu-table cloth="blue">`, `mountHitotsu(el, { cloth })` and `set({ cloth })`, the `cloth` embed parameter and Builder option, with `HITOTSU_CLOTHS`, `isCloth` and `clothVars`. The demo's code says which cloth is on the table.
 - `pnpm test:frameworks` (`scripts/check-frameworks.mjs`) builds the README's React, Vue, Svelte, Angular and plain-page examples from the packed tarball and plays them in Chromium and WebKit, in CI too.
 

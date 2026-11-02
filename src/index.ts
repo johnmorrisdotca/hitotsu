@@ -15,6 +15,7 @@ export * from "./codec.ts";
 export * from "./computer.ts";
 export * from "./constants.ts";
 export * from "./deck.ts";
+export * from "./modes/modes.ts";
 export * from "./random.ts";
 export * from "./rules.ts";
 export * from "./seat.ts";
