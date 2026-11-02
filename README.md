@@ -959,7 +959,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md). Please follow the [code of conduct](./
 
 ## Changes
 
-See [CHANGELOG.md](./CHANGELOG.md). The latest release, 1.4.2, changes nothing a player sees.
+See [CHANGELOG.md](./CHANGELOG.md). The latest release, 1.6.0, adds two modes chosen at the set-up, a deck of wilds only and a launcher, and lets a table be laid in the family's five cloths.
 
 ## Licence
 

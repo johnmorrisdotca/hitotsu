@@ -6,6 +6,8 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [1.6.0] - 2026-11-02
+
 ### Added
 
 - **Two modes, chosen at the set-up** (`mode: "classic" | "all-wild" | "launcher"`, the `mode` attribute and a Builder row; `classic`, the game as it was, is the default and a table kept before this reads as classic). **All wild** plays a deck of 112 wilds with no colour and no number (plain wilds, Skip, Reverse, Draw Two, Wild Draw Four): every card goes on any card, the first wild opens on a colour the seed picks, and there is no challenging a Wild Draw Four. **Launcher** has no draw pile to count: a draw fires 1 to 4 cards at the player, a Draw Two 2 to 6 and a Wild Draw Four 4 to 10, drawn from the seed and the move number so a kept game plays out the same, and nothing stacks. `HITOTSU_MODES`, `HITOTSU_ALL_WILD_DECK`, `hitotsuLaunch` and `hitotsuOpeningColour` are exported. Ruthless and Flip are not here yet.
@@ -193,7 +195,8 @@ Nothing that was exported has been changed or removed.
   `@johnmorrisdotca/hitotsu/react`.
 - A static demo, published to GitHub Pages.
 
-[Unreleased]: https://github.com/johnmorrisdotca/hitotsu/compare/v1.4.0...HEAD
+[Unreleased]: https://github.com/johnmorrisdotca/hitotsu/compare/v1.6.0...HEAD
+[1.6.0]: https://github.com/johnmorrisdotca/hitotsu/compare/v1.5.0...v1.6.0
 [1.4.0]: https://github.com/johnmorrisdotca/hitotsu/compare/v1.3.2...v1.4.0
 [1.3.1]: https://github.com/johnmorrisdotca/hitotsu/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/johnmorrisdotca/hitotsu/compare/v1.2.0...v1.3.0
