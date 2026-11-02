@@ -11,6 +11,12 @@ All notable changes to this project are written here. The format follows
 - A table can be laid in the family's five cloths by itself, not only by a page's theme: `<hitotsu-table cloth="blue">`, `mountHitotsu(el, { cloth })` and `set({ cloth })`, the `cloth` embed parameter and Builder option, with `HITOTSU_CLOTHS`, `isCloth` and `clothVars`. The demo's code says which cloth is on the table.
 - `pnpm test:frameworks` (`scripts/check-frameworks.mjs`) builds the README's React, Vue, Svelte, Angular and plain-page examples from the packed tarball and plays them in Chromium and WebKit, in CI too.
 
+## [1.5.0] - 2026-11-02
+
+### Added
+
+- A house rule, **Finish on a number card** (`finishOnNumber`, off in both presets): the last card of a hand must be a number, so an action card or a wild left alone in a hand is not playable (or stackable, or a jump-in) and that player draws instead. The published rules allow going out on an action card, so the rule is off by default. `readHitotsuOptions` reads a set of options kept before this field existed as played without it; a `HitotsuOptions` object written out by hand now needs the field.
+
 ## [1.4.2] - 2026-10-31
 
 ### Fixed

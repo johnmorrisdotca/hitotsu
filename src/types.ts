@@ -68,6 +68,13 @@ export type HitotsuOptions = {
   wildFour: "challenge" | "strict";
   /** Cards dealt to each player: seven, or five in party mode. */
   deal: 7 | 5;
+  /**
+   * Finish on a number card: the last card of a hand must be a number, so an
+   * action card or a wild is not playable from a hand of one card and that
+   * player draws instead. Off by default: the published rules let a player go
+   * out on an action card.
+   */
+  finishOnNumber: boolean;
 };
 
 /** One move: a card played, a draw, a turn passed, a pending draw taken, a Wild Draw Four challenged, or a card played out of turn.

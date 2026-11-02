@@ -450,7 +450,8 @@ console.log(startHitotsu(1, ["only one"], 1), startHitotsu(7, ["Ann", "Ben"], 1)
   sevenZero: false,
   drawToMatch: false,
   wildFour: 'challenge',
-  deal: 7
+  deal: 7,
+  finishOnNumber: false
 }
 same true [ 7, 7 ] 5
 null null
@@ -556,6 +557,7 @@ document.querySelector("#unmute")!.addEventListener("click", () => sound.setMute
 | Sevens and zeros (a 7 swaps hands, a 0 passes every hand on) | off | on | `sevenZero` |
 | Drawing | one card | one card | `drawToMatch` |
 | Wild Draw Four | may be challenged | may be challenged | `wildFour: "challenge" \| "strict"` |
+| Finish on a number card (an action card or a wild cannot be the last card of a hand: that player draws instead) | off | off | `finishOnNumber` |
 
 The length is separate: `startHitotsu(size, …)` with 200 or 500 points, or 1
 for a single hand. A card left in a hand scores its number, an action card 20
