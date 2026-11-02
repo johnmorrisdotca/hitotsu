@@ -121,7 +121,11 @@ describe("the README's rules table", () => {
     expect(HITOTSU_CLASSIC.drawToMatch || HITOTSU_PARTY.drawToMatch).toBe(false);
     expect(find("Wild Draw Four").slice(1, 3)).toEqual(["may be challenged", "may be challenged"]);
     expect([HITOTSU_CLASSIC.wildFour, HITOTSU_PARTY.wildFour]).toEqual(["challenge", "challenge"]);
-    expect(rows).toHaveLength(6);
+    expect(find("Finish on a number card").slice(1, 3).map(value)).toEqual([
+      HITOTSU_CLASSIC.finishOnNumber,
+      HITOTSU_PARTY.finishOnNumber,
+    ]);
+    expect(rows).toHaveLength(7);
   });
 
   it("the scores in the text are the points", () => {

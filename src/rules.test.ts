@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { decodeHitotsu, encodeHitotsu, readHitotsuMove } from "./codec.ts";
+import { decodeHitotsu, encodeHitotsu, readHitotsuMove, readHitotsuOptions } from "./codec.ts";
 import { hitotsuComputer, hitotsuComputerJump } from "./computer.ts";
 import { HITOTSU_CLASSIC, HITOTSU_DECK_SIZE, HITOTSU_PARTY, HITOTSU_SIZES } from "./constants.ts";
-import { HITOTSU_DECK, hitotsuPoints, hitotsuWords, isNumber } from "./deck.ts";
+import { HITOTSU_DECK, hitotsuPoints, hitotsuWords, isNumber, isWild } from "./deck.ts";
 import { seededRandom } from "./random.ts";
 import { hitotsuJumpIns, hitotsuMatches, hitotsuMoves, hitotsuWinners, playHitotsu, startHitotsu } from "./rules.ts";
 import type { HitotsuGame, HitotsuMove, HitotsuOptions } from "./types.ts";
@@ -223,6 +223,58 @@ describe("hitotsu: the variants", () => {
     expect(game.drawn).toBe("R30");
   });
 
+  it("finish on a number card: an action card or a wild is not played from a hand of one, a number is, and the published rules allow both", () => {
+    const hands = [["R20"], ["G20", "G30"]];
+    const strict = { finishOnNumber: true };
+    // The last card is a number: it goes, and the hand is out.
+    expect(play(at(hands, ["R50"], stock, {}, strict), { play: "R20" }).results[0]?.winners).toEqual([0]);
+    // An action card or a wild left alone in the hand is not offered, and the player draws instead.
+    for (const last of ["RS0", "RR0", "RD0", "WW0", "WF0"]) {
+      const held = at([[last], ["G20", "G30"]], ["R50"], stock, {}, strict);
+      const moves = hitotsuMoves(held);
+      expect(
+        moves.some((move) => "play" in move),
+        last,
+      ).toBe(false);
+      expect(moves).toContainEqual({ draw: true });
+      expect(playHitotsu(held, { play: last, ...(isWild(last) ? { colour: "R" as const } : {}) })).toBeNull();
+      // The published rules let it go out.
+      expect(
+        hitotsuMoves(at([[last], ["G20", "G30"]], ["R50"], stock)).some((move) => "play" in move),
+        last,
+      ).toBe(true);
+    }
+    // With a second card in hand an action card goes as ever, and a drawn action card that would be the last is not offered.
+    expect(
+      hitotsuMoves(at([["RS0", "R20"], ["G20"]], ["R50"], stock, {}, strict)).some(
+        (move) => "play" in move && move.play === "RS0",
+      ),
+    ).toBe(true);
+    const drawn = at([["RS0"], ["G20"]], ["R50"], stock, { drawn: "RS0" }, strict);
+    expect(hitotsuMoves(drawn)).toEqual([{ pass: true }]);
+    // A draw card cannot be stacked from a hand of one, and a jump-in on an action card cannot go out either.
+    expect(
+      hitotsuMoves(
+        at([["RD0"], ["G20"]], ["R50"], stock, { pending: 2, pendingFace: "D" }, { ...strict, stacking: "any" }),
+      ),
+    ).toEqual([{ take: true }]);
+    const jump = at(
+      [["R10", "R20"], ["G20", "G30"], ["RS1"]],
+      ["RS0"],
+      stock,
+      { toPlay: 1 },
+      { ...strict, jumpIn: true },
+    );
+    expect(hitotsuJumpIns(jump)).toEqual([]);
+    expect(hitotsuJumpIns({ ...jump, options: { ...jump.options, finishOnNumber: false } })).not.toEqual([]);
+  });
+
+  it("an option set kept before finish-on-number existed is read as played without it", () => {
+    const { finishOnNumber: _later, ...before } = HITOTSU_CLASSIC;
+    expect(readHitotsuOptions(before)).toEqual(HITOTSU_CLASSIC);
+    expect(readHitotsuOptions({ ...before, finishOnNumber: "yes" })).toBeNull();
+  });
+
   it("no bluffing: a wild draw four only from a hand holding nothing of the colour, and never challenged", () => {
     const holding = at([["WF0", "B10", "R20"], ["G20"]], ["B50"], stock, {}, { wildFour: "strict" });
     expect(hitotsuMoves(holding).some((move) => "play" in move && move.play === "WF0")).toBe(false);
@@ -269,6 +321,7 @@ describe("hitotsu: played out", () => {
       "same-card stacking, no bluffing, draw to match",
       { ...HITOTSU_CLASSIC, stacking: "same", wildFour: "strict", drawToMatch: true },
     ],
+    ["finishing on a number card, with stacking and jumping in", { ...HITOTSU_PARTY, finishOnNumber: true }],
   ];
 
   it.each(houses)(

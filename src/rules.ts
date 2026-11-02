@@ -120,6 +120,11 @@ function fourAllowed(game: HitotsuGame, hand: readonly HitotsuCard[]): boolean {
   return game.options.wildFour !== "strict" || !hand.some((card) => colourOf(card) === game.colour);
 }
 
+/** With "finish on a number card", the last card of a hand goes down only if it is a number. */
+function mayGoOut(game: HitotsuGame, hand: readonly HitotsuCard[], card: HitotsuCard): boolean {
+  return !game.options.finishOnNumber || hand.length > 1 || isNumber(card);
+}
+
 /** Whether a card may be stacked on the draw the player to move faces. */
 function stacks(game: HitotsuGame, card: HitotsuCard): boolean {
   const { stacking } = game.options;
@@ -144,9 +149,14 @@ function stacks(game: HitotsuGame, card: HitotsuCard): boolean {
 export function hitotsuPlayable(game: HitotsuGame): HitotsuCard[] {
   if (game.phase === "over" || game.toPlay === null) return [];
   const hand = handOf(game, game.toPlay);
-  if (game.pending > 0) return hand.filter((card) => stacks(game, card));
+  if (game.pending > 0) return hand.filter((card) => stacks(game, card) && mayGoOut(game, hand, card));
   const from = game.drawn !== null ? [game.drawn] : hand;
-  return from.filter((card) => hitotsuMatches(game, card) && (faceOf(card) !== WILD_FOUR || fourAllowed(game, hand)));
+  return from.filter(
+    (card) =>
+      hitotsuMatches(game, card) &&
+      (faceOf(card) !== WILD_FOUR || fourAllowed(game, hand)) &&
+      mayGoOut(game, hand, card),
+  );
 }
 
 /** Whether playing this card from this hand swaps or turns hands (sevens and zeros), so the call is not asked. */
@@ -234,7 +244,7 @@ export function hitotsuJumpIns(game: HitotsuGame): HitotsuMove[] {
     seat === game.toPlay
       ? []
       : hand
-          .filter((card) => identical(card, top))
+          .filter((card) => identical(card, top) && mayGoOut(game, hand, card))
           .flatMap((card) => waysToPlay(game, seat, card).map((way): HitotsuMove => ({ jump: card, seat, ...way }))),
   );
 }

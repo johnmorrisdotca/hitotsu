@@ -6,6 +6,12 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-11-02
+
+### Added
+
+- A house rule, **Finish on a number card** (`finishOnNumber`, off in both presets): the last card of a hand must be a number, so an action card or a wild left alone in a hand is not playable (or stackable, or a jump-in) and that player draws instead. The published rules allow going out on an action card, so the rule is off by default. `readHitotsuOptions` reads a set of options kept before this field existed as played without it; a `HitotsuOptions` object written out by hand now needs the field.
+
 ## [1.4.2] - 2026-10-31
 
 ### Fixed

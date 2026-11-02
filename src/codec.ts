@@ -32,12 +32,22 @@ const isSeat = (value: unknown) => Number.isInteger(value) && (value as number) 
  */
 export function readHitotsuOptions(value: unknown): HitotsuOptions | null {
   if (typeof value !== "object" || value === null) return null;
-  const { stacking, jumpIn, sevenZero, drawToMatch, wildFour, deal } = value as Record<string, unknown>;
+  const {
+    stacking,
+    jumpIn,
+    sevenZero,
+    drawToMatch,
+    wildFour,
+    deal,
+    finishOnNumber = false,
+  } = value as Record<string, unknown>;
   if (stacking !== "off" && stacking !== "same" && stacking !== "any") return null;
   if (typeof jumpIn !== "boolean" || typeof sevenZero !== "boolean" || typeof drawToMatch !== "boolean") return null;
   if (wildFour !== "challenge" && wildFour !== "strict") return null;
   if (deal !== 7 && deal !== 5) return null;
-  return { stacking, jumpIn, sevenZero, drawToMatch, wildFour, deal };
+  // A game or table kept before this house rule existed has no such field: it was played without it.
+  if (typeof finishOnNumber !== "boolean") return null;
+  return { stacking, jumpIn, sevenZero, drawToMatch, wildFour, deal, finishOnNumber };
 }
 
 /** A move as something sent it, checked for its shape only: whether it may be made is the rules'.
