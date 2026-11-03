@@ -147,4 +147,34 @@ await takePictures({
       target: 'section[aria-labelledby="using-title"]',
     },
   ],
+  // The family's thumbnail, dark thumbnail and icon (scripts/family-thumbnail.mjs): a hand of seven cards of the package's
+  // own deck, drawn by hitotsuCardSvg and fanned (a seven, skip, reverse and draw two in the four colours, a nine, a wild
+  // and a wild draw four); the icon is the wild alone.
+  thumbnail: {
+    url: address("rules=classic&computers=3"),
+    init: steady,
+    ready: READY,
+    target: "#thumbnail-stage",
+    icon: { target: "#thumbnail-icon" },
+    label: "Hitotsu 一つ",
+    async prepare(page) {
+      await page.evaluate(async () => {
+        const { hitotsuCardSvg } = await import("./dist/index.js");
+        const hand = ["R70", "YS0", "GR0", "BD0", "G90", "WW0", "WF0"];
+        const fan = hand
+          .map((card, at) => {
+            const turn = (at - (hand.length - 1) / 2) * 10;
+            const lift = Math.abs(at - (hand.length - 1) / 2) ** 2 * 6;
+            return `<div style="position:absolute;left:${180 + at * 96}px;top:${80 + lift}px;transform:rotate(${turn}deg);transform-origin:50% 100%;filter:drop-shadow(0 3px 5px rgba(0,0,0,.3))">${hitotsuCardSvg(card, { width: 220 })}</div>`;
+          })
+          .join("");
+        document.body.replaceChildren();
+        document.body.insertAdjacentHTML(
+          "beforeend",
+          `<div id="thumbnail-stage" style="position:relative;width:${96 * (hand.length - 1) + 580}px;height:560px">${fan}</div>` +
+            `<div id="thumbnail-icon" style="width:max-content;padding:12px;filter:drop-shadow(0 3px 5px rgba(0,0,0,.3))">${hitotsuCardSvg("WW0", { width: 340 })}</div>`,
+        );
+      });
+    },
+  },
 });

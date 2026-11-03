@@ -1,3 +1,5 @@
+<p align="center"><a href="https://johnmorrisdotca.github.io/hitotsu/"><picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/hitotsu/main/docs/images/thumbnail-dark.png"><img src="https://raw.githubusercontent.com/johnmorrisdotca/hitotsu/main/docs/images/thumbnail.png" alt="Hitotsu: a hand of seven cards from its own deck, fanned: a seven, skip, reverse, draw two, a nine, a wild and a wild draw four." width="1200"></picture></a></p>
+
 <h1 align="center">Hitotsu <sub>一つ</sub> — Colour-card shedding game for two to eight</h1>
 
 <p align="center"><strong>The colour-card game, with the house rules people actually play.</strong><br>

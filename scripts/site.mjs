@@ -13,13 +13,16 @@ import {
   familyHeader,
   familyUnreviewed,
 } from "./family-template.mjs";
+import { publishThumbnails, thumbnailHead } from "./family-thumbnail.mjs";
 
 const id = "hitotsu";
+const ALT =
+  "Hitotsu: a hand of seven cards from its own deck, fanned: a seven, skip, reverse, draw two, a nine, a wild and a wild draw four.";
 const icon = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect x='14' y='6' width='72' height='88' rx='12' fill='%23b5452c' stroke='%23fffdf8' stroke-width='6'/%3E%3Cpath d='M36 54 H64' stroke='%23fffdf8' stroke-width='9' stroke-linecap='round'/%3E%3C/svg%3E`;
-const frame = ({ title, description, links, body, scripts }) => `<!doctype html>
+const frame = ({ title, description, links, body, scripts, head = "" }) => `<!doctype html>
 <html lang="en">
   <head>
-    ${familyHead({ id, title, description, ogTitle: "Hitotsu 一つ — Colour-card shedding game for two to eight", ogDescription: "Match the colour or the number, and call Hitotsu! with one card left. Play against computers." })}
+    ${familyHead({ id, title, description, ogTitle: "Hitotsu 一つ — Colour-card shedding game for two to eight", ogDescription: "Match the colour or the number, and call Hitotsu! with one card left. Play against computers." })}${head}
     <link rel="icon" href="${icon}" />
     <link rel="stylesheet" href="family.css" />
     <link rel="stylesheet" href="hitotsu.css" />
@@ -54,8 +57,11 @@ writeFileSync(
     ],
     body: readFileSync("demo/body.html", "utf8").replace("__UNREVIEWED__", familyUnreviewed({ id })).trimEnd(),
     scripts: `<script type="module" src="page.js"></script>`,
+    head: `\n    ${thumbnailHead(JSON.parse(readFileSync("package.json", "utf8")), { alt: ALT })}`,
   }),
 );
+// The family's card, dark card and icon, at <site>/thumbnail.png, thumbnail-dark.png and icon.png.
+publishThumbnails(".", "site");
 
 const api = apiBody();
 writeFileSync(
