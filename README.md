@@ -961,7 +961,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md). Please follow the [code of conduct](./
 
 ## Changes
 
-See [CHANGELOG.md](./CHANGELOG.md). The latest release, 1.6.1, 1.6.1: in Japanese on a phone a seat's name such as コンピューター1 stays on one line, with two seats to a row.
+See [CHANGELOG.md](./CHANGELOG.md). The latest release, 1.6.1: in Japanese on a phone a seat's name such as コンピューター1 stays on one line, with two seats to a row.
 
 ## Licence
 
