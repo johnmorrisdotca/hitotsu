@@ -6,6 +6,8 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [1.6.1] - 2026-11-03
+
 ### Fixed
 
 - A seat's name keeps together: in Japanese on a 390px phone with three computers, "コンピューター1" no longer breaks after タ and leaves ー1 alone on a line. A seat is at least 148px wide (two to a row on a phone, and on the narrowest phones with a slightly smaller name), a name breaks only if it is longer than any seat, and the seats make the same rows in English and Japanese. The README's pictures are retaken.
@@ -201,7 +203,8 @@ Nothing that was exported has been changed or removed.
   `@johnmorrisdotca/hitotsu/react`.
 - A static demo, published to GitHub Pages.
 
-[Unreleased]: https://github.com/johnmorrisdotca/hitotsu/compare/v1.6.0...HEAD
+[Unreleased]: https://github.com/johnmorrisdotca/hitotsu/compare/v1.6.1...HEAD
+[1.6.1]: https://github.com/johnmorrisdotca/hitotsu/compare/v1.6.0...v1.6.1
 [1.6.0]: https://github.com/johnmorrisdotca/hitotsu/compare/v1.5.0...v1.6.0
 [1.4.0]: https://github.com/johnmorrisdotca/hitotsu/compare/v1.3.2...v1.4.0
 [1.3.1]: https://github.com/johnmorrisdotca/hitotsu/compare/v1.3.0...v1.3.1

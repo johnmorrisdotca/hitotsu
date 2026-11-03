@@ -11,7 +11,7 @@ Match the colour or the number, and call Hitotsu with one card left. Two to eigh
   <a href="./LICENSE"><img alt="MIT licence" src="https://img.shields.io/badge/licence-MIT-2f5d4a"></a>
   <img alt="No dependencies" src="https://img.shields.io/badge/dependencies-0-2f5d4a">
   <img alt="TypeScript" src="https://img.shields.io/badge/types-TypeScript-3178c6">
-  <a href="https://johnmorrisdotca.github.io/hitotsu/docs/api/main/index.html"><img alt="43.0 kB minified and gzipped" src="https://img.shields.io/badge/min%2Bgzip-43.0%20kB-2f5d4a"></a>
+  <a href="https://johnmorrisdotca.github.io/hitotsu/docs/api/main/index.html"><img alt="43.3 kB minified and gzipped" src="https://img.shields.io/badge/min%2Bgzip-43.3%20kB-2f5d4a"></a>
   <a href="https://www.npmjs.com/package/@johnmorrisdotca/hitotsu#provenance"><img alt="Published with npm provenance" src="https://img.shields.io/badge/npm-provenance-2f5d4a"></a>
 </p>
 
@@ -961,7 +961,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md). Please follow the [code of conduct](./
 
 ## Changes
 
-See [CHANGELOG.md](./CHANGELOG.md). The latest release, 1.6.0, adds two modes chosen at the set-up, a deck of wilds only and a launcher, and lets a table be laid in the family's five cloths.
+See [CHANGELOG.md](./CHANGELOG.md). The latest release, 1.6.1, 1.6.1: in Japanese on a phone a seat's name such as コンピューター1 stays on one line, with two seats to a row.
 
 ## Licence
 
