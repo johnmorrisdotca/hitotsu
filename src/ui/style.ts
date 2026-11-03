@@ -43,6 +43,8 @@ export const CSS = `
 .ht-stock:disabled { cursor: default; }
 /* The turn's direction sits level with the middle of the cards, not of the cards and their captions. */
 .ht-dir { font-size: 1.6rem; line-height: 1; opacity: .8; align-self: flex-start; margin-top: calc(var(--ht-card) * 1.25 * 0.7 - .8rem); }
+/* A line of words keeps its words whole: Japanese is never broken inside コンピューター2, ワイルド or ドローカード (keep-all); the table marks the breaks between phrases itself (a wbr, see ui/phrases.ts), and a word wider than the line breaks only because it must (anywhere). */
+.ht-status, .ht-news, .ht-actions button, .ht-seat span { word-break: keep-all; overflow-wrap: anywhere; }
 .ht-status { margin: 0; font-weight: 600; text-align: center; }
 .ht-news { margin: 0; min-height: 1.3em; font-size: .85rem; opacity: .85; text-align: center; }
 .ht-hand { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; padding-top: 6px; }

@@ -6,6 +6,10 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Fixed
+
+- In Japanese the status line and the news line keep their words whole: "…ワイルドを出します" no longer breaks inside ワイルド on a phone, and ドローカード, ワイルドドローフォー and コンピューター2 are never split either. The table marks where a line may break, between phrases (after a run of hiragana such as は, を or の), with a `<wbr>` that leaves `textContent` as it was, and the lines, the buttons and the seats' counts use `word-break: keep-all; overflow-wrap: anywhere`, the same care as a seat's name. Checked at 320, 360, 390 and 1280 pixels in Chromium and WebKit. The README's phone picture is retaken.
+
 ## [1.6.1] - 2026-11-03
 
 ### Fixed

@@ -848,6 +848,7 @@ src/
     ├── cloth.ts    the five cloths a table may be laid in
     ├── dom.ts      a few lines of DOM building, so the table needs no framework
     ├── mount.ts    the table itself: mounting it on a page, and the options it takes
+    ├── phrases.ts  where a line of Japanese may break: between phrases, never inside a word like コンピューター2
     ├── strings.ts  every word the table says, in English and Japanese, which a host page can replace
     └── style.ts    the table's look, injected once per document
 ```

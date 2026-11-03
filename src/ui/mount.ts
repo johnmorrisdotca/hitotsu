@@ -8,7 +8,7 @@ import { callMatters, movesFor, playableFor, waysFor } from "../seat.ts";
 import type { HitotsuCard, HitotsuColour, HitotsuGame, HitotsuMove, HitotsuNews, HitotsuOptions } from "../types.ts";
 import { type CardSounds, createCardSounds } from "./cardSounds.ts";
 import { type Cloth, clothVars, isCloth } from "./cloth.ts";
-import { h, refill } from "./dom.ts";
+import { h, phrased, refill } from "./dom.ts";
 import { type HitotsuLanguage, type HitotsuStrings, hitotsuLanguageOf, hitotsuStrings } from "./strings.ts";
 import { injectStyle } from "./style.ts";
 
@@ -361,8 +361,8 @@ export function mountHitotsu(target: HTMLElement, options: HitotsuTableOptions =
           h("span", { class: "ht-dir", "aria-hidden": "true" }, game.direction === 1 ? "↻" : "↺"),
           pile,
         ),
-        h("p", { class: "ht-status", "aria-live": "polite" }, status),
-        h("p", { class: "ht-news" }, newsLine(game.news, t, name)),
+        h("p", { class: "ht-status", "aria-live": "polite" }, ...phrased(status)),
+        h("p", { class: "ht-news" }, ...phrased(newsLine(game.news, t, name))),
       ),
       h(
         "div",
