@@ -113,6 +113,34 @@ await takePictures({
       target: TABLE,
       prepare: (page) => play(page, 1),
     },
+    // Wilds only: a hand of nothing but wilds, and any card goes on any card.
+    {
+      subject: "wilds-only",
+      views: ["desk"],
+      url: address("rules=classic&mode=all-wild&computers=3"),
+      init: steady,
+      ready: READY,
+      target: TABLE,
+      prepare: (page) => play(page, 2),
+    },
+    // A launcher: no draw pile to count; the draw is a random number of cards fired at the player. Taken just after one draw, before the computers answer, so that the news says how many.
+    {
+      subject: "launcher",
+      views: ["phone"],
+      url: address("rules=classic&mode=launcher&computers=3"),
+      init: () => {
+        steady();
+        window.hitotsuDelay = 3_600_000;
+      },
+      ready: READY,
+      target: TABLE,
+      async prepare(page) {
+        const cards = await page.locator(".ht-hand button").count();
+        await page.locator(STOCK).click();
+        await page.waitForFunction((was) => document.querySelectorAll(".ht-hand button").length > was, cards);
+        await page.waitForFunction(() => /drew/.test(document.querySelector(".ht-news")?.textContent ?? ""));
+      },
+    },
     // The largest table: you and seven computers.
     {
       subject: "eight-players",

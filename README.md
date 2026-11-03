@@ -22,7 +22,7 @@ Match the colour or the number, and call Hitotsu with one card left. Two to eigh
 <td align="center" valign="top">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/hitotsu/main/docs/images/hero-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/hitotsu/main/docs/images/hero-desk-light.webp" alt="The demo on a desk, in English, a few turns into a classic game for four: the page header with the language chooser, Docs and API reference links, five cloth patches and the Help switch, the choices of rules, computers and sound, the seats along the top (You outlined because it is your turn, and three computers), the stock face down and a card in play on the green felt, and your hand with the cards that may be played glowing" width="600">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/hitotsu/main/docs/images/hero-desk-light.webp" alt="The demo on a desk, in English, a few turns into a classic game for four: the page header with the language chooser, Docs and API reference links, five cloth patches and the Help switch, the choices of rules, mode, computers and sound, the seats along the top (You outlined because it is your turn, and three computers), the stock face down and a card in play on the green felt, and your hand with the cards that may be played glowing" width="600">
 </picture>
 <br><em>The demo on a desk: a classic game for four, three turns in.</em>
 </td>
@@ -84,6 +84,9 @@ no script of your own:
   on any), jump-in, sevens and zeros, draw until you can play, and the Wild
   Draw Four challenged or played without bluffing. `HITOTSU_CLASSIC` and
   `HITOTSU_PARTY` are ready-made; mix your own.
+- **Two modes besides the standard deck.** `mode: "all-wild"` deals a deck of
+  wilds only, and `mode: "launcher"` fires a random number of cards in place of
+  a draw. The demo chooses the mode in a row of buttons, and `?mode=` opens it.
 - **Pure and replayable.** Every function takes a game and returns a new one.
   A game is its set-up, a seed and its moves, kept as one line of text and read
   back by playing the moves again through the rules, so a saved game can never
@@ -147,10 +150,26 @@ Each picture is the real table, drawn by the package and taken from [the demo](h
 <tr>
 <td align="center" valign="top" width="50%">
 <picture>
-<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/hitotsu/main/docs/images/set-up-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/hitotsu/main/docs/images/set-up-desk-light.webp" alt="The demo's choices on a desk: the rules (Classic chosen, Party), the number of computers (1, 3 chosen, 5, 7), the Sound switch (Off chosen, On), the Deal again button, and the line Classic: seven cards, one hand; match the colour or the number; draw cards may not be stacked" width="400">
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/hitotsu/main/docs/images/wilds-only-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/hitotsu/main/docs/images/wilds-only-desk-light.webp" alt="The wilds-only mode on a desk, a table of four after two turns: the seats along the top with six cards each, the draw stock with 83 left and a wild in play (black with the four colours, and a red dot for the colour that was called), the line Your turn. Play red, the same number or symbol, or a wild, and a hand of six wilds (a reverse, two plain wilds and three draw fours) all glowing, because every card may be played" width="400">
 </picture>
-<br><em><strong>The options.</strong> Classic or party rules, one to seven computers, and sound.</em>
+<br><em><strong>Wilds only.</strong> A deck of nothing but wilds: every card goes on any card, and the colour is whatever is called.</em>
+</td>
+<td align="center" valign="top" width="50%">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/hitotsu/main/docs/images/launcher-phone-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/hitotsu/main/docs/images/launcher-phone-light.webp" alt="The launcher mode on a phone, just after a draw: the seats in two rows of two (You with 10 cards, Computer 1 outlined because it is its turn, Computers 2 and 3 with 7 each), the stock and a yellow five in play on the green felt, the line Computer 1 to play, the news You drew 3 cards, and a hand of ten cards in three rows, greyed while it is not your turn" width="240">
+</picture>
+<br><em><strong>Launcher.</strong> No draw pile to count: a draw fires a random number of cards, here three, and nothing stacks.</em>
+</td>
+</tr>
+<tr>
+<td align="center" valign="top" width="50%">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/hitotsu/main/docs/images/set-up-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/hitotsu/main/docs/images/set-up-desk-light.webp" alt="The demo's choices on a desk: the rules (Classic chosen, Party), the mode (Standard chosen, Wilds only, Launcher), the number of computers (1, 3 chosen, 5, 7), the Sound switch (Off chosen, On), the Deal again button, and two lines of notes: Classic: seven cards, one hand; match the colour or the number; draw cards may not be stacked, and Standard: the 108-card deck and a draw pile" width="400">
+</picture>
+<br><em><strong>The options.</strong> Classic or party rules, a mode (standard, wilds only or a launcher), one to seven computers, and sound.</em>
 </td>
 <td align="center" valign="top" width="50%">
 <picture>

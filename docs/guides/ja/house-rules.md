@@ -17,6 +17,20 @@ console.log(readHitotsuOptions(rules));
 console.log(startHitotsu(200, ["Aki", "Ben"], 42, rules)?.size);
 ```
 
+## モードを選ぶ
+
+`HitotsuOptions`の`mode`は、デッキと引き方を決めます。どのプリセットも`classic`（基本）です。`all-wild`はワイルドだけのデッキで、どのカードも何の上にでも出せ、色は宣言した色になります。`launcher`は数える山札がなく、引くとランダムな枚数のカードが飛んできて、重ね出しはできません。[HITOTSU_MODES](api:HITOTSU_MODES)に一覧があります。モードはどちらのプリセットにも組み合わせられ、同じシードなら同じ配りになります。
+
+```ts
+import { HITOTSU_CLASSIC, HITOTSU_MODES, startHitotsu } from "@johnmorrisdotca/hitotsu";
+
+console.log(HITOTSU_MODES);
+const wilds = { ...HITOTSU_CLASSIC, mode: "all-wild" } as const;
+console.log(startHitotsu(1, ["Aki", "Ben"], 42, wilds)?.hands[0]);
+```
+
+デモの設定では、ルールの隣のボタンの行でモードを選べます。アドレスに`?mode=all-wild`や`?mode=launcher`をつけると、そのモードでテーブルが開きます。埋め込みでは、`<hitotsu-table>`の`mode`属性か、ビルダーの「モード」の行で指定します。
+
 ## 試合の長さは別に指定する
 
 `startHitotsu`の最初の引数は1回戦なら1、得点制なら200または500です。パーティーのルールを選ぶだけではこの引数は変わりません。表示とビルダーにはそれぞれの初期設定があります。

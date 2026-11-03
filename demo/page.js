@@ -31,10 +31,18 @@ const WORDS = {
     pageRules: "Rules",
     pageClassic: "Classic",
     pageParty: "Party",
+    pageMode: "Mode",
+    pageModeClassic: "Standard",
+    pageModeWild: "Wilds only",
+    pageModeLauncher: "Launcher",
     pageComputers: "Computers",
     pageDeal: "Deal again",
     noteClassic: "Classic: seven cards, one hand. Match the colour or the number; draw cards may not be stacked.",
     noteParty: "Party: five cards, draw cards stacking on any draw card, jumping in, and sevens and zeros.",
+    noteModeClassic: "Standard: the 108-card deck and a draw pile.",
+    noteModeWild: "Wilds only: every card goes on any card; the colour is whatever is called.",
+    noteModeLauncher: "Launcher: a draw fires a random number of cards, and nothing stacks.",
+    pageCliClassic: "# The command line deals the standard deck only.",
     pageDeck: "The deck",
     pageDeckNote:
       "108 cards in four colours. Each colour also has an element in its corners (火 土 木 水), so no card is told by colour alone.",
@@ -68,10 +76,18 @@ const WORDS = {
     pageRules: "ルール",
     pageClassic: "クラシック",
     pageParty: "パーティー",
+    pageMode: "モード",
+    pageModeClassic: "基本",
+    pageModeWild: "ワイルドのみ",
+    pageModeLauncher: "ランチャー",
     pageComputers: "コンピューター",
     pageDeal: "配り直す",
     noteClassic: "クラシック: 7枚で1回戦。色か数字をそろえて出します。ドローカードは重ねられません。",
     noteParty: "パーティー: 5枚。どのドローカードにもドローカードを重ねられ、割り込みも、7と0の特別ルールもあります。",
+    noteModeClassic: "基本: 108枚のデッキと山札で遊びます。",
+    noteModeWild: "ワイルドのみ: どのカードも何の上にでも出せます。色は宣言した色です。",
+    noteModeLauncher: "ランチャー: 引くと、ランダムな枚数のカードが飛んできます。重ねられません。",
+    pageCliClassic: "# コマンドラインでは基本のデッキだけを配ります。",
     pageDeck: "カード",
     pageDeckNote: "4色108枚。色ごとに四隅の元素（火 土 木 水）もあるので、色だけで見分ける必要はありません。",
     foot: "MITライセンスのオープンソースです。ここでは何も保存せず、どこにも送りません。",
@@ -94,6 +110,10 @@ const WORDS = {
 const asked = new URLSearchParams(location.search);
 const seatCounts = [1, 3, 5, 7];
 let mode = asked.get("rules") === "party" ? "party" : "classic";
+// The deck and how a draw is dealt (`mode` in the address, as in the tag): the standard deck, wilds only, or a launcher.
+const variants = { classic: "pageModeClassic", "all-wild": "pageModeWild", launcher: "pageModeLauncher" };
+const noteOfVariant = { classic: "noteModeClassic", "all-wild": "noteModeWild", launcher: "noteModeLauncher" };
+let variant = Object.hasOwn(variants, asked.get("mode") ?? "") ? asked.get("mode") : "classic";
 let computers = seatCounts.includes(Number(asked.get("computers"))) ? Number(asked.get("computers")) : 3;
 let seed =
   /^\d{1,10}$/.test(asked.get("seed") ?? "") &&
@@ -120,7 +140,7 @@ const language = familyLanguage({
 const chosen = () => {
   const words = hitotsuStrings(language.lang === "ja" ? "ja" : "en");
   return {
-    rules: mode === "party" ? HITOTSU_PARTY : HITOTSU_CLASSIC,
+    rules: { ...(mode === "party" ? HITOTSU_PARTY : HITOTSU_CLASSIC), mode: variant },
     players: [words.you, ...Array.from({ length: computers }, (_, at) => words.computer(at + 1))],
   };
 };
@@ -158,6 +178,7 @@ function note() {
     .querySelector('[data-say="pageDocs"]')
     ?.setAttribute("href", language.lang === "ja" ? "docs/ja/index.html" : "docs/index.html");
   $("rules-note").textContent = language.word(mode === "party" ? "noteParty" : "noteClassic");
+  $("mode-note").textContent = language.word(noteOfVariant[variant]);
 }
 
 function press(group, attribute, value) {
@@ -169,6 +190,15 @@ for (const button of $("rules").children) {
   button.addEventListener("click", () => {
     mode = button.dataset.mode;
     press("rules", "mode", mode);
+    note();
+    table.restart(chosen());
+    using();
+  });
+}
+for (const button of $("variants").children) {
+  button.addEventListener("click", () => {
+    variant = button.dataset.variant;
+    press("variants", "variant", variant);
     note();
     table.restart(chosen());
     using();
@@ -218,6 +248,7 @@ function dealLink() {
   const link = new URL(location.href);
   link.search = "";
   link.searchParams.set("rules", mode);
+  link.searchParams.set("mode", variant);
   link.searchParams.set("computers", String(computers));
   link.searchParams.set("seed", String(table.game().seed));
   if (language.asked !== null) link.searchParams.set("lang", language.asked);
@@ -231,16 +262,18 @@ function using() {
   const seedNow = table.game().seed;
   const sound = sounds.muted ? "" : " sound";
   const cloth = document.documentElement.dataset.cloth ?? "green";
+  const rulesCode = mode === "party" ? "HITOTSU_PARTY" : "HITOTSU_CLASSIC";
+  const modeAttribute = variant === "classic" ? "" : ` mode="${variant}"`;
   $("using-tag").textContent =
-    `<script type="module" src="https://cdn.jsdelivr.net/npm/@johnmorrisdotca/hitotsu@1/dist/element-define.js"></script>\n<hitotsu-table rules="${mode}" computers="${computers}" seed="${seedNow}"${cloth === "green" ? "" : ` cloth="${cloth}"`}${lang === "ja" ? ' lang="ja"' : ""}${sound}></hitotsu-table>`;
+    `<script type="module" src="https://cdn.jsdelivr.net/npm/@johnmorrisdotca/hitotsu@1/dist/element-define.js"></script>\n<hitotsu-table rules="${mode}"${modeAttribute} computers="${computers}" seed="${seedNow}"${cloth === "green" ? "" : ` cloth="${cloth}"`}${lang === "ja" ? ' lang="ja"' : ""}${sound}></hitotsu-table>`;
   $("using-script").textContent =
-    `import { ${mode === "party" ? "HITOTSU_PARTY" : "HITOTSU_CLASSIC"}, mountHitotsu } from "@johnmorrisdotca/hitotsu";\n\nmountHitotsu(document.getElementById("table"), {\n  rules: ${mode === "party" ? "HITOTSU_PARTY" : "HITOTSU_CLASSIC"},\n  players: [${chosen()
+    `import { ${rulesCode}, mountHitotsu } from "@johnmorrisdotca/hitotsu";\n\nmountHitotsu(document.getElementById("table"), {\n  rules: ${variant === "classic" ? rulesCode : `{ ...${rulesCode}, mode: "${variant}" }`},\n  players: [${chosen()
       .players.map((name) => JSON.stringify(name))
       .join(
         ", ",
       )}],\n  seed: ${seedNow},\n  language: "${lang}",${cloth === "green" ? "" : `\n  cloth: "${cloth}",`}${sound === "" ? "" : "\n  sound: true,"}\n});`;
   $("using-cli").textContent =
-    `npx @johnmorrisdotca/hitotsu deal --seed ${seedNow} --players ${computers + 1} --rules ${mode}\nnpx @johnmorrisdotca/hitotsu play --seed ${seedNow} --players ${computers + 1} --rules ${mode}`;
+    `${variant === "classic" ? "" : `${language.word("pageCliClassic")}\n`}npx @johnmorrisdotca/hitotsu deal --seed ${seedNow} --players ${computers + 1} --rules ${mode}\nnpx @johnmorrisdotca/hitotsu play --seed ${seedNow} --players ${computers + 1} --rules ${mode}`;
 }
 document.addEventListener("family-cloth", using);
 for (const id of ["tag", "script", "cli"])
@@ -251,6 +284,7 @@ $("deck").innerHTML = [...shown, null].map((card) => hitotsuCardSvg(card, { widt
 
 press("rules", "mode", mode);
 press("counts", "count", computers);
+press("variants", "variant", variant);
 mount();
 note();
 document.documentElement.dataset.ready = "true";

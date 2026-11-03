@@ -8,6 +8,14 @@
               <button type="button" data-mode="party" aria-pressed="false" data-say="pageParty"></button>
             </div>
           </div>
+          <div class="fam-row" data-help-en="Standard is the usual deck. Wilds only is a deck of nothing but wilds. Launcher has no draw pile to count: a draw fires a random number of cards." data-help-ja="基本は普通のデッキです。ワイルドのみは、ワイルドだけのデッキです。ランチャーは数える山札がなく、引くとランダムな枚数のカードが飛んできます。">
+            <span class="fam-label" id="mode-label" data-say="pageMode"></span>
+            <div class="fam-seg" id="variants" role="group" aria-labelledby="mode-label" data-testid="modes">
+              <button type="button" data-variant="classic" aria-pressed="true" data-say="pageModeClassic"></button>
+              <button type="button" data-variant="all-wild" aria-pressed="false" data-say="pageModeWild"></button>
+              <button type="button" data-variant="launcher" aria-pressed="false" data-say="pageModeLauncher"></button>
+            </div>
+          </div>
           <div class="fam-row" data-help-en="How many computer players sit at the table with you: one, three, five or seven. The table is dealt again." data-help-ja="いっしょに遊ぶコンピューターの人数です（1・3・5・7人）。選ぶと配り直します。">
             <span class="fam-label" id="count-label" data-say="pageComputers"></span>
             <div class="fam-seg" id="counts" role="group" aria-labelledby="count-label" data-testid="counts">
@@ -27,6 +35,7 @@
           <button type="button" class="fam-button" data-primary="true" id="deal" data-testid="deal" data-say="pageDeal" data-tip-en="Shuffle and deal a new game with the same rules and players" data-tip-ja="同じルールと人数で、新しく配り直します"></button>
         </div>
         <p class="fam-fine rules-note" id="rules-note" data-testid="rules-note"></p>
+        <p class="fam-fine rules-note" id="mode-note" data-testid="mode-note"></p>
       </section>
       <div id="table" data-testid="table"></div>
       <div class="fam-actions">

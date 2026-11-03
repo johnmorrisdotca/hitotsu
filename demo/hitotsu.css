@@ -27,9 +27,6 @@ nav {
     min-height: 50px;
   }
 }
-.rules-note {
-  min-height: 2.7em;
-}
 @media (min-width: 481px) and (max-width: 700px) {
   .setup {
     min-height: 215px;
@@ -44,10 +41,24 @@ nav {
 .setup .fam-row {
   gap: 8px 14px;
 }
-/* Two lines kept for the rules' note in either language, so choosing a rule never moves the table. */
+/* Each choice is a row of its own, so that the words of one language never wrap a choice onto another line that the other language fits: the set-up is the same height in English and in Japanese. */
+.setup > .fam-row > .fam-row {
+  flex: 0 0 100%;
+}
+/* Room kept for each of the notes (the rules' and the mode's) in either language, so choosing one never moves the table: three lines on the narrowest phones, two on a phone and a tablet, and on a wide page each is one line in either language. */
 .rules-note {
-  min-height: 2.7em;
+  min-height: 4.05em;
   font-size: 0.85rem;
+}
+@media (min-width: 481px) {
+  .rules-note {
+    min-height: 2.7em;
+  }
+}
+@media (min-width: 900px) {
+  .rules-note {
+    min-height: 1.35em;
+  }
 }
 .fam-seg button {
   min-width: 44px;

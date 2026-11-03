@@ -6,6 +6,10 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- The demo's set-up offers the mode as a choice: a row of three buttons beside the rules, **Standard**, **Wilds only** and **Launcher** (基本, ワイルドのみ, ランチャー), with a line saying what the choice is. It is in the page's address like the other settings (`?mode=all-wild` or `?mode=launcher`, and the link to a deal carries it), and the code beside the table says it in the tag, the script and, for the command line, that it deals the standard deck only. Choosing a mode moves nothing of the set-up: each note has the room of its longest wording at every width, in either language. The embed frame reads `mode` too, so the builder's Mode row shows in its preview. The README has a picture of each mode in play (wilds only on a desk, a launcher on a phone), the options picture shows the new row, and the house-rules guide says how to choose a mode, in English and Japanese.
+
 ### Fixed
 
 - In Japanese the status line and the news line keep their words whole: "…ワイルドを出します" no longer breaks inside ワイルド on a phone, and ドローカード, ワイルドドローフォー and コンピューター2 are never split either. The table marks where a line may break, between phrases (after a run of hiragana such as は, を or の), with a `<wbr>` that leaves `textContent` as it was, and the lines, the buttons and the seats' counts use `word-break: keep-all; overflow-wrap: anywhere`, the same care as a seat's name. Checked at 320, 360, 390 and 1280 pixels in Chromium and WebKit. The README's phone picture is retaken.
