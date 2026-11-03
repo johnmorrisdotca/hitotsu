@@ -6,6 +6,10 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Fixed
+
+- A seat's name keeps together: in Japanese on a 390px phone with three computers, "コンピューター1" no longer breaks after タ and leaves ー1 alone on a line. A seat is at least 148px wide (two to a row on a phone, and on the narrowest phones with a slightly smaller name), a name breaks only if it is longer than any seat, and the seats make the same rows in English and Japanese. The README's pictures are retaken.
+
 - The README opens with the package's thumbnail, and the demo carries it as its link preview (og:image) and publishes the card, a dark card and an icon on Pages at `thumbnail.png`, `thumbnail-dark.png` and `icon.png`.
 
 ## [1.6.0] - 2026-11-02

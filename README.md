@@ -123,7 +123,7 @@ Each picture is the real table, drawn by the package and taken from [the demo](h
 <td align="center" valign="top" width="50%">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/hitotsu/main/docs/images/eight-players-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/hitotsu/main/docs/images/eight-players-desk-light.webp" alt="The largest table on a desk: eight seats along the top (You and Computer 1 to 7, each with seven cards and 0 points), the draw stock and a yellow four in play on the green felt, the line Your turn. Play yellow, the same number or symbol, or a wild, and a hand of seven cards with three glowing" width="400">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/hitotsu/main/docs/images/eight-players-desk-light.webp" alt="The largest table on a desk: eight seats at the top, seven in a row and Computer 7 below (You and Computer 1 to 7, each with seven cards and 0 points), the draw stock and a yellow four in play on the green felt, the line Your turn. Play yellow, the same number or symbol, or a wild, and a hand of seven cards with three glowing" width="400">
 </picture>
 <br><em><strong>Up to eight players.</strong> You and seven computers; the seats wrap on a narrow screen.</em>
 </td>
@@ -132,7 +132,7 @@ Each picture is the real table, drawn by the package and taken from [the demo](h
 <td align="center" valign="top" width="50%">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/hitotsu/main/docs/images/party-phone-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/hitotsu/main/docs/images/party-phone-light.webp" alt="Party mode on a phone, a table of six: the seats in two rows, the draw stock with 77 cards left and a yellow four in play, the status line Your turn, a hand of five cards with the wild draw four glowing, and four round buttons to choose the colour: red, yellow, green and blue" width="240">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/hitotsu/main/docs/images/party-phone-light.webp" alt="Party mode on a phone, a table of six: the seats in three rows of two, the draw stock with 77 cards left and a yellow four in play, the status line Your turn, a hand of five cards with the wild draw four glowing, and four round buttons to choose the colour: red, yellow, green and blue" width="240">
 </picture>
 <br><em><strong>Party mode.</strong> Stacking draw cards, jumping in, and sevens and zeros; a wild asks for its colour.</em>
 </td>

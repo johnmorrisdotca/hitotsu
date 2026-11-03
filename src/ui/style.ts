@@ -24,10 +24,13 @@ export const CSS = `
 .ht-root button { font: inherit; color: inherit; cursor: pointer; }
 .ht-root button:focus-visible { outline: 3px solid var(--ht-accent); outline-offset: 2px; }
 .ht-root, .ht-root * { line-height: 1.35; }
-.ht-seats { display: flex; flex-wrap: wrap; gap: 8px; }
-.ht-seat { flex: 1 1 110px; padding: 8px 10px; border: 1px solid var(--ht-rule); border-radius: 12px; background: var(--ht-surface); display: grid; gap: 2px; }
+.ht-seats { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(148px, calc(50% - 4px)), 1fr)); gap: 8px; container-type: inline-size; }
+.ht-seat { min-width: 0; padding: 8px 10px; border: 1px solid var(--ht-rule); border-radius: 12px; background: var(--ht-surface); display: grid; gap: 2px; }
 .ht-seat[data-turn] { border-color: var(--ht-accent); box-shadow: 0 0 0 2px var(--ht-accent); }
-.ht-seat b { font-size: .95rem; min-height: 2.7em; }
+/* A name keeps together: a seat is at least 148px wide, which holds "コンピューター7" at this size, and where that leaves room for one seat to a row it is half the row instead. A seat after the last full row keeps one column's width; a row with room to spare shares it. A name too long for any seat breaks only because it must. */
+.ht-seat b { font-size: .95rem; min-height: 2.7em; word-break: keep-all; overflow-wrap: anywhere; }
+/* On the narrowest phones the names are a little smaller, so two still make a row. */
+@container (max-width: 320px) { .ht-seat b { font-size: .8rem; } }
 .ht-seat span { font-size: .8rem; color: var(--ht-muted); }
 .ht-felt { position: relative; border-radius: var(--ht-radius); background: radial-gradient(circle at 50% 40%, var(--ht-felt), var(--ht-felt-deep)); color: var(--ht-felt-ink); padding: 18px 16px; display: grid; justify-items: center; gap: 10px; }
 .ht-piles { display: flex; align-items: flex-start; justify-content: center; gap: 22px; }
